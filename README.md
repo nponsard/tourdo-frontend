@@ -1,8 +1,15 @@
 
+## technos
+
+
+
+### next.js
 - Routing 
 - Connais déjà
 - 
-
+### mui/ material ui 
+- connais déjà 
+- interface facile et compréhensible
 
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
