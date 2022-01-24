@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { NextPage } from "next";
 import TeamSummary from "../components/TeamSummary";
+import TournamentSummary from "../components/TournamentSummary";
 import UserSummary from "../components/UserSummary";
 
 const Test: NextPage = () => {
@@ -50,6 +51,21 @@ const Test: NextPage = () => {
                 />
 
                 <UserSummary user={{ id: 2, username: "toto", admin: false }} />
+            </Box>
+            <Box sx={{ display: "flex", marginTop: "1em" }}>
+                <TournamentSummary
+                    tournament={{
+                        id: 1,
+                        type: 1,
+                        name: "Test tournament",
+                        description: "test description",
+                        start_date: new Date(),
+                        end_date: new Date(),
+                        max_teams: 25,
+                        game_name: "Super Smash Bros Ultimate",
+                        status: 0,
+                    }}
+                />
             </Box>
         </Box>
     );
