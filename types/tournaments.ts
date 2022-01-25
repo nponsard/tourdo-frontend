@@ -1,4 +1,4 @@
-import { Team } from './teams';
+import { Team } from "./teams";
 
 export enum TournamentType {
     None = 0,
@@ -28,3 +28,7 @@ export interface TournamentTeam {
     team: Team;
     team_number: number;
 }
+
+export const FetchTournament = (id: number): Promise<Tournament> => {
+    return fetch(`/api/v1/tournaments/${id}`).then((r) => r.json());
+};

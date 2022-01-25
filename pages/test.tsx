@@ -58,11 +58,11 @@ const Test: NextPage = () => {
                     tournament={{
                         id: 1,
                         type: 1,
-                        name: "Test tournament",
+                        name: "Tournois DO",
                         description: "test description",
                         start_date: new Date(),
                         end_date: new Date(),
-                        max_teams: 25,
+                        max_teams: 10,
                         game_name: "Super Smash Bros Ultimate",
                         status: 0,
                     }}
