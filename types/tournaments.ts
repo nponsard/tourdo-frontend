@@ -18,8 +18,8 @@ export interface Tournament {
     type: TournamentType;
     name: string;
     description: string;
-    start_date: Date;
-    end_date: Date;
+    start_date: string;
+    end_date: string;
     max_teams: number;
     game_name: string;
     status: TournamentStatus;

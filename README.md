@@ -1,6 +1,9 @@
 
-## technos
 
+## possible improvements 
+- use Skeleton when loading
+
+## technos
 
 
 ### next.js
