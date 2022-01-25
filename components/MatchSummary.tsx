@@ -1,0 +1,77 @@
+import { Team } from "../types/teams";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { CardHeader, Chip, Paper } from "@mui/material";
+import { typography } from "@mui/system";
+import { User } from "../types/users";
+import { Match, MatchStatus } from "../types/matches";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
+
+const MiniTeam = ({
+    team,
+    team_number,
+    match_status,
+}: {
+    team: Team;
+    team_number: number;
+    match_status: number;
+}) => {
+    return (
+        <Box sx={{ display: "flex" }}>
+            <Typography
+                component="div"
+                sx={{
+                    overflowX: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "clip",
+                }}
+                color={
+                    team_number === match_status
+                        ? "text.primary"
+                        : "text.secondary"
+                }
+            >
+                {team.name}
+            </Typography>
+            <Box sx={{ flexGrow: 1, minWidth: "1em" }} />
+            {match_status === team_number ? (
+                <CheckIcon color="success" />
+            ) : (
+                <CloseIcon color="error" />
+            )}
+        </Box>
+    );
+};
+
+const MatchSummary = ({ match, teams }: { match: Match; teams: Team[] }) => {
+    const team1 = teams.find((t) => t.id === match.team1_id);
+    const team2 = teams.find((t) => t.id === match.team2_id);
+
+    if (team1 === undefined || team2 === undefined) {
+        return (
+            <Paper elevation={3} sx={{ width: "20em", p: "0.5rem" }}></Paper>
+        );
+    }
+
+    return (
+        <Paper elevation={3} sx={{ width: "20em", p: "0.5rem" }}>
+            <MiniTeam
+                team={team1}
+                team_number={1}
+                match_status={match.status}
+            />
+            <MiniTeam
+                team={team2}
+                team_number={2}
+                match_status={match.status}
+            />
+        </Paper>
+    );
+};
+
+export default MatchSummary;
