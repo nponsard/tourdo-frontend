@@ -17,7 +17,7 @@ const MiniTeam = ({
     team_number,
     match_status,
 }: {
-    team: Team;
+    team: Team | undefined;
     team_number: number;
     match_status: number;
 }) => {
@@ -29,6 +29,7 @@ const MiniTeam = ({
                     overflowX: "hidden",
                     whiteSpace: "nowrap",
                     textOverflow: "clip",
+                    fontStyle: team ? "normal" : "italic",
                 }}
                 color={
                     team_number === match_status
@@ -36,27 +37,33 @@ const MiniTeam = ({
                         : "text.secondary"
                 }
             >
-                {team.name}
+                {team ? team.name : "TBD"}
             </Typography>
             <Box sx={{ flexGrow: 1, minWidth: "1em" }} />
-            {match_status === team_number ? (
-                <CheckIcon color="success" />
-            ) : (
-                <CloseIcon color="error" />
-            )}
+            {match_status >= 1 &&
+                match_status <= 2 &&
+                (match_status === team_number ? (
+                    <CheckIcon color="success" />
+                ) : (
+                    <CloseIcon color="error" />
+                ))}
         </Box>
     );
 };
 
 const MatchSummary = ({ match, teams }: { match: Match; teams: Team[] }) => {
-    const team1 = teams.find((t) => t.id === match.team1_id);
-    const team2 = teams.find((t) => t.id === match.team2_id);
+    let team1 = teams.find((t) => t.id === match.team1_id);
+    let team2 = teams.find((t) => t.id === match.team2_id);
+
+    console.log(teams);
+
+    /*
 
     if (team1 === undefined || team2 === undefined) {
         return (
             <Paper elevation={3} sx={{ width: "20em", p: "0.5rem" }}></Paper>
         );
-    }
+    }*/
 
     return (
         <Paper elevation={3} sx={{ width: "20em", p: "0.5rem" }}>

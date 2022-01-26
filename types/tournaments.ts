@@ -1,3 +1,6 @@
+import useSWR from "swr";
+import { Fetcher } from "./fetcher";
+import { Match } from "./matches";
 import { Team } from "./teams";
 
 export enum TournamentType {
@@ -29,6 +32,15 @@ export interface TournamentTeam {
     team_number: number;
 }
 
-export const FetchTournament = (id: number): Promise<Tournament> => {
-    return fetch(`/api/v1/tournaments/${id}`).then((r) => r.json());
+export const FetchTournament = (id: string) => {
+    return useSWR<Tournament>(`/api/v1/tournaments/${id}`, Fetcher);
+};
+export const FetchTournamentMatches = (id: string) => {
+    return useSWR<Match[]>(`/api/v1/tournaments/${id}/matches`, Fetcher);
+};
+export const FetchTournamentTeams = (id: string) => {
+    return useSWR<{ team: Team; team_number: number }[]>(
+        `/api/v1/tournaments/${id}/teams`,
+        Fetcher
+    );
 };

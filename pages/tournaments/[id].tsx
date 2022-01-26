@@ -1,12 +1,18 @@
 import { Box, Divider, Paper, Skeleton, Typography } from "@mui/material";
 import { FetchEvent } from "next/dist/server/web/spec-compliant/fetch-event";
 import { useRouter } from "next/router";
-import { FetchTournament } from "../../types/tournaments";
+import {
+    FetchTournament,
+    FetchTournamentMatches,
+    FetchTournamentTeams,
+} from "../../types/tournaments";
 import useSWR from "swr";
-import { typography } from "@mui/system";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useState } from "react";
+import TournamentRepresentation from "../../components/TournamentRepresentation";
+import TeamSummary from "../../components/TeamSummary";
+import MatchSummary from "../../components/MatchSummary";
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -34,17 +40,21 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const Tournament = () => {
+    const router = useRouter();
+    const { id: tournamentID } = router.query;
     const [currentTab, setTab] = useState(0);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setTab(newValue);
     };
-    const router = useRouter();
-    const { id: tournamentID } = router.query;
 
-    const { data: tournament, error } = useSWR(
-        `${tournamentID}`,
-        FetchTournament
+    const { data: tournament, error } = FetchTournament(`${tournamentID}`);
+
+    const { data: matches, error: matchesError } = FetchTournamentMatches(
+        `${tournamentID}`
+    );
+    const { data: teams, error: teamsError } = FetchTournamentTeams(
+        `${tournamentID}`
     );
 
     if (!tournament) {
@@ -78,17 +88,36 @@ const Tournament = () => {
                             <Tab label="Preview" />
                             <Tab label="Teams" />
                             <Tab label="Matches" />
+                            <Tab label="Organizers" />
                         </Tabs>
                     </Box>
 
                     <TabPanel value={currentTab} index={0}>
-                        Item One
+                        <TournamentRepresentation
+                            matches={matches}
+                            tournament={tournament}
+                        />
                     </TabPanel>
                     <TabPanel value={currentTab} index={1}>
-                        Item Two
+                        {teams?.map((entry) => (
+                            <TeamSummary
+                                key={entry.team.id}
+                                team={entry.team}
+                            />
+                        ))}
                     </TabPanel>
                     <TabPanel value={currentTab} index={2}>
-                        Item Three
+                        {teams &&
+                            matches?.map((entry) => (
+                                <MatchSummary
+                                    teams={teams?.map((entry) => entry.team)}
+                                    match={entry}
+                                    key={entry.id}
+                                />
+                            ))}
+                    </TabPanel>
+                    <TabPanel value={currentTab} index={3}>
+                        Organizers
                     </TabPanel>
                 </Box>
             </Paper>
