@@ -19,13 +19,14 @@ import {
 import useSWR from "swr";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import TournamentRepresentation from "../../components/TournamentRepresentation";
 import TeamSummary from "../../components/TeamSummary";
 import MatchSummary from "../../components/MatchSummary";
 import UserSummary from "../../components/UserSummary";
 import OrganizerManager from "../../components/OrganizerManager";
 import { User } from "../../types/users";
+import { LoginContext } from "../_app";
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -57,6 +58,8 @@ const Tournament = () => {
         setTab(newValue);
     };
 
+    const { user } = useContext(LoginContext);
+
     const { data: tournament, error } = FetchTournament(`${tournamentID}`);
 
     const { data: organizers } = FetchTournamentOrganizers(`${tournamentID}`);
@@ -72,7 +75,11 @@ const Tournament = () => {
         return <div>Loading...</div>;
     }
 
-    const canEdit = true; // TODO  use context
+    const canEdit =
+        user?.admin ||
+        organizers?.some((val) => {
+            user?.id == val.id;
+        });
 
     const removeOrganizer = canEdit
         ? async (user: User) => {
@@ -92,8 +99,7 @@ const Tournament = () => {
                   (res) => {
                       if (res.status != 200)
                           throw new Error("Failed to add organizer");
-                  
-                        }
+                  }
               );
 
               organizers?.push(user);

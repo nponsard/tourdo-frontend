@@ -8,10 +8,19 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import { createContext, useState } from "react";
+import { User } from "../types/users";
+
+export const LoginContext = createContext({
+    user: null as User | null,
+    setUser: (newUser: User) => {},
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
+    const [user, setUser] = useState<User | null>(null);
+
     return (
-        <>
+        <LoginContext.Provider value={{ user, setUser }}>
             <div>
                 <Head>
                     <title>Create Next App</title>
@@ -48,7 +57,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             </div>
 
             <Component {...pageProps} />
-        </>
+        </LoginContext.Provider>
     );
 }
 
