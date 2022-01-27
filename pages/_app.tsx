@@ -10,22 +10,29 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { createContext, useState } from "react";
 import { User } from "../utils/users";
-import { LoginContext } from "../utils/auth";
+import { LoginContext, TokenManager, TokenPair } from "../utils/auth";
 
 function MyApp({ Component, pageProps }: AppProps) {
     const [user, setUser] = useState<User | null>(null);
-    const [accessToken, setAccessToken] = useState<string | null>(null);
-    const [refreshToken, setRefreshToken] = useState<string | null>(null);
+    const [tokenPair, setTokenPair] = useState<TokenPair>({
+        accessToken: "",
+        refreshToken: "",
+    });
 
-    const setAuth = (user: User, accessToken: string, refreshToken: string) => {
-        setUser(user);
-        setAccessToken(accessToken);
-        setRefreshToken(refreshToken);
+    const tokensManager: TokenManager = {
+        tokenPair,
+        setTokens: (tokens: TokenPair) => {
+            setTokenPair(tokens);
+        },
     };
 
     return (
         <LoginContext.Provider
-            value={{ user, setAuth, refreshToken, accessToken }}
+            value={{
+                user,
+                setUser: (newUser: User) => setUser(newUser),
+                tokensManager,
+            }}
         >
             <div>
                 <Head>

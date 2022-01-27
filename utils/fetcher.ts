@@ -1,4 +1,4 @@
-import { RefreshToken } from "./auth";
+import { RefreshToken, TokenManager } from "./auth";
 
 export const Fetcher = <T>(
     url: string,
@@ -17,12 +17,11 @@ export const Fetcher = <T>(
 
 export const LoggedInFetcher = async <T>(
     url: string,
-    tokens: { accessToken: string; refreshToken: string },
-    setTokens: (tokens: { accessToken: string; refreshToken: string }) => void,
+    tokens: TokenManager,
     init?: RequestInit | undefined
 ): Promise<T> => {
     const headers = {
-        Authorization: `${tokens.accessToken}`,
+        Authorization: `${tokens.tokenPair.accessToken}`,
     };
 
     const r = await fetch(url, {
@@ -31,7 +30,7 @@ export const LoggedInFetcher = async <T>(
     });
 
     if (r.status == 401) {
-        const newTokens = await RefreshToken(tokens.refreshToken);
+        const newTokens = await RefreshToken(tokens.tokenPair.refreshToken);
 
         const headers = {
             Authorization: `${newTokens.accessToken}`,
@@ -42,7 +41,7 @@ export const LoggedInFetcher = async <T>(
             headers,
         });
 
-        setTokens(newTokens);
+        tokens.setTokens(newTokens);
 
         return r.json();
     }
