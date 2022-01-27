@@ -28,8 +28,11 @@ export const RegisterUser = (username: string, password: string) => {
 };
 
 export const Login = (username: string, password: string) => {
-    return Fetcher<{  }>(`/api/v1/users/login`, {
-        method: "POST",
-        body: JSON.stringify({ username, password }),
-    });
-}
+    return Fetcher<{ accessToken: string; refreshToken: string }>(
+        `/api/v1/users/login`,
+        {
+            method: "POST",
+            body: JSON.stringify({ username, password }),
+        }
+    );
+};

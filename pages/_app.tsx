@@ -10,14 +10,23 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { createContext, useState } from "react";
 import { User } from "../utils/users";
-import { LoginContext } from '../utils/auth';
-
+import { LoginContext } from "../utils/auth";
 
 function MyApp({ Component, pageProps }: AppProps) {
     const [user, setUser] = useState<User | null>(null);
+    const [accessToken, setAccessToken] = useState<string | null>(null);
+    const [refreshToken, setRefreshToken] = useState<string | null>(null);
+
+    const setAuth = (user: User, accessToken: string, refreshToken: string) => {
+        setUser(user);
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+    };
 
     return (
-        <LoginContext.Provider value={{ user, setAuth: setUser }}>
+        <LoginContext.Provider
+            value={{ user, setAuth, refreshToken, accessToken }}
+        >
             <div>
                 <Head>
                     <title>Create Next App</title>
