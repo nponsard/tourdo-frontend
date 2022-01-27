@@ -11,6 +11,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { createContext, useState } from "react";
 import { User } from "../utils/users";
 import { LoginContext, TokenManager, TokenPair } from "../utils/auth";
+import Link from "next/link";
 
 function MyApp({ Component, pageProps }: AppProps) {
     const [user, setUser] = useState<User | null>(null);
@@ -61,7 +62,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                 component="div"
                                 sx={{ flexGrow: 1 }}
                             >
-                                News
+                                <Link href={"/"}>Tournaments</Link>
                             </Typography>
                             <Button color="inherit">Login</Button>
                         </Toolbar>
