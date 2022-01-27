@@ -15,7 +15,7 @@ import {
     FetchTournamentOrganizers,
     FetchTournamentTeams,
     RemoveTournamentOrganizer,
-} from "../../types/tournaments";
+} from "../../utils/tournaments";
 import useSWR from "swr";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -25,8 +25,8 @@ import TeamSummary from "../../components/TeamSummary";
 import MatchSummary from "../../components/MatchSummary";
 import UserSummary from "../../components/UserSummary";
 import OrganizerManager from "../../components/OrganizerManager";
-import { User } from "../../types/users";
-import { LoginContext } from "../_app";
+import { User } from "../../utils/users";
+import { LoginContext } from "../../utils/auth";
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;

@@ -1,4 +1,4 @@
-import { Team } from "../types/teams";
+import { Team } from "../utils/teams";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { CardHeader, Paper } from "@mui/material";
 import { typography } from "@mui/system";
-import { Tournament } from "../types/tournaments";
+import { Tournament } from "../utils/tournaments";
 
 const TournamentSummary = ({ tournament }: { tournament: Tournament }) => {
     return (

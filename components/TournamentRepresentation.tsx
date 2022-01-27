@@ -1,5 +1,5 @@
-import { Match } from "../types/matches";
-import { Tournament } from "../types/tournaments";
+import { Match } from "../utils/matches";
+import { Tournament } from "../utils/tournaments";
 
 const TournamentRepresentation = ({
     matches,

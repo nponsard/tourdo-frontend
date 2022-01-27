@@ -1,4 +1,4 @@
-import { Team } from "../types/teams";
+import { Team } from "../utils/teams";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -15,9 +15,14 @@ import {
 } from "@mui/material";
 import { typography } from "@mui/system";
 import { useState } from "react";
-import { SearchUser, SearchUserFetch } from "../types/users";
+import { RegisterUser, SearchUser, SearchUserFetch } from "../utils/users";
+import Link from "next/link";
+import { Router, useRouter } from "next/router";
 
 const Register = () => {
+    const router = useRouter();
+
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -97,13 +102,30 @@ const Register = () => {
             setErrorMessage("Username must be at least 3 characters long");
             return;
         }
+
+        RegisterUser(username, password)
+            .then((res) => {
+                setShowSuccessSnack(true);
+            })
+            .catch((err) => {
+                if (err.message) setErrorMessage(`${err.message}`);
+                else
+                    setErrorMessage("There was an error contacting the server");
+            });
     };
-    console.log( errorMessage)
 
     const closeSuccessSnack = () => {
+
+
         setShowSuccessSnack(false);
 
-        // TODO : log in user
+
+
+        
+
+
+
+        router.back();
     };
 
     return (
@@ -182,6 +204,12 @@ const Register = () => {
                         <Button variant="contained" onClick={handleRegister}>
                             Register
                         </Button>
+                        <Typography>
+                            Already have an account ?{" "}
+                            <Typography component="a" color="primary">
+                                <Link href="/login">Log in here</Link>
+                            </Typography>
+                        </Typography>
                     </Stack>
                 </Box>
             </Paper>

@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { NextPage } from "next";
 import MatchSummary from "../components/MatchSummary";
-import Register from "../components/Register";
+import Register from "./register";
 import TeamSummary from "../components/TeamSummary";
 import TournamentSummary from "../components/TournamentSummary";
 import UserSummary from "../components/UserSummary";
