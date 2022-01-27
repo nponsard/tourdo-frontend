@@ -13,3 +13,7 @@ export const SearchUser = (username: string) => {
         Fetcher
     );
 };
+
+export const SearchUserFetch = (username: string) => {
+    return Fetcher<{ users: User[]; total: number }>(`/api/v1/users?search=${username}`);
+};
