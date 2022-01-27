@@ -1,9 +1,17 @@
-import { Box, Divider, Paper, Skeleton, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Divider,
+    Paper,
+    Skeleton,
+    Typography,
+} from "@mui/material";
 import { FetchEvent } from "next/dist/server/web/spec-compliant/fetch-event";
 import { useRouter } from "next/router";
 import {
     FetchTournament,
     FetchTournamentMatches,
+    FetchTournamentOrganizers,
     FetchTournamentTeams,
 } from "../../types/tournaments";
 import useSWR from "swr";
@@ -13,6 +21,8 @@ import { useState } from "react";
 import TournamentRepresentation from "../../components/TournamentRepresentation";
 import TeamSummary from "../../components/TeamSummary";
 import MatchSummary from "../../components/MatchSummary";
+import UserSummary from "../../components/UserSummary";
+import OrganizerManager from "../../components/OrganizerManager";
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -50,6 +60,8 @@ const Tournament = () => {
 
     const { data: tournament, error } = FetchTournament(`${tournamentID}`);
 
+    const { data: organizers } = FetchTournamentOrganizers(`${tournamentID}`);
+
     const { data: matches, error: matchesError } = FetchTournamentMatches(
         `${tournamentID}`
     );
@@ -61,11 +73,13 @@ const Tournament = () => {
         return <div>Loading...</div>;
     }
 
+    const canEdit = true; // TODO  use context
+
     return (
         <>
             <Typography>{JSON.stringify(tournament)}</Typography>
 
-            <Paper elevation={3} sx={{ padding: "1em", m: "1em" }}>
+            <Box sx={{ padding: "1em", m: "1em" }}>
                 <Box>
                     <Typography variant="h2">{tournament?.name}</Typography>
                     <Typography color="text.secondary">
@@ -117,10 +131,18 @@ const Tournament = () => {
                             ))}
                     </TabPanel>
                     <TabPanel value={currentTab} index={3}>
-                        Organizers
+                        <OrganizerManager
+                            organizers={organizers}
+                            removeOrganizer={
+                                canEdit ? (id: number) => {} : undefined
+                            }
+                            addOrganizer={
+                                canEdit ? (id: number) => {} : undefined
+                            }
+                        />
                     </TabPanel>
                 </Box>
-            </Paper>
+            </Box>
         </>
     );
 };

@@ -2,6 +2,7 @@ import useSWR from "swr";
 import { Fetcher } from "./fetcher";
 import { Match } from "./matches";
 import { Team } from "./teams";
+import { User } from "./users";
 
 export enum TournamentType {
     None = 0,
@@ -43,4 +44,14 @@ export const FetchTournamentTeams = (id: string) => {
         `/api/v1/tournaments/${id}/teams`,
         Fetcher
     );
+};
+
+export const FetchTournamentOrganizers = (id: string) => {
+    return useSWR<User[]>(`/api/v1/tournaments/${id}/organizers`, Fetcher);
+};
+
+export const AddTournamentOrganizer = (id: string, user_id: number) => {
+    return fetch(`/api/v1/tournaments/${id}/organizers/${user_id}`, {
+        method: "PUT",
+    });
 };

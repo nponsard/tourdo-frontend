@@ -5,14 +5,30 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { CardHeader, Chip, Paper } from "@mui/material";
+import { CardHeader, Chip, IconButton, Paper } from "@mui/material";
 import { typography } from "@mui/system";
 import { User } from "../types/users";
-
-const UserSummary = ({ user }: { user: User }) => {
+import DeleteIcon from "@mui/icons-material/Delete";
+const UserSummary = ({
+    user,
+    deleteAction,
+}: {
+    user: User;
+    deleteAction?: (id: number) => any;
+}) => {
     return (
-        <Paper elevation={3} sx={{ width: "20em", p: "0.5rem" }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Paper
+            elevation={3}
+            sx={{ width: "20em", p: "0.5rem", height: "3rem" }}
+        >
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                }}
+            >
                 <Typography
                     variant="h6"
                     component="div"
@@ -34,6 +50,11 @@ const UserSummary = ({ user }: { user: User }) => {
                         />
                     )}
                 </Typography>
+                {deleteAction && (
+                    <IconButton aria-label="Delete" color="error" size="small">
+                        <DeleteIcon />
+                    </IconButton>
+                )}
             </Box>
         </Paper>
     );
