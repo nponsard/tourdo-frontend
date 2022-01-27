@@ -1,9 +1,10 @@
 import {
+    Alert,
     Autocomplete,
     Box,
     Button,
-    Input,
     Modal,
+    Snackbar,
     TextField,
     Typography,
 } from "@mui/material";
@@ -28,8 +29,8 @@ const OrganizerManager = ({
     removeOrganizer,
 }: {
     organizers: User[] | undefined;
-    addOrganizer?: (id: number) => Promise<any>;
-    removeOrganizer?: (id: number) => Promise<any>;
+    addOrganizer?: (user: User) => Promise<any>;
+    removeOrganizer?: (user: User) => Promise<any>;
 }) => {
     const [editMode, setEditMode] = useState(false);
     const [openModal, setOpenModal] = useState(false);
@@ -38,12 +39,8 @@ const OrganizerManager = ({
     const { data: searchResult } = SearchUser(search);
 
     const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
-
-    const addUser = (userID: number) => {
-        setOpenModal(false);
-
-        if (addOrganizer) addOrganizer(userID);
-    };
+    const [errorSnack, setErrorSnack] = useState(false);
+    const [successSnack, setSuccessSnack] = useState(false);
 
     const addUsers = () => {
         setOpenModal(false);
@@ -52,25 +49,59 @@ const OrganizerManager = ({
 
         if (addOrganizer) {
             for (const user of selectedUsers) {
-                promises.push(addOrganizer(user.id));
+                promises.push(addOrganizer(user));
             }
         }
         Promise.allSettled(promises)
             .then(() => {
-
-
-
-                
+                setSuccessSnack(true);
             })
             .catch(() => {
-
-
-
+                setErrorSnack(true);
             });
+    };
+
+    const removeUser = (user: User) => {
+        setOpenModal(false);
+        if (removeOrganizer) {
+            removeOrganizer(user)
+                .then(() => {
+                    setSuccessSnack(true);
+                })
+                .catch(() => {
+                    setErrorSnack(true);
+                });
+        }
     };
 
     return (
         <>
+            <Snackbar
+                open={successSnack}
+                autoHideDuration={6000}
+                onClose={() => setSuccessSnack(false)}
+            >
+                <Alert
+                    onClose={() => setSuccessSnack(false)}
+                    severity="success"
+                    sx={{ width: "100%" }}
+                >
+                    Organizers successufuly modified
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={errorSnack}
+                autoHideDuration={6000}
+                onClose={() => setErrorSnack(false)}
+            >
+                <Alert
+                    onClose={() => setErrorSnack(false)}
+                    severity="success"
+                    sx={{ width: "100%" }}
+                >
+                    An error occured
+                </Alert>
+            </Snackbar>
             <Modal
                 open={openModal}
                 onClose={() => setOpenModal(false)}
@@ -127,11 +158,11 @@ const OrganizerManager = ({
                 )}
             </Box>
 
-            {organizers?.map((entry) => (
+            {organizers?.map((user) => (
                 <UserSummary
-                    key={entry.id}
-                    user={entry}
-                    deleteAction={editMode ? removeOrganizer : undefined}
+                    key={user.id}
+                    user={user}
+                    deleteAction={editMode ? () => removeUser(user) : undefined}
                 />
             ))}
         </>

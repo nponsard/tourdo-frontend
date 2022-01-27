@@ -50,8 +50,13 @@ export const FetchTournamentOrganizers = (id: string) => {
     return useSWR<User[]>(`/api/v1/tournaments/${id}/organizers`, Fetcher);
 };
 
-export const AddTournamentOrganizer = (id: string, user_id: number) => {
-    return fetch(`/api/v1/tournaments/${id}/organizers/${user_id}`, {
+export const AddTournamentOrganizer = (tournament_id: number, user_id: number) => {
+    return fetch(`/api/v1/tournaments/${tournament_id}/organizers/${user_id}`, {
         method: "PUT",
+    });
+};
+export const RemoveTournamentOrganizer = (tournament_id: number, user_id: number) => {
+    return fetch(`/api/v1/tournaments/${tournament_id}/organizers/${user_id}`, {
+        method: "DELETE",
     });
 };
