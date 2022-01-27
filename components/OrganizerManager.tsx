@@ -53,8 +53,15 @@ const OrganizerManager = ({
             }
         }
         Promise.allSettled(promises)
-            .then(() => {
-                setSuccessSnack(true);
+            .then((res) => {
+                let error = false;
+
+                res.forEach((result) => {
+                    if (result.status === "rejected") error = true;
+                });
+
+                if (error) setErrorSnack(true);
+                else setSuccessSnack(true);
             })
             .catch(() => {
                 setErrorSnack(true);
@@ -96,7 +103,7 @@ const OrganizerManager = ({
             >
                 <Alert
                     onClose={() => setErrorSnack(false)}
-                    severity="success"
+                    severity="error"
                     sx={{ width: "100%" }}
                 >
                     An error occured

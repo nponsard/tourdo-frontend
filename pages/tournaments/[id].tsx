@@ -43,11 +43,7 @@ function TabPanel(props: TabPanelProps) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-            {value === index && (
-                <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
+            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
         </div>
     );
 }
@@ -78,10 +74,34 @@ const Tournament = () => {
 
     const canEdit = true; // TODO  use context
 
+    const removeOrganizer = canEdit
+        ? async (user: User) => {
+              await RemoveTournamentOrganizer(tournament.id, user.id).then(
+                  (res) => {
+                      if (res.status != 200)
+                          throw new Error("Failed to remove organizer");
+                  }
+              );
+
+              organizers?.filter((predicate) => predicate.id !== user.id);
+          }
+        : undefined;
+    const addOrganizer = canEdit
+        ? async (user: User) => {
+              await AddTournamentOrganizer(tournament.id, user.id).then(
+                  (res) => {
+                      if (res.status != 200)
+                          throw new Error("Failed to add organizer");
+                  
+                        }
+              );
+
+              organizers?.push(user);
+          }
+        : undefined;
+
     return (
         <>
-            <Typography>{JSON.stringify(tournament)}</Typography>
-
             <Box sx={{ padding: "1em", m: "1em" }}>
                 <Box>
                     <Typography variant="h2">{tournament?.name}</Typography>
@@ -134,30 +154,12 @@ const Tournament = () => {
                             ))}
                     </TabPanel>
                     <TabPanel value={currentTab} index={3}>
+                        <div id="test"></div>
+
                         <OrganizerManager
                             organizers={organizers}
-                            removeOrganizer={
-                                canEdit
-                                    ? async (user: User) => {
-                                          await RemoveTournamentOrganizer(
-                                              tournament.id,
-                                              user.id
-                                          );
-                                      }
-                                    : undefined
-                            }
-                            addOrganizer={
-                                canEdit
-                                    ? async (user: User) => {
-                                          await AddTournamentOrganizer(
-                                              tournament.id,
-                                              user.id
-                                          );
-
-                                          organizers?.push(user);
-                                      }
-                                    : undefined
-                            }
+                            removeOrganizer={removeOrganizer}
+                            addOrganizer={addOrganizer}
                         />
                     </TabPanel>
                 </Box>
