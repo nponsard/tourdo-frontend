@@ -1,58 +1,127 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
+import useSWR from "swr";
+import { BASE_URL } from "./api";
 import { Fetcher, LoggedInFetcher } from "./fetcher";
 import { User } from "./users";
 
 export interface TokenPair {
     accessToken: string;
     refreshToken: string;
-    valid: boolean;
 }
 export interface TokenManager {
     tokenPair: TokenPair;
     setTokens: (tokens: TokenPair) => void;
 }
 
+export function useUser() {
+    const [user, setUser] = useState<User | null>(null);
+
+    return {
+        user,
+        setUser,
+    };
+}
+
 export const LoginContext = createContext({
     user: null as User | null,
-    tokensManager: null as TokenManager | null,
+    tokenManager: {
+        tokenPair: { accessToken: "", refreshToken: "", valid: false },
+        setTokens: () => {},
+    } as TokenManager,
     setUser: (newUser: User) => {},
 });
 
-export const GetCurrentUser = async (tokens: TokenManager) => {
-    return LoggedInFetcher<User>(`/api/v1/users/me`, tokens).then((user) => {
+export const GetCurrentUser = async (
+    tokens: TokenManager,
+    invalidRedirect: () => any
+) => {
+    return LoggedInFetcher<User>(
+        `/api/v1/users/me`,
+        tokens,
+        invalidRedirect
+    ).then((user) => {
         if (!user.username) throw new Error("Invalid user");
 
         return user;
     });
 };
 
-export const RefreshToken = async (refreshToken: string) => {
-    return Fetcher<{ accessToken: string; refreshToken: string }>(
-        `/api/v1/users/refresh`,
-        {
-            method: "POST",
-            body: JSON.stringify({ refresh_token: refreshToken }),
-        }
-    ).then((data) => {
-        if (!data.accessToken || !data.refreshToken)
-            throw new Error("Invalid token");
-
-        return data;
+export const useRefreshToken = async (refreshToken: string) => {
+    return BaseFetch<TokenPair>("/tokens/refresh", {
+        method: "POST",
+        body: JSON.stringify({ refresh_token: refreshToken }),
     });
 };
 
-export const LoginUser = async (username: string, password: string) => {
-    return Fetcher<{ accessToken: string; refreshToken: string }>(
+export const BaseFetch = <T>(
+    endpoint: string,
+    init?: RequestInit | undefined,
+    user?: {
+        user: User | null;
+        tokenManager: TokenManager;
+        setUser: (newUser: User) => void;
+    }
+) => {
+    const fetcher = () => {
+        return fetch(BASE_URL + endpoint, {
+            headers: {
+                Authorization: `${user?.tokenManager.tokenPair.accessToken}`,
+                ...init?.headers,
+            },
+        }).then(async (res) => {
+            const body = await res.json();
+
+            if (res.status >= 400) {
+                throw { message: body.message, status: res.status };
+            }
+
+            return body;
+        });
+    };
+
+    return useSWR<T>(endpoint, fetcher);
+};
+
+export const UseApi = <T>(endpoint: string, init?: RequestInit | undefined) => {
+    const user = useContext(LoginContext);
+
+    const result = BaseFetch<T>(endpoint, user, init);
+
+    if (result.error) {
+        if (result.error.status === 401) {
+            const refreshToken = user.tokenManager.tokenPair.refreshToken;
+
+            const refreshResult = useRefreshToken(refreshToken)
+            
+        }
+    }
+};
+
+export const LoginUser = async (
+    username: string,
+    password: string,
+    tokenManager: TokenManager
+) => {
+    return Fetcher<{ access_token: string; refresh_token: string }>(
         `/api/v1/users/login`,
         {
             method: "POST",
             body: JSON.stringify({ username, password }),
         }
     ).then((data) => {
-        if (!data.accessToken || !data.refreshToken)
-            throw new Error("Invalid token");
+        if (!data.access_token || !data.refresh_token)
+            throw new Error("Invalid tokens received");
 
-        return data;
+        tokenManager.setTokens({
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+            valid: true,
+        });
+
+        return {
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+        };
     });
 };
 

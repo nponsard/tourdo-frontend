@@ -14,10 +14,14 @@ import {
     CheckLocalStorage,
     GetCurrentUser,
     LoginContext,
+    SaveLocalStorage,
     TokenManager,
     TokenPair,
 } from "../utils/auth";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { Menu, MenuItem } from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 function MyApp({ Component, pageProps }: AppProps) {
     const [user, setUser] = useState<User | null>(null);
@@ -26,19 +30,29 @@ function MyApp({ Component, pageProps }: AppProps) {
         refreshToken: "",
         valid: false,
     });
+    const router = useRouter();
 
     const tokensManager: TokenManager = {
         tokenPair,
         setTokens: (tokens: TokenPair) => {
-
-            // TODO : update user
-            
             setTokenPair(tokens);
+
+            tokensManager.tokenPair = tokens;
+
+            GetCurrentUser(tokensManager, () => {
+                router.push("/login");
+            }).then((user) => {
+                console.log(user);
+                setUser(user);
+                SaveLocalStorage(tokensManager)
+            });
         },
     };
 
     useEffect(() => {
         const tokens = CheckLocalStorage();
+
+        console.log(tokens);
 
         if (tokens) {
             tokensManager.setTokens({
@@ -47,7 +61,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                 valid: true,
             });
 
-            GetCurrentUser(tokensManager).then((user) => {
+            GetCurrentUser(tokensManager, () => {
+              //  router.push("/login");
+            }).then((user) => {
                 setUser(user);
             });
         }
@@ -57,12 +73,22 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     console.log(user);
 
+    const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(
+        null
+    );
+
+    const handleUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setUserMenuAnchor(event.currentTarget);
+    };
+    const handleUserMenuClose = () => {
+        setUserMenuAnchor(null);
+    };
     return (
         <LoginContext.Provider
             value={{
                 user,
                 setUser: (newUser: User) => setUser(newUser),
-                tokensManager,
+                tokenManager: tokensManager,
             }}
         >
             <div>
@@ -94,9 +120,48 @@ function MyApp({ Component, pageProps }: AppProps) {
                             >
                                 <Link href={"/"}>Tournaments</Link>
                             </Typography>
-                            <Link href="/login" passHref>
-                                <Button color="inherit">Login</Button>
-                            </Link>
+
+                            {user ? (
+                                <div>
+                                    <Button
+                                        aria-label="account of current user"
+                                        aria-controls="menu-appbar"
+                                        aria-haspopup="true"
+                                        onClick={handleUserMenu}
+                                        color="inherit"
+                                        sx={{ textTransform: "none" }}
+                                        endIcon={<ArrowDropDownIcon />}
+                                    >
+                                        {user.username}
+                                    </Button>
+                                    <Menu
+                                        id="user-menu"
+                                        anchorEl={userMenuAnchor}
+                                        anchorOrigin={{
+                                            vertical: "top",
+                                            horizontal: "right",
+                                        }}
+                                        keepMounted
+                                        transformOrigin={{
+                                            vertical: "top",
+                                            horizontal: "right",
+                                        }}
+                                        open={Boolean(userMenuAnchor)}
+                                        onClose={handleUserMenuClose}
+                                    >
+                                        <MenuItem onClick={handleUserMenuClose}>
+                                            Profile
+                                        </MenuItem>
+                                        <MenuItem onClick={handleUserMenuClose}>
+                                            Logout
+                                        </MenuItem>
+                                    </Menu>
+                                </div>
+                            ) : (
+                                <Link href="/login" passHref>
+                                    <Button color="inherit">Login</Button>
+                                </Link>
+                            )}
                         </Toolbar>
                     </AppBar>
                 </Box>

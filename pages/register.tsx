@@ -41,7 +41,7 @@ const Register = () => {
     if (context.user) {
         // redirect to login if token is invalid but an user is present
 
-        if (context.tokensManager && !context.tokensManager.tokenPair.valid)
+        if (context.tokenManager && !context.tokenManager.tokenPair.valid)
             router.push("/login");
         else router.push("/");
     }

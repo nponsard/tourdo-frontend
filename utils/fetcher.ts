@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { RefreshToken, TokenManager } from "./auth";
+import { useRefreshToken, TokenManager } from "./auth";
 
 export const Fetcher = <T>(
     url: string,
@@ -19,10 +19,9 @@ export const Fetcher = <T>(
 export const LoggedInFetcher = async <T>(
     url: string,
     tokens: TokenManager,
+    invalidRedirect: () => void,
     init?: RequestInit | undefined
 ): Promise<T> => {
-    const router = useRouter();
-
     const headers = {
         Authorization: `${tokens.tokenPair.accessToken}`,
     };
@@ -33,7 +32,7 @@ export const LoggedInFetcher = async <T>(
     });
 
     if (r.status == 401) {
-        const newTokens = await RefreshToken(
+        const newTokens = await useRefreshToken(
             tokens.tokenPair.refreshToken
         ).catch((e) => {
             console.log(e);
@@ -48,7 +47,7 @@ export const LoggedInFetcher = async <T>(
         });
 
         if (!newTokens) {
-            router.push("/login");
+            invalidRedirect();
             throw new Error("Invalid token");
         }
 

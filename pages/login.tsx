@@ -49,7 +49,7 @@ const Login = () => {
     };
 
     const handleLogin = () => {
-        LoginUser(username, password)
+        LoginUser(username, password, context.tokenManager)
             .then((res) => {
                 router.push("/");
             })
@@ -62,7 +62,7 @@ const Login = () => {
 
     // redirect to home page if already logged in
 
-    if (context.user) router.push("/");
+    if (context.user) return router.push("/");
 
     return (
         <>
