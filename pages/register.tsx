@@ -39,7 +39,6 @@ const Register = () => {
     // redirect to home page if already logged in
 
     if (context.user) {
-
         // redirect to login if token is invalid but an user is present
 
         if (context.tokensManager && !context.tokensManager.tokenPair.valid)
@@ -210,9 +209,11 @@ const Register = () => {
                         </Button>
                         <Typography>
                             Already have an account ?{" "}
-                            <Typography component="a" color="primary">
-                                <Link href="/login">Log in here</Link>
-                            </Typography>
+                            <Link href="/login" passHref>
+                                <Typography component="a" color="primary">
+                                    Log in here
+                                </Typography>
+                            </Link>
                         </Typography>
                     </Stack>
                 </Box>

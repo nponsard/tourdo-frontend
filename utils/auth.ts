@@ -40,6 +40,22 @@ export const RefreshToken = async (refreshToken: string) => {
         return data;
     });
 };
+
+export const LoginUser = async (username: string, password: string) => {
+    return Fetcher<{ accessToken: string; refreshToken: string }>(
+        `/api/v1/users/login`,
+        {
+            method: "POST",
+            body: JSON.stringify({ username, password }),
+        }
+    ).then((data) => {
+        if (!data.accessToken || !data.refreshToken)
+            throw new Error("Invalid token");
+
+        return data;
+    });
+};
+
 /*
 export const CheckAuth = async (accessToken: string, refreshToken: string) => {
     try {

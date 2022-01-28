@@ -18,7 +18,7 @@ import { useContext, useState } from "react";
 import { RegisterUser, SearchUser, SearchUserFetch } from "../utils/users";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
-import { LoginContext } from "../utils/auth";
+import { LoginContext, LoginUser } from "../utils/auth";
 
 const Login = () => {
     const router = useRouter();
@@ -34,6 +34,8 @@ const Login = () => {
 
     if (context.user) router.push("/");
 
+    console.log(context);
+
     const handleUsernameChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
@@ -47,19 +49,15 @@ const Login = () => {
     };
 
     const handleLogin = () => {
-
-        // TODO : log in
-
-        /*
         LoginUser(username, password)
             .then((res) => {
-                setShowSuccessSnack(true);
+                router.push("/");
             })
             .catch((err) => {
                 if (err.message) setErrorMessage(`${err.message}`);
                 else
                     setErrorMessage("There was an error contacting the server");
-            });*/
+            });
     };
 
     // redirect to home page if already logged in
@@ -119,9 +117,11 @@ const Login = () => {
                         </Button>
                         <Typography>
                             Don’t have an account ?{" "}
-                            <Typography component="a" color="primary">
-                                <Link href="/register">Register here</Link>
-                            </Typography>
+                            <Link href="/register" passHref>
+                                <Typography component="a" color="primary">
+                                    Register here
+                                </Typography>
+                            </Link>
                         </Typography>
                     </Stack>
                 </Box>

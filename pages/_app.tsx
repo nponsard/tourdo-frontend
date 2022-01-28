@@ -31,11 +31,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         tokenPair,
         setTokens: (tokens: TokenPair) => {
 
-
-            setTokenPair(tokens);
-        
+            // TODO : update user
             
-        
+            setTokenPair(tokens);
         },
     };
 
@@ -56,6 +54,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    console.log(user);
 
     return (
         <LoginContext.Provider
@@ -94,7 +94,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                             >
                                 <Link href={"/"}>Tournaments</Link>
                             </Typography>
-                            <Button color="inherit">Login</Button>
+                            <Link href="/login" passHref>
+                                <Button color="inherit">Login</Button>
+                            </Link>
                         </Toolbar>
                     </AppBar>
                 </Box>
