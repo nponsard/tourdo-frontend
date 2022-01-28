@@ -25,10 +25,17 @@ import { Menu, MenuItem } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 function MyApp({ Component, pageProps }: AppProps) {
-    const [user, setUser] = useState<User | undefined>(undefined);
-    const [tokenPair, setTokenPair] = useState<TokenPair | undefined>(
+    const [user, setUser] = useState<User | undefined | null>(undefined);
+    const [tokenPair, _setTokenPair] = useState<TokenPair | undefined | null>(
         undefined
     );
+
+    const setTokenPair = (value: TokenPair | undefined | null) => {
+        if (value) SaveLocalStorage(value);
+
+        _setTokenPair(value);
+    };
+
     const [validToken, setValidToken] = useState<boolean>(false);
 
     const router = useRouter();
@@ -36,7 +43,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     // charge les tokens au lancement
 
     useEffect(() => {
-        setTokenPair(CheckLocalStorage());
+        _setTokenPair(CheckLocalStorage());
     }, []);
 
     useEffect(() => {
@@ -47,15 +54,15 @@ function MyApp({ Component, pageProps }: AppProps) {
                     if (data.id != undefined && data.username != undefined) {
                         setUser(data);
                     } else {
-                        setUser(undefined);
+                        setUser(null);
                     }
                 })
                 .catch((err) => {
                     console.log(err);
-                    setTokenPair(undefined);
+                    setTokenPair(null);
                 });
         } else {
-            setUser(undefined);
+            setUser(null);
         }
     }, [tokenPair]);
 
@@ -78,7 +85,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             CallLogout(tokenPair, setTokenPair)
                 .then(() => {
                     ClearLocalStorage();
-
                     setTokenPair(undefined);
                 })
                 .catch((err) => {
@@ -93,9 +99,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <LoginContext.Provider
             value={{
                 user,
-                setUser: (newUser: User) => setUser(newUser),
+                setUser: (newUser: User | undefined | null) => setUser(newUser),
                 tokenPair,
-                setTokenPair: (newTokenPair: TokenPair) =>
+                setTokenPair: (newTokenPair: TokenPair | undefined | null) =>
                     setTokenPair(newTokenPair),
                 validToken,
                 setValidToken: (newValidToken: boolean) =>
@@ -131,6 +137,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                             >
                                 <Link href={"/"}>Tournaments</Link>
                             </Typography>
+
+                            {user === undefined && (<div>loading</div>)}
+
 
                             {tokenPair && user ? (
                                 <div>

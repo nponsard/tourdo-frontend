@@ -19,11 +19,11 @@ export function useUser() {
 }
 
 export const LoginContext = createContext({
-    user: undefined as User | undefined,
-    setUser: (newUser: User) => {},
+    user: undefined as User | undefined | null,
+    setUser: (newUser: User | undefined | null) => {},
 
-    tokenPair: undefined as TokenPair | undefined,
-    setTokenPair: (newTokenPair: TokenPair) => {},
+    tokenPair: undefined as TokenPair | undefined | null,
+    setTokenPair: (newTokenPair: TokenPair | undefined | null) => {},
 
     setValidToken: (valid: boolean) => {},
     validToken: false,
@@ -39,7 +39,7 @@ export const refreshToken = async (refresh_token: string) => {
 export const BaseFetch = async <T>(
     endpoint: string,
     init?: RequestInit | undefined,
-    tokenPair?: TokenPair
+    tokenPair?: TokenPair | null
 ) => {
     const res = await fetch(BASE_URL + endpoint, {
         headers: {
@@ -64,7 +64,7 @@ export interface ApiError {
 export const CallApi = async <T>(
     endpoint: string,
     init?: RequestInit | undefined,
-    tokenPair?: TokenPair,
+    tokenPair?: TokenPair | null,
     setTokenPair?: (newTokenPair: TokenPair) => any
 ) => {
     return BaseFetch<T>(endpoint, init, tokenPair).catch(async (e) => {
