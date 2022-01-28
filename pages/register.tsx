@@ -38,13 +38,8 @@ const Register = () => {
 
     // redirect to home page if already logged in
 
-    if (context.user) {
-        // redirect to login if token is invalid but an user is present
+    if (context.user && context.validToken) router.push("/");
 
-        if (context.tokenManager && !context.tokenManager.tokenPair.valid)
-            router.push("/login");
-        else router.push("/");
-    }
     const handleUsernameChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {

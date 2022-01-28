@@ -1,11 +1,12 @@
+import { endianness } from "os";
 import { createContext, useContext, useState } from "react";
 import useSWR from "swr";
 import { BASE_URL } from "./api";
 import { User } from "./users";
 
 export interface TokenPair {
-    accessToken: string;
-    refreshToken: string;
+    access_token: string;
+    refresh_token: string;
 }
 
 export function useUser() {
@@ -28,10 +29,10 @@ export const LoginContext = createContext({
     validToken: false,
 });
 
-export const refreshToken = async (refreshToken: string) => {
-    return BaseFetch("tokens/refresh", {
+export const refreshToken = async (refresh_token: string) => {
+    return BaseFetch("/tokens/refresh", {
         method: "POST",
-        body: JSON.stringify({ refresh_token: refreshToken }),
+        body: JSON.stringify({ refresh_token }),
     });
 };
 
@@ -42,10 +43,12 @@ export const BaseFetch = async <T>(
 ) => {
     const res = await fetch(BASE_URL + endpoint, {
         headers: {
-            Authorization: tokenPair?.accessToken ?? "",
+            Authorization: tokenPair?.access_token ?? "",
             ...init?.headers,
         },
+        ...init,
     });
+
     const body = await res.json();
     if (res.status >= 400) {
         throw { message: body.message, status: res.status };
@@ -53,34 +56,65 @@ export const BaseFetch = async <T>(
     return await body;
 };
 
-export const UseApi = <T>(endpoint: string, init?: RequestInit | undefined) => {
-    const [data, setData] = useState<T | null>(null);
-    const [error, setError] = useState<any>(null);
+export interface ApiError {
+    message: string;
+    status: number;
+}
 
+export const CallApi = async <T>(
+    endpoint: string,
+    init?: RequestInit | undefined,
+    tokenPair?: TokenPair,
+    setTokenPair?: (newTokenPair: TokenPair) => any
+) => {
+    return BaseFetch<T>(endpoint, init, tokenPair).catch(async (e) => {
+        if (e.status != 401 || tokenPair == undefined) throw e;
+
+        const newTokens = await refreshToken(tokenPair.refresh_token);
+
+        if (setTokenPair) setTokenPair(newTokens as TokenPair);
+        return BaseFetch<T>(endpoint, init, newTokens);
+    });
+};
+
+export const UseApi = <T>(endpoint: string, init?: RequestInit | undefined) => {
     const loginCtx = useContext(LoginContext);
 
-    BaseFetch<T>(endpoint, init, loginCtx.tokenPair)
-        .then((data) => {
-            setData(data);
-        })
-        .catch(async (e) => {
-            try {
-                if (e.status != 401 || loginCtx.tokenPair == undefined) throw e;
+    const fetcher = () => {
+        return CallApi(
+            endpoint,
+            init,
+            loginCtx.tokenPair,
+            loginCtx.setTokenPair
+        );
+        //     .then((value) => setData(value))
+        //     .catch((e) => setError(e));
+    };
+    return useSWR(endpoint, fetcher);
+};
 
-                const newTokens = await refreshToken(
-                    loginCtx.tokenPair.refreshToken
-                );
+export const CallLogin = async (
+    username: string,
+    password: string
+): Promise<TokenPair> => {
+    return CallApi<TokenPair>("/users/login", {
+        body: JSON.stringify({ username, password }),
+        method: "POST",
+    });
+};
 
-                await BaseFetch<T>(endpoint, init, newTokens).then((data) => {
-                    setData(data);
-                });
-                loginCtx.setTokenPair(newTokens);
-            } catch (e) {
-                setError(e);
-            }
-        });
-
-    return { data, error };
+export const CallLogout = async (
+    tokenPair: TokenPair,
+    setTokenPair: (newTokenPair: TokenPair) => any
+): Promise<void> => {
+    return CallApi<void>(
+        "/users/logout",
+        {
+            method: "POST",
+        },
+        tokenPair,
+        setTokenPair
+    );
 };
 
 /*
@@ -101,48 +135,53 @@ export const LoginUser = async (
             throw new Error("Invalid tokens received");
 
         tokenManager.setTokens({
-            accessToken: data.access_token,
-            refreshToken: data.refresh_token,
+            access_token: data.access_token,
+            refresh_token: data.refresh_token,
             valid: true,
         });
 
         return {
-            accessToken: data.access_token,
-            refreshToken: data.refresh_token,
+            access_token: data.access_token,
+            refresh_token: data.refresh_token,
         };
     });
 };*/
 
 /*
-export const CheckAuth = async (accessToken: string, refreshToken: string) => {
+export const CheckAuth = async (access_token: string, refresh_token: string) => {
     try {
-        const user = await GetCurrentUser(accessToken);
-        return { user, accessToken, refreshToken };
+        const user = await GetCurrentUser(access_token);
+        return { user, access_token, refresh_token };
     } catch (e) {
         console.log(e);
 
-        const newTokens = await RefreshToken(refreshToken);
+        const newTokens = await RefreshToken(refresh_token);
 
-        const user = await GetCurrentUser(newTokens.accessToken);
+        const user = await GetCurrentUser(newTokens.access_token);
 
         return {
             user,
-            accessToken: newTokens.accessToken,
-            refreshToken: newTokens.refreshToken,
+            access_token: newTokens.access_token,
+            refresh_token: newTokens.refresh_token,
         };
     }
 };*/
 
 export const CheckLocalStorage = () => {
-    const accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
-    if (accessToken && refreshToken) {
-        return { accessToken, refreshToken };
+    const access_token = localStorage.getItem("access_token");
+    const refresh_token = localStorage.getItem("refresh_token");
+    if (access_token && refresh_token) {
+        return { access_token, refresh_token };
     }
     return undefined;
 };
 
 export const SaveLocalStorage = (tokenPair: TokenPair) => {
-    localStorage.setItem("accessToken", tokenPair.accessToken);
-    localStorage.setItem("refreshToken", tokenPair.refreshToken);
+    localStorage.setItem("access_token", tokenPair.access_token);
+    localStorage.setItem("refresh_token", tokenPair.refresh_token);
+};
+
+export const ClearLocalStorage = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
 };

@@ -18,7 +18,7 @@ import { useContext, useState } from "react";
 import { RegisterUser, SearchUser, SearchUserFetch } from "../utils/users";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
-import { LoginContext, LoginUser } from "../utils/auth";
+import { CallLogin, LoginContext } from "../utils/auth";
 
 const Login = () => {
     const router = useRouter();
@@ -49,20 +49,19 @@ const Login = () => {
     };
 
     const handleLogin = () => {
-        LoginUser(username, password, context.tokenManager)
-            .then((res) => {
-                router.push("/");
+        CallLogin(username, password)
+            .then((value) => {
+                context.setTokenPair(value);
             })
-            .catch((err) => {
-                if (err.message) setErrorMessage(`${err.message}`);
-                else
-                    setErrorMessage("There was an error contacting the server");
+            .catch((error) => {
+                if (error.message) setErrorMessage(error.message);
+                else setErrorMessage("An error occured");
             });
     };
 
     // redirect to home page if already logged in
 
-    if (context.user) return router.push("/");
+    if (context.user && context.validToken) return router.push("/");
 
     return (
         <>

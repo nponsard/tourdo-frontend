@@ -9,13 +9,14 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { createContext, useEffect, useState } from "react";
-import { User } from "../utils/users";
+import { GetCurrentUser, User } from "../utils/users";
 import {
+    CallApi,
+    CallLogout,
     CheckLocalStorage,
-    GetCurrentUser,
+    ClearLocalStorage,
     LoginContext,
     SaveLocalStorage,
-    TokenManager,
     TokenPair,
 } from "../utils/auth";
 import Link from "next/link";
@@ -28,31 +29,35 @@ function MyApp({ Component, pageProps }: AppProps) {
     const [tokenPair, setTokenPair] = useState<TokenPair | undefined>(
         undefined
     );
-
-    
+    const [validToken, setValidToken] = useState<boolean>(false);
 
     const router = useRouter();
 
+    // charge les tokens au lancement
+
     useEffect(() => {
-        const tokens = CheckLocalStorage();
-
-        console.log(tokens);
-
-        if (tokens) {
-
-
-
-
-
-            GetCurrentUser(tokensManager, () => {
-                //  router.push("/login");
-            }).then((user) => {
-                setUser(user);
-            });
-        }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        setTokenPair(CheckLocalStorage());
     }, []);
+
+    useEffect(() => {
+        if (tokenPair) {
+            GetCurrentUser(tokenPair, setTokenPair)
+                .then((data) => {
+                    console.log(data);
+                    if (data.id != undefined && data.username != undefined) {
+                        setUser(data);
+                    } else {
+                        setUser(undefined);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    setTokenPair(undefined);
+                });
+        } else {
+            setUser(undefined);
+        }
+    }, [tokenPair]);
 
     console.log(user);
 
@@ -66,12 +71,35 @@ function MyApp({ Component, pageProps }: AppProps) {
     const handleUserMenuClose = () => {
         setUserMenuAnchor(null);
     };
+
+    const handleLogout = () => {
+        if (tokenPair) {
+            setUserMenuAnchor(null);
+            CallLogout(tokenPair, setTokenPair)
+                .then(() => {
+                    ClearLocalStorage();
+
+                    setTokenPair(undefined);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    };
+
+    console.log("tokenPair : ", tokenPair);
+
     return (
         <LoginContext.Provider
             value={{
                 user,
                 setUser: (newUser: User) => setUser(newUser),
-                tokenManager: tokensManager,
+                tokenPair,
+                setTokenPair: (newTokenPair: TokenPair) =>
+                    setTokenPair(newTokenPair),
+                validToken,
+                setValidToken: (newValidToken: boolean) =>
+                    setValidToken(newValidToken),
             }}
         >
             <div>
@@ -104,7 +132,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                 <Link href={"/"}>Tournaments</Link>
                             </Typography>
 
-                            {user ? (
+                            {tokenPair && user ? (
                                 <div>
                                     <Button
                                         aria-label="account of current user"
@@ -132,10 +160,13 @@ function MyApp({ Component, pageProps }: AppProps) {
                                         open={Boolean(userMenuAnchor)}
                                         onClose={handleUserMenuClose}
                                     >
-                                        <MenuItem onClick={handleUserMenuClose}>
-                                            Profile
-                                        </MenuItem>
-                                        <MenuItem onClick={handleUserMenuClose}>
+                                        <Link
+                                            href={`/users/${user.id}`}
+                                            passHref
+                                        >
+                                            <MenuItem>Profile</MenuItem>
+                                        </Link>
+                                        <MenuItem onClick={handleLogout}>
                                             Logout
                                         </MenuItem>
                                     </Menu>
