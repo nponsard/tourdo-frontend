@@ -9,6 +9,8 @@ export interface TokenPair {
     refresh_token: string;
 }
 
+export type TokenPairSetter = (newTokenPair: TokenPair) => void;
+
 export function useUser() {
     const [user, setUser] = useState<User | null>(null);
 

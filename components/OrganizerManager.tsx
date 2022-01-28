@@ -69,13 +69,17 @@ const OrganizerManager = ({
     };
 
     const removeUser = (user: User) => {
-        setOpenModal(false);
+
+        console.log(user)
+
         if (removeOrganizer) {
             removeOrganizer(user)
-                .then(() => {
+                .then((v) => {
+                    console.log(v)
                     setSuccessSnack(true);
                 })
-                .catch(() => {
+                .catch((e) => {
+                    console.log(e)
                     setErrorSnack(true);
                 });
         }
@@ -169,7 +173,9 @@ const OrganizerManager = ({
                 <UserSummary
                     key={user.id}
                     user={user}
-                    deleteAction={editMode ? () => removeUser(user) : undefined}
+                    deleteAction={editMode ? () =>{ 
+                        console.log(user)
+                        removeUser(user)} : undefined}
                 />
             ))}
         </>

@@ -1,8 +1,15 @@
 import { appendFile } from "fs";
 import useSWR from "swr";
-import { BaseFetch, CallApi, TokenPair, UseApi as useApi } from "./auth";
+import {
+    BaseFetch,
+    CallApi,
+    TokenPair,
+    UseApi,
+    UseApi as useApi,
+} from "./auth";
 
 import { Fetcher } from "./fetcher";
+import { Team } from "./teams";
 export interface User {
     id: number;
     username: string;
@@ -44,4 +51,12 @@ export const GetCurrentUser = (
     setTokenPair?: (newTokenPair: TokenPair) => any
 ) => {
     return CallApi(`/users/me`, undefined, tokenPair, setTokenPair);
+};
+
+export const useGetUser = (id: string) => {
+    return UseApi<User>(`/users/${id}`);
+};
+
+export const useGetTeamsOfUser = (id: string) => {
+    return UseApi<Team[]>(`/users/${id}/teams`);
 };

@@ -53,6 +53,7 @@ const Tournament = () => {
     const router = useRouter();
     const { id: tournamentID } = router.query;
     const [currentTab, setTab] = useState(0);
+    const context = useContext(LoginContext);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setTab(newValue);
@@ -83,26 +84,31 @@ const Tournament = () => {
 
     const removeOrganizer = canEdit
         ? async (user: User) => {
-              await RemoveTournamentOrganizer(tournament.id, user.id).then(
-                  (res) => {
-                      if (res.status != 200)
-                          throw new Error("Failed to remove organizer");
-                  }
-              );
-
-              organizers?.filter((predicate) => predicate.id !== user.id);
+              console.log(user);
+              if (context.tokenPair && context.setTokenPair) {
+                  await RemoveTournamentOrganizer(
+                      tournament.id,
+                      user.id,
+                      context.tokenPair,
+                      context.setTokenPair
+                  );
+                  organizers?.filter((predicate) => predicate.id !== user.id);
+              }
           }
         : undefined;
+
+    console.log(removeOrganizer);
     const addOrganizer = canEdit
         ? async (user: User) => {
-              await AddTournamentOrganizer(tournament.id, user.id).then(
-                  (res) => {
-                      if (res.status != 200)
-                          throw new Error("Failed to add organizer");
-                  }
-              );
-
-              organizers?.push(user);
+              if (context.tokenPair && context.setTokenPair) {
+                  await AddTournamentOrganizer(
+                      tournament.id,
+                      user.id,
+                      context.tokenPair,
+                      context.setTokenPair
+                  );
+                  organizers?.push(user);
+              }
           }
         : undefined;
 

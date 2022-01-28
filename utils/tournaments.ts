@@ -1,4 +1,5 @@
 import useSWR from "swr";
+import { CallApi, TokenPair, TokenPairSetter } from "./auth";
 import { Fetcher } from "./fetcher";
 import { Match } from "./matches";
 import { Team } from "./teams";
@@ -50,13 +51,33 @@ export const FetchTournamentOrganizers = (id: string) => {
     return useSWR<User[]>(`/api/v1/tournaments/${id}/organizers`, Fetcher);
 };
 
-export const AddTournamentOrganizer = (tournament_id: number, user_id: number) => {
-    return fetch(`/api/v1/tournaments/${tournament_id}/organizers/${user_id}`, {
-        method: "PUT",
-    });
+export const AddTournamentOrganizer = (
+    tournament_id: number,
+    user_id: number,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/tournaments/${tournament_id}/organizers/${user_id}`,
+        {
+            method: "PUT",
+        },
+        tokenPair,
+        setTokenPair
+    );
 };
-export const RemoveTournamentOrganizer = (tournament_id: number, user_id: number) => {
-    return fetch(`/api/v1/tournaments/${tournament_id}/organizers/${user_id}`, {
-        method: "DELETE",
-    });
+export const RemoveTournamentOrganizer = (
+    tournament_id: number,
+    user_id: number,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/tournaments/${tournament_id}/organizers/${user_id}`,
+        {
+            method: "DELETE",
+        },
+        tokenPair,
+        setTokenPair
+    );
 };

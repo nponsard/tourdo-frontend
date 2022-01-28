@@ -194,6 +194,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     maxWidth: "60rem",
                     marginRight: "auto",
                     marginLeft: "auto",
+                    p: { sm: 0, md: "1rem" },
                 }}
             >
                 <Component {...pageProps} />

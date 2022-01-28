@@ -51,7 +51,12 @@ const UserSummary = ({
                     )}
                 </Typography>
                 {deleteAction && (
-                    <IconButton aria-label="Delete" color="error" size="small">
+                    <IconButton
+                        aria-label="Delete"
+                        color="error"
+                        size="small"
+                        onClick={() => deleteAction(user.id)}
+                    >
                         <DeleteIcon />
                     </IconButton>
                 )}
