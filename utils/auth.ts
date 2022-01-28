@@ -1,16 +1,11 @@
 import { createContext, useContext, useState } from "react";
 import useSWR from "swr";
 import { BASE_URL } from "./api";
-import { Fetcher, LoggedInFetcher } from "./fetcher";
 import { User } from "./users";
 
 export interface TokenPair {
     accessToken: string;
     refreshToken: string;
-}
-export interface TokenManager {
-    tokenPair: TokenPair;
-    setTokens: (tokens: TokenPair) => void;
 }
 
 export function useUser() {
@@ -23,79 +18,72 @@ export function useUser() {
 }
 
 export const LoginContext = createContext({
-    user: null as User | null,
-    tokenManager: {
-        tokenPair: { accessToken: "", refreshToken: "", valid: false },
-        setTokens: () => {},
-    } as TokenManager,
+    user: undefined as User | undefined,
     setUser: (newUser: User) => {},
+
+    tokenPair: undefined as TokenPair | undefined,
+    setTokenPair: (newTokenPair: TokenPair) => {},
+
+    setValidToken: (valid: boolean) => {},
+    validToken: false,
 });
 
-export const GetCurrentUser = async (
-    tokens: TokenManager,
-    invalidRedirect: () => any
-) => {
-    return LoggedInFetcher<User>(
-        `/api/v1/users/me`,
-        tokens,
-        invalidRedirect
-    ).then((user) => {
-        if (!user.username) throw new Error("Invalid user");
-
-        return user;
-    });
-};
-
-export const useRefreshToken = async (refreshToken: string) => {
-    return BaseFetch<TokenPair>("/tokens/refresh", {
+export const refreshToken = async (refreshToken: string) => {
+    return BaseFetch("tokens/refresh", {
         method: "POST",
         body: JSON.stringify({ refresh_token: refreshToken }),
     });
 };
 
-export const BaseFetch = <T>(
+export const BaseFetch = async <T>(
     endpoint: string,
     init?: RequestInit | undefined,
-    user?: {
-        user: User | null;
-        tokenManager: TokenManager;
-        setUser: (newUser: User) => void;
-    }
+    tokenPair?: TokenPair
 ) => {
-    const fetcher = () => {
-        return fetch(BASE_URL + endpoint, {
-            headers: {
-                Authorization: `${user?.tokenManager.tokenPair.accessToken}`,
-                ...init?.headers,
-            },
-        }).then(async (res) => {
-            const body = await res.json();
-
-            if (res.status >= 400) {
-                throw { message: body.message, status: res.status };
-            }
-
-            return body;
-        });
-    };
-
-    return useSWR<T>(endpoint, fetcher);
+    const res = await fetch(BASE_URL + endpoint, {
+        headers: {
+            Authorization: tokenPair?.accessToken ?? "",
+            ...init?.headers,
+        },
+    });
+    const body = await res.json();
+    if (res.status >= 400) {
+        throw { message: body.message, status: res.status };
+    }
+    return await body;
 };
 
 export const UseApi = <T>(endpoint: string, init?: RequestInit | undefined) => {
-    const user = useContext(LoginContext);
+    const [data, setData] = useState<T | null>(null);
+    const [error, setError] = useState<any>(null);
 
-    const result = BaseFetch<T>(endpoint, user, init);
+    const loginCtx = useContext(LoginContext);
 
-    if (result.error) {
-        if (result.error.status === 401) {
-            const refreshToken = user.tokenManager.tokenPair.refreshToken;
+    BaseFetch<T>(endpoint, init, loginCtx.tokenPair)
+        .then((data) => {
+            setData(data);
+        })
+        .catch(async (e) => {
+            try {
+                if (e.status != 401 || loginCtx.tokenPair == undefined) throw e;
 
-            const refreshResult = useRefreshToken(refreshToken)
-            
-        }
-    }
+                const newTokens = await refreshToken(
+                    loginCtx.tokenPair.refreshToken
+                );
+
+                await BaseFetch<T>(endpoint, init, newTokens).then((data) => {
+                    setData(data);
+                });
+                loginCtx.setTokenPair(newTokens);
+            } catch (e) {
+                setError(e);
+            }
+        });
+
+    return { data, error };
 };
+
+/*
 
 export const LoginUser = async (
     username: string,
@@ -123,7 +111,7 @@ export const LoginUser = async (
             refreshToken: data.refresh_token,
         };
     });
-};
+};*/
 
 /*
 export const CheckAuth = async (accessToken: string, refreshToken: string) => {
@@ -151,10 +139,10 @@ export const CheckLocalStorage = () => {
     if (accessToken && refreshToken) {
         return { accessToken, refreshToken };
     }
-    return null;
+    return undefined;
 };
 
-export const SaveLocalStorage = (tokensManager: TokenManager) => {
-    localStorage.setItem("accessToken", tokensManager.tokenPair.accessToken);
-    localStorage.setItem("refreshToken", tokensManager.tokenPair.refreshToken);
+export const SaveLocalStorage = (tokenPair: TokenPair) => {
+    localStorage.setItem("accessToken", tokenPair.accessToken);
+    localStorage.setItem("refreshToken", tokenPair.refreshToken);
 };

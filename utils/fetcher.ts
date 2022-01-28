@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useRefreshToken, TokenManager } from "./auth";
+import { refreshToken } from "./auth";
 
 export const Fetcher = <T>(
     url: string,
@@ -15,7 +15,7 @@ export const Fetcher = <T>(
         return r.json();
     });
 };
-
+/*
 export const LoggedInFetcher = async <T>(
     url: string,
     tokens: TokenManager,
@@ -32,7 +32,7 @@ export const LoggedInFetcher = async <T>(
     });
 
     if (r.status == 401) {
-        const newTokens = await useRefreshToken(
+        const newTokens = await refreshToken(
             tokens.tokenPair.refreshToken
         ).catch((e) => {
             console.log(e);
@@ -76,3 +76,4 @@ export const LoggedInFetcher = async <T>(
     }
     return await r.json();
 };
+*/

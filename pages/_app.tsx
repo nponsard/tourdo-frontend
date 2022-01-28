@@ -24,30 +24,14 @@ import { Menu, MenuItem } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 function MyApp({ Component, pageProps }: AppProps) {
-    const [user, setUser] = useState<User | null>(null);
-    const [tokenPair, setTokenPair] = useState<TokenPair>({
-        accessToken: "",
-        refreshToken: "",
-        valid: false,
-    });
+    const [user, setUser] = useState<User | undefined>(undefined);
+    const [tokenPair, setTokenPair] = useState<TokenPair | undefined>(
+        undefined
+    );
+
+    
+
     const router = useRouter();
-
-    const tokensManager: TokenManager = {
-        tokenPair,
-        setTokens: (tokens: TokenPair) => {
-            setTokenPair(tokens);
-
-            tokensManager.tokenPair = tokens;
-
-            GetCurrentUser(tokensManager, () => {
-                router.push("/login");
-            }).then((user) => {
-                console.log(user);
-                setUser(user);
-                SaveLocalStorage(tokensManager)
-            });
-        },
-    };
 
     useEffect(() => {
         const tokens = CheckLocalStorage();
@@ -55,14 +39,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         console.log(tokens);
 
         if (tokens) {
-            tokensManager.setTokens({
-                accessToken: tokens.accessToken,
-                refreshToken: tokens.refreshToken,
-                valid: true,
-            });
+
+
+
+
 
             GetCurrentUser(tokensManager, () => {
-              //  router.push("/login");
+                //  router.push("/login");
             }).then((user) => {
                 setUser(user);
             });
