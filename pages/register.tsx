@@ -38,8 +38,14 @@ const Register = () => {
 
     // redirect to home page if already logged in
 
-    if (context.user) router.push("/");
+    if (context.user) {
 
+        // redirect to login if token is invalid but an user is present
+
+        if (context.tokensManager && !context.tokensManager.tokenPair.valid)
+            router.push("/login");
+        else router.push("/");
+    }
     const handleUsernameChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
@@ -123,14 +129,14 @@ const Register = () => {
     const closeSuccessSnack = () => {
         setShowSuccessSnack(false);
 
-        router.back();
+        router.push("/");
     };
 
     return (
         <>
             <Snackbar
                 open={showSuccessSnack}
-                autoHideDuration={6000}
+                autoHideDuration={2000}
                 onClose={closeSuccessSnack}
             >
                 <Alert

@@ -5,6 +5,7 @@ import { User } from "./users";
 export interface TokenPair {
     accessToken: string;
     refreshToken: string;
+    valid: boolean;
 }
 export interface TokenManager {
     tokenPair: TokenPair;
@@ -66,4 +67,9 @@ export const CheckLocalStorage = () => {
         return { accessToken, refreshToken };
     }
     return null;
+};
+
+export const SaveLocalStorage = (tokensManager: TokenManager) => {
+    localStorage.setItem("accessToken", tokensManager.tokenPair.accessToken);
+    localStorage.setItem("refreshToken", tokensManager.tokenPair.refreshToken);
 };

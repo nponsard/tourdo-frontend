@@ -8,9 +8,15 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { User } from "../utils/users";
-import { LoginContext, TokenManager, TokenPair } from "../utils/auth";
+import {
+    CheckLocalStorage,
+    GetCurrentUser,
+    LoginContext,
+    TokenManager,
+    TokenPair,
+} from "../utils/auth";
 import Link from "next/link";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -18,14 +24,38 @@ function MyApp({ Component, pageProps }: AppProps) {
     const [tokenPair, setTokenPair] = useState<TokenPair>({
         accessToken: "",
         refreshToken: "",
+        valid: false,
     });
 
     const tokensManager: TokenManager = {
         tokenPair,
         setTokens: (tokens: TokenPair) => {
+
+
             setTokenPair(tokens);
+        
+            
+        
         },
     };
+
+    useEffect(() => {
+        const tokens = CheckLocalStorage();
+
+        if (tokens) {
+            tokensManager.setTokens({
+                accessToken: tokens.accessToken,
+                refreshToken: tokens.refreshToken,
+                valid: true,
+            });
+
+            GetCurrentUser(tokensManager).then((user) => {
+                setUser(user);
+            });
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <LoginContext.Provider

@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { RefreshToken, TokenManager } from "./auth";
 
 export const Fetcher = <T>(
@@ -20,6 +21,8 @@ export const LoggedInFetcher = async <T>(
     tokens: TokenManager,
     init?: RequestInit | undefined
 ): Promise<T> => {
+    const router = useRouter();
+
     const headers = {
         Authorization: `${tokens.tokenPair.accessToken}`,
     };
@@ -30,7 +33,24 @@ export const LoggedInFetcher = async <T>(
     });
 
     if (r.status == 401) {
-        const newTokens = await RefreshToken(tokens.tokenPair.refreshToken);
+        const newTokens = await RefreshToken(
+            tokens.tokenPair.refreshToken
+        ).catch((e) => {
+            console.log(e);
+
+            tokens.setTokens({
+                accessToken: "",
+                refreshToken: "",
+                valid: false,
+            });
+
+            return null;
+        });
+
+        if (!newTokens) {
+            router.push("/login");
+            throw new Error("Invalid token");
+        }
 
         const headers = {
             Authorization: `${newTokens.accessToken}`,
@@ -41,7 +61,11 @@ export const LoggedInFetcher = async <T>(
             headers,
         });
 
-        tokens.setTokens(newTokens);
+        tokens.setTokens({
+            accessToken: newTokens.accessToken,
+            refreshToken: newTokens.refreshToken,
+            valid: true,
+        });
 
         return r.json();
     }
