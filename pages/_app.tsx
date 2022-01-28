@@ -138,8 +138,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                 <Link href={"/"}>Tournaments</Link>
                             </Typography>
 
-                            {user === undefined && (<div>loading</div>)}
-
+                            {user === undefined && <div>loading</div>}
 
                             {tokenPair && user ? (
                                 <div>
@@ -190,7 +189,15 @@ function MyApp({ Component, pageProps }: AppProps) {
                 </Box>
             </div>
 
-            <Component {...pageProps} />
+            <Box
+                sx={{
+                    maxWidth: "60rem",
+                    marginRight: "auto",
+                    marginLeft: "auto",
+                }}
+            >
+                <Component {...pageProps} />
+            </Box>
         </LoginContext.Provider>
     );
 }
