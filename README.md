@@ -1,5 +1,9 @@
 
-
+## todo
+- edition interface
+- tournament preview
+- show tournament type
+- 
 ## possible improvements 
 - use Skeleton when loading
 
