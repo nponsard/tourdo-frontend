@@ -17,7 +17,7 @@ export function PaginationManager(props: {
                 {props.currentPage > 1 && (
                     <span onClick={() => props.setCurrentPage(1)}>1 </span>
                 )}
-                {max > 5 && props.currentPage > 3 && "... "}
+                {max > 3 && props.currentPage > 3 && "... "}
 
                 {props.currentPage > 2 && max >= 3 && (
                     <span
