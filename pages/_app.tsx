@@ -25,7 +25,11 @@ import { Menu, MenuItem } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 function MyApp({ Component, pageProps }: AppProps) {
-    const [user, setUser] = useState<User | undefined | null>(undefined);
+
+    // undefined : not yet loaded 
+    // null : not logged in
+
+    const [user, setUser] = useState<User | undefined | null>(undefined); 
     const [tokenPair, _setTokenPair] = useState<TokenPair | undefined | null>(
         undefined
     );
@@ -61,8 +65,10 @@ function MyApp({ Component, pageProps }: AppProps) {
                     console.log(err);
                     setTokenPair(null);
                 });
-        } else {
+        } else if (tokenPair === null) {
             setUser(null);
+        } else {
+            setUser(undefined);
         }
     }, [tokenPair]);
 
@@ -85,7 +91,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             CallLogout(tokenPair, setTokenPair)
                 .then(() => {
                     ClearLocalStorage();
-                    setTokenPair(undefined);
+                    setTokenPair(null);
                 })
                 .catch((err) => {
                     console.log(err);

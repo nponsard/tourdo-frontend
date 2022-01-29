@@ -175,7 +175,7 @@ export const CheckLocalStorage = () => {
     if (access_token && refresh_token) {
         return { access_token, refresh_token };
     }
-    return undefined;
+    return null;
 };
 
 export const SaveLocalStorage = (tokenPair: TokenPair) => {
