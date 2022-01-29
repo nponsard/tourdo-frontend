@@ -14,7 +14,7 @@ const TeamSummary = ({ team }: { team: Team }) => {
         <Link href={`/teams/${team.id}`} passHref>
             <Paper
                 elevation={3}
-                sx={{ cursor: "pointer", width: "20em", p: "0.5rem" }}
+                sx={{ cursor: "pointer", width: "23rem", p: "0.5rem" , m : "1rem"}}
             >
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Typography

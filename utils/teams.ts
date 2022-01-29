@@ -30,5 +30,9 @@ export const useGetTeamMembers = (team_id: string) => {
 };
 
 export const useGetTeamTournaments = (team_id: string) => {
-    return UseApi<Tournament[]>(`/teams/${team_id}/tournaments`); 
+    return UseApi<Tournament[]>(`/teams/${team_id}/tournaments`);
+};
+
+export const useSearchTeams = (query: string) => {
+    return UseApi<{ teams: Team[]; total: number }>(`/teams?search=${query}`);
 };

@@ -23,9 +23,10 @@ const UserSummary = ({
                 elevation={3}
                 sx={{
                     cursor: "pointer",
-                    width: "20em",
+                    width: "23em",
                     p: "0.5rem",
                     height: "3rem",
+                    margin:"1rem"
                 }}
             >
                 <Box

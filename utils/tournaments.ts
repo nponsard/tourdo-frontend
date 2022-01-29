@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { CallApi, TokenPair, TokenPairSetter } from "./auth";
+import { CallApi, TokenPair, TokenPairSetter, UseApi } from "./auth";
 import { Fetcher } from "./fetcher";
 import { Match } from "./matches";
 import { Team } from "./teams";
@@ -79,5 +79,11 @@ export const RemoveTournamentOrganizer = (
         },
         tokenPair,
         setTokenPair
+    );
+};
+
+export const useSearchTournaments = (query: string) => {
+    return UseApi<{ tournaments: Tournament[]; total: number }>(
+        `/tournaments?search=${query}`
     );
 };

@@ -15,7 +15,7 @@ const TournamentSummary = ({ tournament }: { tournament: Tournament }) => {
         <Link href={`/tournaments/${tournament.id}`} passHref>
             <Paper
                 elevation={3}
-                sx={{ cursor: "pointer", width: "20em", p: "0.5rem" }}
+                sx={{ cursor: "pointer", width: "23rem", p: "0.5rem" , m : "1rem"}}
             >
                 <Typography
                     variant="h6"

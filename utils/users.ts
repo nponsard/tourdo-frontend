@@ -60,3 +60,7 @@ export const useGetUser = (id: string) => {
 export const useGetTeamsOfUser = (id: string) => {
     return UseApi<Team[]>(`/users/${id}/teams`);
 };
+
+export const useSearchUsers = (query: string) => {
+    return UseApi<{ users: User[]; total: number }>(`/users?search=${query}`);
+};
