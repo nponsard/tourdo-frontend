@@ -15,7 +15,12 @@ const TournamentSummary = ({ tournament }: { tournament: Tournament }) => {
         <Link href={`/tournaments/${tournament.id}`} passHref>
             <Paper
                 elevation={3}
-                sx={{ cursor: "pointer", width: "23rem", p: "0.5rem" , m : "1rem"}}
+                sx={{
+                    cursor: "pointer",
+                    width: "23rem",
+                    p: "0.5rem",
+                    m: "1rem",
+                }}
             >
                 <Typography
                     variant="h6"
@@ -41,8 +46,19 @@ const TournamentSummary = ({ tournament }: { tournament: Tournament }) => {
                 </Typography>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Typography variant="body2">
-                        {new Date(tournament.start_date).toLocaleDateString()} -
-                        {new Date(tournament.end_date).toLocaleDateString()}
+                        {tournament.start_date ? (
+                            <>
+                                {new Date(
+                                    tournament.start_date
+                                ).toLocaleDateString()}{" "}
+                                -
+                                {new Date(
+                                    tournament.end_date
+                                ).toLocaleDateString()}
+                            </>
+                        ) : (
+                            <>No date specified</>
+                        )}
                     </Typography>
                     <Box sx={{ flexGrow: 1, minWidth: "1em" }} />
                     <Typography variant="body2">
