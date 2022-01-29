@@ -47,7 +47,7 @@ export default function TeamCreation() {
             )
                 .then((value) => {
                     if (value.id || value.id === 0)
-                        router.push(`/tournament/${value.id}/edit`);
+                        router.push(`/teams/${value.id}/edit`);
                     else setErrorMessage("An error occured");
                 })
                 .catch((error) => {

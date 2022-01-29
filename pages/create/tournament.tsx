@@ -57,7 +57,7 @@ export default function TournamentCreation() {
             )
                 .then((value) => {
                     if (value.id || value.id === 0)
-                        router.push(`/tournament/${value.id}/edit`);
+                        router.push(`/tournaments/${value.id}/edit`);
                     else setErrorMessage("An error occured");
                 })
                 .catch((error) => {
