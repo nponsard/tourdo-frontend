@@ -168,12 +168,16 @@ function MyApp({ Component, pageProps }: AppProps) {
                                         open={Boolean(userMenuAnchor)}
                                         onClose={handleUserMenuClose}
                                     >
-                                        <Link
-                                            href={`/users/${user.id}`}
-                                            passHref
+                                        <MenuItem
+                                            onClick={() => {
+                                                setUserMenuAnchor(null);
+                                                router.push(
+                                                    `/users/${user.id}`
+                                                );
+                                            }}
                                         >
-                                            <MenuItem>Profile</MenuItem>
-                                        </Link>
+                                            Profile
+                                        </MenuItem>
                                         <MenuItem onClick={handleLogout}>
                                             Logout
                                         </MenuItem>
