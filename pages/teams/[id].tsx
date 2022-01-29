@@ -30,6 +30,7 @@ import OrganizerManager from "../../components/OrganizerManager";
 import { useGetTeamsOfUser, useGetUser, User } from "../../utils/users";
 import { LoginContext } from "../../utils/auth";
 import {
+    DeleteTeam,
     Role,
     Team,
     TeamMember,
@@ -38,6 +39,9 @@ import {
     useGetTeamTournaments,
 } from "../../utils/teams";
 import Link from "next/link";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -86,9 +90,48 @@ const TeamDetail = () => {
         (member: TeamMember) => member.role == Role.PLAYER
     );
 
+    const canEdit =
+        captains.some((captain: TeamMember) => {
+            captain.user.id == context.user?.id;
+        }) || context.user?.admin;
+
     return (
         <Box sx={{ p: "1rem" }}>
-            <Typography variant="h4">{team.name}</Typography>
+            <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                <Typography variant="h4">{team.name}</Typography>
+                <Box sx={{ flexGrow: 1 }} />
+                {canEdit && (
+                    <Button
+                        variant="outlined"
+                        startIcon={<DeleteIcon />}
+                        color="error"
+                        onClick={() => {
+                            if (context.tokenPair && context.setTokenPair)
+                                DeleteTeam(
+                                    team.id,
+                                    context.tokenPair,
+                                    context.setTokenPair
+                                )
+                                    .then(() => router.push("/"))
+                                    .catch(console.error);
+                        }}
+                    >
+                        Delete
+                    </Button>
+                )}
+                {canEdit && (
+                    <Link href={`/teams/${team.id}/edit`} passHref>
+                        <Button
+                            variant="outlined"
+                            startIcon={<EditIcon />}
+                            color="primary"
+                            sx={{ marginLeft: "1rem" }}
+                        >
+                            Edit
+                        </Button>
+                    </Link>
+                )}
+            </Box>
             <Typography variant="body1">{team.description}</Typography>
             <Typography variant="body1">
                 {team.win_count} Wins on {team.match_count} matches played
@@ -189,7 +232,9 @@ const TeamDetail = () => {
                     </>
                 )}
             </TabPanel>
-            <TabPanel value={currentTab} index={1}></TabPanel>
+            <TabPanel value={currentTab} index={1}>
+                TODO : create and use the api
+            </TabPanel>
         </Box>
     );
 };

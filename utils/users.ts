@@ -4,6 +4,7 @@ import {
     BaseFetch,
     CallApi,
     TokenPair,
+    TokenPairSetter,
     UseApi,
     UseApi as useApi,
 } from "./auth";
@@ -66,3 +67,16 @@ export const useSearchUsers = (query: string, offset = 0, limit = 20) => {
         `/users?search=${query}&offset=${offset}&limit=${limit}`
     );
 };
+
+
+
+export const DeleteUser = (user_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) => {
+    return CallApi(
+        `/users/${user_id}`,
+        {
+            method: "DELETE",
+        },
+        tokenPair,
+        setTokenPair
+    );
+}

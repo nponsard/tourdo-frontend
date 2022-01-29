@@ -1,4 +1,4 @@
-import { UseApi } from "./auth";
+import { CallApi, TokenPair, TokenPairSetter, UseApi } from "./auth";
 import { Tournament } from "./tournaments";
 import { User } from "./users";
 
@@ -38,3 +38,15 @@ export const useSearchTeams = (query: string, offset = 0, limit = 20) => {
         `/teams?search=${query}&offset=${offset}&limit=${limit}`
     );
 };
+
+
+export const DeleteTeam = (team_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) => {
+    return CallApi(
+        `/teams/${team_id}`,
+        {
+            method: "DELETE",
+        },
+        tokenPair,
+        setTokenPair
+    );
+}

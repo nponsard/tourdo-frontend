@@ -27,10 +27,17 @@ import TeamSummary from "../../components/TeamSummary";
 import MatchSummary from "../../components/MatchSummary";
 import UserSummary from "../../components/UserSummary";
 import OrganizerManager from "../../components/OrganizerManager";
-import { useGetTeamsOfUser, useGetUser, User } from "../../utils/users";
+import {
+    DeleteUser,
+    useGetTeamsOfUser,
+    useGetUser,
+    User,
+} from "../../utils/users";
 import { LoginContext } from "../../utils/auth";
 import { Team } from "../../utils/teams";
 import Link from "next/link";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 const boxSx = {
     display: "flex",
     flexWrap: "wrap",
@@ -55,15 +62,60 @@ const UserDetail = () => {
 
     if (!user) return <div>Loading</div>;
 
+    const canEdit = context.user?.admin || context.user?.id === user.id;
+
     return (
         <Box sx={{ p: "1rem" }}>
-            <Typography variant="h4">
-                {user.username}{" "}
-                {user.admin && (
-                    <Chip color="secondary" label="Admin" variant="outlined" />
-                )}
-            </Typography>
+            <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                <Typography variant="h4">
+                    {user.username}{" "}
+                    {user.admin && (
+                        <Chip
+                            color="secondary"
+                            label="Admin"
+                            variant="outlined"
+                        />
+                    )}
+                </Typography>
 
+                <Box sx={{ flexGrow: 1 }} />
+                {canEdit && (
+                    <Button
+                        variant="outlined"
+                        startIcon={<DeleteIcon />}
+                        color="error"
+                        onClick={() => {
+                            if (context.tokenPair && context.setTokenPair)
+                                DeleteUser(
+                                    user.id,
+                                    context.tokenPair,
+                                    context.setTokenPair
+                                )
+                                    .then(() => {
+                                        if (user.id == context.user?.id)
+                                            context.setTokenPair(null);
+
+                                        router.push("/");
+                                    })
+                                    .catch(console.error);
+                        }}
+                    >
+                        Delete
+                    </Button>
+                )}
+                {canEdit && (
+                    <Link href={`/users/${user.id}/edit`} passHref>
+                        <Button
+                            variant="outlined"
+                            startIcon={<EditIcon />}
+                            color="primary"
+                            sx={{ marginLeft: "1rem" }}
+                        >
+                            Edit
+                        </Button>
+                    </Link>
+                )}
+            </Box>
             <Typography variant="h5" sx={{ marginTop: "1rem" }}>
                 Teams
             </Typography>
