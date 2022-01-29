@@ -39,8 +39,11 @@ export const useSearchTeams = (query: string, offset = 0, limit = 20) => {
     );
 };
 
-
-export const DeleteTeam = (team_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) => {
+export const DeleteTeam = (
+    team_id: number,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
     return CallApi(
         `/teams/${team_id}`,
         {
@@ -49,4 +52,24 @@ export const DeleteTeam = (team_id: number, tokenPair: TokenPair, setTokenPair: 
         tokenPair,
         setTokenPair
     );
-}
+};
+
+export const CreateTeam = (
+    name: string,
+    description: string,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/teams`,
+        {
+            method: "POST",
+            body: JSON.stringify({
+                name,
+                description,
+            }),
+        },
+        tokenPair,
+        setTokenPair
+    );
+};
