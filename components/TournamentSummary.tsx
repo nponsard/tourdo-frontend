@@ -8,43 +8,49 @@ import Typography from "@mui/material/Typography";
 import { CardHeader, Paper } from "@mui/material";
 import { typography } from "@mui/system";
 import { Tournament } from "../utils/tournaments";
+import Link from "next/link";
 
 const TournamentSummary = ({ tournament }: { tournament: Tournament }) => {
     return (
-        <Paper elevation={3} sx={{ width: "20em", p: "0.5rem" }}>
-            <Typography
-                variant="h6"
-                component="div"
-                sx={{
-                    overflowX: "hidden",
-                    whiteSpace: "nowrap",
-                    textOverflow: "clip",
-                }}
+        <Link href={`/tournaments/${tournament.id}`} passHref>
+            <Paper
+                elevation={3}
+                sx={{ cursor: "pointer", width: "20em", p: "0.5rem" }}
             >
-                {tournament.name}
-            </Typography>
+                <Typography
+                    variant="h6"
+                    component="div"
+                    sx={{
+                        overflowX: "hidden",
+                        whiteSpace: "nowrap",
+                        textOverflow: "clip",
+                    }}
+                >
+                    {tournament.name}
+                </Typography>
 
-            <Typography
-                color="text.secondary"
-                sx={{
-                    textOverflow: "ellipsis",
-                    overflowX: "hidden",
-                    whiteSpace: "nowrap",
-                }}
-            >
-                {tournament.game_name}
-            </Typography>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Typography variant="body2">
-                    {tournament.start_date.toLocaleDateString()} -
-                    {tournament.end_date.toLocaleDateString()}
+                <Typography
+                    color="text.secondary"
+                    sx={{
+                        textOverflow: "ellipsis",
+                        overflowX: "hidden",
+                        whiteSpace: "nowrap",
+                    }}
+                >
+                    {tournament.game_name}
                 </Typography>
-                <Box sx={{ flexGrow: 1, minWidth: "1em" }} />
-                <Typography variant="body2">
-                    {tournament.max_teams} teams
-                </Typography>
-            </Box>
-        </Paper>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Typography variant="body2">
+                        {new Date(tournament.start_date).toLocaleDateString()} -
+                        {new Date(tournament.end_date).toLocaleDateString()}
+                    </Typography>
+                    <Box sx={{ flexGrow: 1, minWidth: "1em" }} />
+                    <Typography variant="body2">
+                        {tournament.max_teams} teams
+                    </Typography>
+                </Box>
+            </Paper>
+        </Link>
     );
 };
 

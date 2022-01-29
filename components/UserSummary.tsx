@@ -9,6 +9,7 @@ import { CardHeader, Chip, IconButton, Paper } from "@mui/material";
 import { typography } from "@mui/system";
 import { User } from "../utils/users";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Link from "next/link";
 const UserSummary = ({
     user,
     deleteAction,
@@ -17,51 +18,58 @@ const UserSummary = ({
     deleteAction?: (id: number) => any;
 }) => {
     return (
-        <Paper
-            elevation={3}
-            sx={{ width: "20em", p: "0.5rem", height: "3rem" }}
-        >
-            <Box
+        <Link href={`/users/${user.id}`} passHref>
+            <Paper
+                elevation={3}
                 sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "100%",
+                    cursor: "pointer",
+                    width: "20em",
+                    p: "0.5rem",
+                    height: "3rem",
                 }}
             >
-                <Typography
-                    variant="h6"
-                    component="div"
+                <Box
                     sx={{
-                        overflowX: "hidden",
-                        whiteSpace: "nowrap",
-                        textOverflow: "clip",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: "100%",
                     }}
                 >
-                    {user.username}
-                </Typography>
-                <Box sx={{ flexGrow: 1, minWidth: "1em" }} />
-                <Typography sx={{ minWidth: "3em" }}>
-                    {user.admin && (
-                        <Chip
-                            label="admin"
-                            color="secondary"
-                            variant="outlined"
-                        />
-                    )}
-                </Typography>
-                {deleteAction && (
-                    <IconButton
-                        aria-label="Delete"
-                        color="error"
-                        size="small"
-                        onClick={() => deleteAction(user.id)}
+                    <Typography
+                        variant="h6"
+                        component="div"
+                        sx={{
+                            overflowX: "hidden",
+                            whiteSpace: "nowrap",
+                            textOverflow: "clip",
+                        }}
                     >
-                        <DeleteIcon />
-                    </IconButton>
-                )}
-            </Box>
-        </Paper>
+                        {user.username}
+                    </Typography>
+                    <Box sx={{ flexGrow: 1, minWidth: "1em" }} />
+                    <Typography sx={{ minWidth: "3em" }}>
+                        {user.admin && (
+                            <Chip
+                                label="admin"
+                                color="secondary"
+                                variant="outlined"
+                            />
+                        )}
+                    </Typography>
+                    {deleteAction && (
+                        <IconButton
+                            aria-label="Delete"
+                            color="error"
+                            size="small"
+                            onClick={() => deleteAction(user.id)}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    )}
+                </Box>
+            </Paper>
+        </Link>
     );
 };
 
