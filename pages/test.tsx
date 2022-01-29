@@ -5,10 +5,17 @@ import Register from "./register";
 import TeamSummary from "../components/TeamSummary";
 import TournamentSummary from "../components/TournamentSummary";
 import UserSummary from "../components/UserSummary";
+import { PaginationManager } from "../components/PaginationManager";
 
 const Test: NextPage = () => {
     return (
         <>
+            <PaginationManager
+                total={500}
+                pagination={20}
+                currentPage={20}
+                setCurrentPage={() => {}}
+            />
             <Register />
             <Box sx={{ maxWidth: "50rem", padding: "1em" }}>
                 <Box sx={{ display: "flex" }}>
