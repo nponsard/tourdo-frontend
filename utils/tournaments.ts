@@ -10,6 +10,11 @@ export enum TournamentType {
     RoundRobin = 1,
     SimpleElimination = 2,
 }
+export const TournamentnTypeName = [
+    "None",
+    "Round Robin",
+    "Simple Elimination",
+];
 
 export enum TournamentStatus {
     Created = 0,
@@ -88,8 +93,11 @@ export const useSearchTournaments = (query: string, offset = 0, limit = 20) => {
     );
 };
 
-
-export const DeleteTournament = (tournament_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) => {
+export const DeleteTournament = (
+    tournament_id: number,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
     return CallApi(
         `/tournaments/${tournament_id}`,
         {
@@ -98,4 +106,4 @@ export const DeleteTournament = (tournament_id: number, tokenPair: TokenPair, se
         tokenPair,
         setTokenPair
     );
-}
+};
