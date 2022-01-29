@@ -151,8 +151,19 @@ const Tournament = () => {
                         {tournament?.description}
                     </Typography>
                     <Typography>
-                        {new Date(tournament.start_date).toLocaleDateString()} -{" "}
-                        {new Date(tournament.end_date).toLocaleDateString()}
+                        {tournament.start_date ? (
+                            <>
+                                {new Date(
+                                    tournament.start_date
+                                ).toLocaleDateString()}{" "}
+                                -
+                                {new Date(
+                                    tournament.end_date
+                                ).toLocaleDateString()}
+                            </>
+                        ) : (
+                            <>No date specified</>
+                        )}
                     </Typography>
                     <Typography>{tournament.game_name}</Typography>
                 </Box>
