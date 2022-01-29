@@ -20,7 +20,7 @@ const boxSx = {
     justifyContent: "center",
 };
 
-const pagination = 1;
+const pagination = 20;
 
 const Home: NextPage = () => {
     const [currentTab, setTab] = useState(0);
