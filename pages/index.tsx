@@ -8,7 +8,6 @@ import { useSearchUsers } from "../utils/users";
 import { useSearchTournaments } from "../utils/tournaments";
 import UserSummary from "../components/UserSummary";
 import TeamSummary from "../components/TeamSummary";
-import Tournament from "./tournaments/[id]";
 import TournamentSummary from "../components/TournamentSummary";
 import { PaginationManager } from "../components/PaginationManager";
 

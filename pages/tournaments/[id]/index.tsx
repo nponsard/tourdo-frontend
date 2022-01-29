@@ -16,18 +16,18 @@ import {
     FetchTournamentOrganizers,
     FetchTournamentTeams,
     RemoveTournamentOrganizer,
-} from "../../utils/tournaments";
+} from "../../../utils/tournaments";
 import useSWR from "swr";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useContext, useState } from "react";
-import TournamentRepresentation from "../../components/TournamentRepresentation";
-import TeamSummary from "../../components/TeamSummary";
-import MatchSummary from "../../components/MatchSummary";
-import UserSummary from "../../components/UserSummary";
-import OrganizerManager from "../../components/OrganizerManager";
-import { User } from "../../utils/users";
-import { LoginContext } from "../../utils/auth";
+import TournamentRepresentation from "../../../components/TournamentRepresentation";
+import TeamSummary from "../../../components/TeamSummary";
+import MatchSummary from "../../../components/MatchSummary";
+import UserSummary from "../../../components/UserSummary";
+import OrganizerManager from "../../../components/OrganizerManager";
+import { User } from "../../../utils/users";
+import { LoginContext } from "../../../utils/auth";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Link from "next/link";
