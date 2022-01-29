@@ -12,10 +12,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Link from "next/link";
 const UserSummary = ({
     user,
-    deleteAction,
 }: {
     user: User;
-    deleteAction?: (id: number) => any;
 }) => {
     return (
         <Link href={`/users/${user.id}`} passHref>
@@ -49,7 +47,8 @@ const UserSummary = ({
                         {user.username}
                     </Typography>
                     <Box sx={{ flexGrow: 1, minWidth: "1em" }} />
-                    <Typography sx={{ minWidth: "3em" }}>
+                    <
+                        Box sx={{ minWidth: "3em" }}>
                         {user.admin && (
                             <Chip
                                 label="admin"
@@ -57,17 +56,8 @@ const UserSummary = ({
                                 variant="outlined"
                             />
                         )}
-                    </Typography>
-                    {deleteAction && (
-                        <IconButton
-                            aria-label="Delete"
-                            color="error"
-                            size="small"
-                            onClick={() => deleteAction(user.id)}
-                        >
-                            <DeleteIcon />
-                        </IconButton>
-                    )}
+                    </Box>
+                    
                 </Box>
             </Paper>
         </Link>

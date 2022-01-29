@@ -69,17 +69,16 @@ const OrganizerManager = ({
     };
 
     const removeUser = (user: User) => {
-
-        console.log(user)
+        console.log(user);
 
         if (removeOrganizer) {
             removeOrganizer(user)
                 .then((v) => {
-                    console.log(v)
+                    console.log(v);
                     setSuccessSnack(true);
                 })
                 .catch((e) => {
-                    console.log(e)
+                    console.log(e);
                     setErrorSnack(true);
                 });
         }
@@ -168,16 +167,6 @@ const OrganizerManager = ({
                     </Button>
                 )}
             </Box>
-
-            {organizers?.map((user) => (
-                <UserSummary
-                    key={user.id}
-                    user={user}
-                    deleteAction={editMode ? () =>{ 
-                        console.log(user)
-                        removeUser(user)} : undefined}
-                />
-            ))}
         </>
     );
 };
