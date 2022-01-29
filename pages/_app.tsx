@@ -25,11 +25,10 @@ import { Menu, MenuItem } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 function MyApp({ Component, pageProps }: AppProps) {
-
-    // undefined : not yet loaded 
+    // undefined : not yet loaded
     // null : not logged in
 
-    const [user, setUser] = useState<User | undefined | null>(undefined); 
+    const [user, setUser] = useState<User | undefined | null>(undefined);
     const [tokenPair, _setTokenPair] = useState<TokenPair | undefined | null>(
         undefined
     );
@@ -204,7 +203,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                     maxWidth: "60rem",
                     marginRight: "auto",
                     marginLeft: "auto",
-                    p: { sm: 0, md: "1rem" },
+                    paddingRight: { sm: 0, md: "1rem" },
+                    paddingLeft: { sm: 0, md: "1rem" },
+                    paddingTop: "1rem",
                 }}
             >
                 <Component {...pageProps} />
