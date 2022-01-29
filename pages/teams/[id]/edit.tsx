@@ -1,47 +1,14 @@
-import {
-    Badge,
-    Box,
-    Button,
-    Chip,
-    Divider,
-    Paper,
-    Skeleton,
-    Typography,
-} from "@mui/material";
-import { FetchEvent } from "next/dist/server/web/spec-compliant/fetch-event";
+import { Box, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import {
-    AddTournamentOrganizer,
-    FetchTournament,
-    FetchTournamentMatches,
-    FetchTournamentOrganizers,
-    FetchTournamentTeams,
-    RemoveTournamentOrganizer,
-} from "../../../utils/tournaments";
-import useSWR from "swr";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import { useContext, useState } from "react";
-import TournamentRepresentation from "../../../components/TournamentRepresentation";
-import TeamSummary from "../../../components/TeamSummary";
-import MatchSummary from "../../../components/MatchSummary";
 import UserSummary from "../../../components/UserSummary";
-import OrganizerManager from "../../../components/OrganizerManager";
-import { useGetTeamsOfUser, useGetUser, User } from "../../../utils/users";
 import { LoginContext } from "../../../utils/auth";
 import {
-    DeleteTeam,
     Role,
-    Team,
     TeamMember,
     useGetTeam,
     useGetTeamMembers,
-    useGetTeamTournaments,
 } from "../../../utils/teams";
-import Link from "next/link";
-
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 
 const TeamEditor = () => {
     const router = useRouter();
@@ -74,7 +41,7 @@ const TeamEditor = () => {
             captain.user.id == context.user?.id;
         }) || context.user?.admin;
 
-    console.log("context :" , context);
+    console.log("context :", context);
 
     console.log(canEdit);
 
