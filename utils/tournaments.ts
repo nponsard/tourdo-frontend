@@ -107,3 +107,33 @@ export const DeleteTournament = (
         setTokenPair
     );
 };
+
+export const CreateTournament = (
+    name: string,
+    description: string,
+    start_date: Date | null,
+    end_date: Date | null,
+    max_teams: number,
+    game_name: string,
+    type: TournamentType,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi<Tournament>(
+        "/tournaments",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                name,
+                description,
+                start_date: start_date ? start_date.toISOString() : null,
+                end_date: end_date ? end_date.toISOString() : null,
+                max_teams,
+                game_name,
+                type,
+            }),
+        },
+        tokenPair,
+        setTokenPair
+    );
+};

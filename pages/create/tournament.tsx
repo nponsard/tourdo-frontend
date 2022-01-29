@@ -1,4 +1,5 @@
 import {
+    Alert,
     Button,
     FormControl,
     InputLabel,
@@ -8,12 +9,17 @@ import {
     Stack,
     TextField,
     Typography,
+    Snackbar,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { LoginContext } from "../../utils/auth";
-import { TournamentnTypeName, TournamentType } from "../../utils/tournaments";
+import {
+    CreateTournament,
+    TournamentnTypeName,
+    TournamentType,
+} from "../../utils/tournaments";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
@@ -25,17 +31,57 @@ export default function TournamentCreation() {
     const [type, setType] = useState(TournamentType.None);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [maxPlayers, setMaxPlayers] = useState(10);
+    const [maxTeams, setMaxTeams] = useState(10);
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
     const [game, setGame] = useState("");
+
+    const [errorMessage, setErrorMessage] = useState("");
 
     console.log("user :", context.user);
 
     if (context.user === null) router.push("/");
 
+    const handleCreate = () => {
+        if (context.tokenPair && context.setTokenPair) {
+            CreateTournament(
+                name,
+                description,
+                startDate,
+                endDate,
+                maxTeams,
+                game,
+                type,
+                context.tokenPair,
+                context.setTokenPair
+            )
+                .then((value) => {
+                    if (value.id || value.id === 0)
+                        router.push(`/tournament/${value.id}/edit`);
+                    else setErrorMessage("An error occured");
+                })
+                .catch((error) => {
+                    if (error.message) setErrorMessage(error.message);
+                    else setErrorMessage(JSON.stringify(error));
+                });
+        }
+    };
+
     return (
         <>
+            <Snackbar
+                open={errorMessage.length > 0}
+                autoHideDuration={6000}
+                onClose={() => setErrorMessage("")}
+            >
+                <Alert
+                    onClose={() => setErrorMessage("")}
+                    severity="error"
+                    sx={{ width: "100%" }}
+                >
+                    {errorMessage}
+                </Alert>
+            </Snackbar>
             <Paper
                 elevation={3}
                 sx={{
@@ -57,6 +103,7 @@ export default function TournamentCreation() {
 
                             {/* name  */}
                             <TextField
+                                required
                                 fullWidth
                                 label="Tournament Name"
                                 value={name}
@@ -143,14 +190,14 @@ export default function TournamentCreation() {
                             <TextField
                                 label="Maximum number of teams"
                                 type="number"
-                                value={maxPlayers}
+                                value={maxTeams}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
                                 onChange={(event) =>
-                                    setMaxPlayers(parseInt(event.target.value))
+                                    setMaxTeams(parseInt(event.target.value))
                                 }
-                                error={maxPlayers < 1}
+                                error={maxTeams < 1}
                             />
 
                             {/* game_name  */}
@@ -163,7 +210,9 @@ export default function TournamentCreation() {
                                 }
                             />
 
-                            <Button variant="contained">Create</Button>
+                            <Button variant="contained" onClick={handleCreate}>
+                                Create
+                            </Button>
                         </Stack>
                     </Box>
                 </LocalizationProvider>
