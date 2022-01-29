@@ -87,3 +87,15 @@ export const useSearchTournaments = (query: string, offset = 0, limit = 20) => {
         `/tournaments?search=${query}&offset=${offset}&limit=${limit}`
     );
 };
+
+
+export const DeleteTournament = (tournament_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) => {
+    return CallApi(
+        `/tournaments/${tournament_id}`,
+        {
+            method: "DELETE",
+        },
+        tokenPair,
+        setTokenPair
+    );
+}

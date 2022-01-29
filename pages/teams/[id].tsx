@@ -97,7 +97,9 @@ const TeamDetail = () => {
 
     return (
         <Box sx={{ p: "1rem" }}>
-            <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+            <Box
+                sx={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}
+            >
                 <Typography variant="h4">{team.name}</Typography>
                 <Box sx={{ flexGrow: 1 }} />
                 {canEdit && (

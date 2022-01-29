@@ -66,7 +66,9 @@ const UserDetail = () => {
 
     return (
         <Box sx={{ p: "1rem" }}>
-            <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+            <Box
+                sx={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}
+            >
                 <Typography variant="h4">
                     {user.username}{" "}
                     {user.admin && (

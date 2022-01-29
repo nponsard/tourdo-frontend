@@ -10,6 +10,7 @@ import { FetchEvent } from "next/dist/server/web/spec-compliant/fetch-event";
 import { useRouter } from "next/router";
 import {
     AddTournamentOrganizer,
+    DeleteTournament,
     FetchTournament,
     FetchTournamentMatches,
     FetchTournamentOrganizers,
@@ -27,6 +28,9 @@ import UserSummary from "../../components/UserSummary";
 import OrganizerManager from "../../components/OrganizerManager";
 import { User } from "../../utils/users";
 import { LoginContext } from "../../utils/auth";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import Link from "next/link";
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -92,41 +96,57 @@ const Tournament = () => {
             user?.id == val.id;
         });
 
-    const removeOrganizer = canEdit
-        ? async (user: User) => {
-              console.log(user);
-              if (context.tokenPair && context.setTokenPair) {
-                  await RemoveTournamentOrganizer(
-                      tournament.id,
-                      user.id,
-                      context.tokenPair,
-                      context.setTokenPair
-                  );
-                  organizers?.filter((predicate) => predicate.id !== user.id);
-              }
-          }
-        : undefined;
-
-    console.log(removeOrganizer);
-    const addOrganizer = canEdit
-        ? async (user: User) => {
-              if (context.tokenPair && context.setTokenPair) {
-                  await AddTournamentOrganizer(
-                      tournament.id,
-                      user.id,
-                      context.tokenPair,
-                      context.setTokenPair
-                  );
-                  organizers?.push(user);
-              }
-          }
-        : undefined;
-
     return (
         <>
             <Box sx={{ padding: "1em", m: "1em" }}>
                 <Box>
-                    <Typography variant="h2">{tournament?.name}</Typography>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Typography variant="h2">{tournament?.name}</Typography>
+                        <Box sx={{ flexGrow: 1 }} />
+                        {canEdit && (
+                            <Button
+                                variant="outlined"
+                                startIcon={<DeleteIcon />}
+                                color="error"
+                                onClick={() => {
+                                    if (
+                                        context.tokenPair &&
+                                        context.setTokenPair
+                                    )
+                                        DeleteTournament(
+                                            tournament.id,
+                                            context.tokenPair,
+                                            context.setTokenPair
+                                        )
+                                            .then(() => router.push("/"))
+                                            .catch(console.error);
+                                }}
+                            >
+                                Delete
+                            </Button>
+                        )}
+                        {canEdit && (
+                            <Link
+                                href={`/tournaments/${tournament.id}/edit`}
+                                passHref
+                            >
+                                <Button
+                                    variant="outlined"
+                                    startIcon={<EditIcon />}
+                                    color="primary"
+                                    sx={{ marginLeft: "1rem" }}
+                                >
+                                    Edit
+                                </Button>
+                            </Link>
+                        )}
+                    </Box>
                     <Typography color="text.secondary">
                         {tournament?.description}
                     </Typography>
