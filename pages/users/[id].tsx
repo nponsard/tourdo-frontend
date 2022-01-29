@@ -31,6 +31,13 @@ import { useGetTeamsOfUser, useGetUser, User } from "../../utils/users";
 import { LoginContext } from "../../utils/auth";
 import { Team } from "../../utils/teams";
 import Link from "next/link";
+const boxSx = {
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+};
 
 const UserDetail = () => {
     const router = useRouter();
@@ -62,21 +69,9 @@ const UserDetail = () => {
             </Typography>
 
             {teams && (
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-evenly",
-                    }}
-                >
+                <Box sx={boxSx}>
                     {teams.map((team: Team) => (
-                        <Link key={team.id} href={`/teams/${team.id}`} passHref>
-                            <Box sx={{ m: "1rem", cursor: "pointer" }}>
-                                <TeamSummary team={team} />
-                            </Box>
-                        </Link>
+                        <TeamSummary key={team.id} team={team} />
                     ))}
                 </Box>
             )}

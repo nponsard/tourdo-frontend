@@ -49,6 +49,14 @@ function TabPanel(props: TabPanelProps) {
     );
 }
 
+const boxSx = {
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+};
+
 const Tournament = () => {
     const router = useRouter();
     const { id: tournamentID } = router.query;
@@ -71,6 +79,8 @@ const Tournament = () => {
     const { data: teams, error: teamsError } = FetchTournamentTeams(
         `${tournamentID}`
     );
+
+    const teamsList = teams?.map((team) => team.team) ?? [];
 
     if (!tournament) {
         return <div>Loading...</div>;
@@ -148,31 +158,33 @@ const Tournament = () => {
                         />
                     </TabPanel>
                     <TabPanel value={currentTab} index={1}>
-                        {teams?.map((entry) => (
-                            <TeamSummary
-                                key={entry.team.id}
-                                team={entry.team}
-                            />
-                        ))}
-                    </TabPanel>
-                    <TabPanel value={currentTab} index={2}>
-                        {teams &&
-                            matches?.map((entry) => (
-                                <MatchSummary
-                                    teams={teams?.map((entry) => entry.team)}
-                                    match={entry}
-                                    key={entry.id}
+                        <Box sx={boxSx}>
+                            {teams?.map((entry) => (
+                                <TeamSummary
+                                    key={entry.team.id}
+                                    team={entry.team}
                                 />
                             ))}
+                        </Box>
+                    </TabPanel>
+                    <TabPanel value={currentTab} index={2}>
+                        <Box sx={boxSx}>
+                            {teams &&
+                                matches?.map((entry) => (
+                                    <MatchSummary
+                                        teams={teamsList}
+                                        match={entry}
+                                        key={entry.id}
+                                    />
+                                ))}
+                        </Box>
                     </TabPanel>
                     <TabPanel value={currentTab} index={3}>
-                        <div id="test"></div>
-
-                        <OrganizerManager
-                            organizers={organizers}
-                            removeOrganizer={removeOrganizer}
-                            addOrganizer={addOrganizer}
-                        />
+                        <Box sx={boxSx}>
+                            {organizers?.map((user) => (
+                                <UserSummary key={user.id} user={user} />
+                            ))}
+                        </Box>
                     </TabPanel>
                 </Box>
             </Box>
