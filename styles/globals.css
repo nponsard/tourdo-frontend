@@ -13,3 +13,7 @@ a {
 * {
     box-sizing: border-box;
 }
+
+.pagination-manager span{
+    cursor: pointer;
+}

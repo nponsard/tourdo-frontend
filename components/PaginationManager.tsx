@@ -13,11 +13,11 @@ export function PaginationManager(props: {
 
     return (
         <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-            <Box>
+            <div className='pagination-manager' >
                 {props.currentPage > 1 && (
                     <span onClick={() => props.setCurrentPage(1)}>1 </span>
                 )}
-                {max > 5 && props.currentPage > 3 && <span>... </span>}
+                {max > 5 && props.currentPage > 3 && "... "}
 
                 {props.currentPage > 2 && max >= 3 && (
                     <span
@@ -29,7 +29,7 @@ export function PaginationManager(props: {
                     </span>
                 )}
 
-                <Typography component="span" >{props.currentPage} </Typography>
+                <Typography component="span" sx={{textDecoration: "underline"}}  >{props.currentPage}</Typography> {" "}
 
                 {props.currentPage < max - 1 && (
                     <span
@@ -41,11 +41,11 @@ export function PaginationManager(props: {
                     </span>
                 )}
 
-                {max > 3 && props.currentPage < max - 2 && <span>... </span>}
+                {max > 3 && props.currentPage < max - 2 && "... "}
                 {props.currentPage < max && (
                     <span onClick={() => props.setCurrentPage(max)}>{max}</span>
                 )}
-            </Box>
+            </div>
         </Box>
     );
 }
