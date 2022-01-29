@@ -7,6 +7,7 @@ export enum Role {
     LEADER = 1,
     COACH = 2,
 }
+export const RoleNames = ["Player", "Captain", "Coach"];
 
 export interface Team {
     id: number;

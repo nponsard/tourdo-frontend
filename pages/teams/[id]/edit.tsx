@@ -1,44 +1,59 @@
-import { Box, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    IconButton,
+    List,
+    ListItem,
+    ListItemText,
+    Paper,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import UserSummary from "../../../components/UserSummary";
 import { LoginContext } from "../../../utils/auth";
 import {
     Role,
+    RoleNames,
     TeamMember,
     useGetTeam,
     useGetTeamMembers,
 } from "../../../utils/teams";
-
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
 const TeamEditor = () => {
     const router = useRouter();
     const { id } = router.query;
-    const [currentTab, setTab] = useState(0);
     const context = useContext(LoginContext);
+
+    const [localMembers, setLocalMembers] = useState<TeamMember[]>([]);
+    const [localName, setLocalName] = useState("");
+    const [localDescription, setLocalDescription] = useState("");
 
     const { data: team } = useGetTeam(`${id}`);
     const { data: members } = useGetTeamMembers(`${id}`);
-    // const { data: tournaments } = useGetTeamTournaments(`${id}`);
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-        setTab(newValue);
-    };
+    useEffect(() => {
+        if (team) {
+            setLocalName(team.name);
+            setLocalDescription(team.description);
+        }
+    }, [team]);
+
+    useEffect(() => {
+        if (members !== undefined) {
+            setLocalMembers(members);
+        }
+    }, [members]);
 
     if (!team || !members) return <div>Loading</div>;
 
-    const captains = members.filter(
-        (member: TeamMember) => member.role == Role.LEADER
-    );
-    const coaches = members.filter(
-        (member: TeamMember) => member.role == Role.COACH
-    );
-    const players = members.filter(
-        (member: TeamMember) => member.role == Role.PLAYER
-    );
-
     const canEdit =
-        captains.some((captain: TeamMember) => {
-            captain.user.id == context.user?.id;
+        members.some((captain: TeamMember) => {
+            captain.user.id === context.user?.id &&
+                captain.role === Role.LEADER;
         }) || context.user?.admin;
 
     console.log("context :", context);
@@ -49,99 +64,46 @@ const TeamEditor = () => {
 
     return (
         <Box sx={{ p: "1rem" }}>
-            <Typography variant="body1" color="text.secondary">
-                Team
-            </Typography>
-            <Box
-                sx={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}
-            >
-                <Typography variant="h4">{team.name}</Typography>
-                <Box sx={{ flexGrow: 1 }} />
-            </Box>
+            <Typography variant="h4">Edit team</Typography>
+            <Stack spacing={2}>
+                <TextField
+                    fullWidth
+                    value={localName}
+                    label="Name"
+                    InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                    fullWidth
+                    value={localDescription}
+                    label="Description"
+                    InputLabelProps={{ shrink: true }}
+                />
+            </Stack>
             <Typography variant="body1">{team.description}</Typography>
-
-            {captains.length > 0 && (
-                <>
-                    <Typography
-                        variant="h5"
-                        sx={{ textAlign: "center", marginTop: "1rem" }}
-                    >
-                        Captain{captains.length > 1 ? "s" : ""}
-                    </Typography>
-
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-evenly",
-                        }}
-                    >
-                        {captains.map((captain: TeamMember) => (
-                            <UserSummary
-                                key={captain.user.id}
-                                user={captain.user}
+            <Typography variant="h6">Members</Typography>
+            TODO : implement actions
+            <Button color="success" variant="contained">
+                Add
+            </Button>
+            <Paper elevation={3} sx={{ maxWidth: "30rem" }}>
+                <List>
+                    {localMembers.map((member: TeamMember) => (
+                        <ListItem
+                            key={member.user.id}
+                            secondaryAction={
+                                <IconButton edge="end" aria-label="delete">
+                                    <DeleteIcon />
+                                </IconButton>
+                            }
+                        >
+                            <ListItemText
+                                primary={member.user.username}
+                                secondary={RoleNames[member.role]}
                             />
-                        ))}
-                    </Box>
-                </>
-            )}
-            {coaches.length > 0 && (
-                <>
-                    <Typography
-                        variant="h5"
-                        sx={{ textAlign: "center", marginTop: "1rem" }}
-                    >
-                        Coach{captains.length > 1 ? "es" : ""}
-                    </Typography>
-
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-evenly",
-                        }}
-                    >
-                        {coaches.map((member: TeamMember) => (
-                            <UserSummary
-                                key={member.user.id}
-                                user={member.user}
-                            />
-                        ))}
-                    </Box>
-                </>
-            )}
-
-            {players.length > 0 && (
-                <>
-                    <Typography
-                        variant="h5"
-                        sx={{ textAlign: "center", marginTop: "1rem" }}
-                    >
-                        Player{captains.length > 1 ? "s" : ""}
-                    </Typography>
-
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-evenly",
-                        }}
-                    >
-                        {players.map((member: TeamMember) => (
-                            <UserSummary
-                                key={member.user.id}
-                                user={member.user}
-                            />
-                        ))}
-                    </Box>
-                </>
-            )}
+                        </ListItem>
+                    ))}
+                </List>
+            </Paper>
         </Box>
     );
 };
