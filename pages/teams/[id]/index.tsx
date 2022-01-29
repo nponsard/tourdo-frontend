@@ -97,6 +97,9 @@ const TeamDetail = () => {
 
     return (
         <Box sx={{ p: "1rem" }}>
+            <Typography variant="body1" color="text.secondary">
+                Team
+            </Typography>
             <Box
                 sx={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}
             >

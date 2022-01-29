@@ -66,6 +66,9 @@ const UserDetail = () => {
 
     return (
         <Box sx={{ p: "1rem" }}>
+            <Typography variant="body1" color="text.secondary">
+                User
+            </Typography>
             <Box
                 sx={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}
             >

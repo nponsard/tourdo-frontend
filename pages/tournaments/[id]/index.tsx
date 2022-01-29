@@ -100,6 +100,10 @@ const Tournament = () => {
         <>
             <Box sx={{ padding: "1em", m: "1em" }}>
                 <Box>
+                    <Typography variant="body1" color="text.secondary">
+                        Tournament
+                    </Typography>
+
                     <Box
                         sx={{
                             display: "flex",
