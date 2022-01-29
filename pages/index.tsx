@@ -10,6 +10,7 @@ import UserSummary from "../components/UserSummary";
 import TeamSummary from "../components/TeamSummary";
 import Tournament from "./tournaments/[id]";
 import TournamentSummary from "../components/TournamentSummary";
+import { PaginationManager } from "../components/PaginationManager";
 
 const boxSx = {
     display: "flex",
@@ -19,13 +20,31 @@ const boxSx = {
     justifyContent: "center",
 };
 
+const pagination = 1;
+
 const Home: NextPage = () => {
     const [currentTab, setTab] = useState(0);
     const [search, setSearch] = useState("");
 
-    const { data: teams } = useSearchTeams(search);
-    const { data: users } = useSearchUsers(search);
-    const { data: tournaments } = useSearchTournaments(search);
+    const [tournamentPage, setTournamentPage] = useState(1);
+    const [teamPage, setTeamPage] = useState(1);
+    const [userPage, setUserPage] = useState(1);
+
+    const { data: teams } = useSearchTeams(
+        search,
+        (teamPage - 1) * pagination,
+        pagination
+    );
+    const { data: users } = useSearchUsers(
+        search,
+        (userPage - 1) * pagination,
+        pagination
+    );
+    const { data: tournaments } = useSearchTournaments(
+        search,
+        (tournamentPage - 1) * pagination,
+        pagination
+    );
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setTab(newValue);
@@ -49,11 +68,11 @@ const Home: NextPage = () => {
                     alignItems: "center",
                     marginTop: "3rem",
                     flexWrap: "wrap",
-                    marginBottom: "1rem"
+                    marginBottom: "1rem",
                 }}
             >
                 <Typography variant="h4">Explore</Typography>
-                <Box sx={{ flexGrow: 1, minWidth : "2rem" }}></Box>
+                <Box sx={{ flexGrow: 1, minWidth: "2rem" }}></Box>
                 <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                     <SearchIcon
                         sx={{ color: "action.active", mr: 1, my: 0.5 }}
@@ -94,6 +113,12 @@ const Home: NextPage = () => {
                         </>
                     )}
                 </Box>
+                <PaginationManager
+                    currentPage={tournamentPage}
+                    setCurrentPage={setTournamentPage}
+                    total={tournaments?.total ?? 0}
+                    pagination={pagination}
+                />
             </TabPanel>
             <TabPanel value={currentTab} index={1}>
                 <Box sx={boxSx}>
@@ -105,6 +130,12 @@ const Home: NextPage = () => {
                         </>
                     )}
                 </Box>
+                <PaginationManager
+                    currentPage={teamPage}
+                    setCurrentPage={setTeamPage}
+                    total={teams?.total ?? 0}
+                    pagination={pagination}
+                />
             </TabPanel>
             <TabPanel value={currentTab} index={2}>
                 <Box sx={boxSx}>
@@ -116,6 +147,12 @@ const Home: NextPage = () => {
                         </>
                     )}
                 </Box>
+                <PaginationManager
+                    pagination={pagination}
+                    total={users?.total || 0}
+                    currentPage={userPage}
+                    setCurrentPage={setUserPage}
+                />
             </TabPanel>
         </>
     );

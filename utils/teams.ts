@@ -33,6 +33,8 @@ export const useGetTeamTournaments = (team_id: string) => {
     return UseApi<Tournament[]>(`/teams/${team_id}/tournaments`);
 };
 
-export const useSearchTeams = (query: string) => {
-    return UseApi<{ teams: Team[]; total: number }>(`/teams?search=${query}`);
+export const useSearchTeams = (query: string, offset = 0, limit = 20) => {
+    return UseApi<{ teams: Team[]; total: number }>(
+        `/teams?search=${query}&offset=${offset}&limit=${limit}`
+    );
 };

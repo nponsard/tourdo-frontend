@@ -82,8 +82,8 @@ export const RemoveTournamentOrganizer = (
     );
 };
 
-export const useSearchTournaments = (query: string) => {
+export const useSearchTournaments = (query: string, offset = 0, limit = 20) => {
     return UseApi<{ tournaments: Tournament[]; total: number }>(
-        `/tournaments?search=${query}`
+        `/tournaments?search=${query}&offset=${offset}&limit=${limit}`
     );
 };
