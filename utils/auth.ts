@@ -83,7 +83,7 @@ export const UseApi = <T>(endpoint: string, init?: RequestInit | undefined) => {
     const loginCtx = useContext(LoginContext);
 
     const fetcher = () => {
-        return CallApi(
+        return CallApi<T>(
             endpoint,
             init,
             loginCtx.tokenPair,
@@ -92,7 +92,7 @@ export const UseApi = <T>(endpoint: string, init?: RequestInit | undefined) => {
         //     .then((value) => setData(value))
         //     .catch((e) => setError(e));
     };
-    return useSWR(endpoint, fetcher);
+    return useSWR<T>(endpoint, fetcher);
 };
 
 export const CallLogin = async (
