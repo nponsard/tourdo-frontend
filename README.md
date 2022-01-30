@@ -1,9 +1,9 @@
-
 ## todo
 - change description
 - fix login after register
 - improve tournament preview
 - handle newlines in description
+- set back end url via env variable
 ## possible improvements 
 - use Skeleton when loading
 
