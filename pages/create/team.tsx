@@ -17,7 +17,7 @@ import { useContext, useState } from "react";
 import { LoginContext } from "../../utils/auth";
 import {
     CreateTournament,
-    TournamentnTypeName,
+    TournamentTypeName,
     TournamentType,
 } from "../../utils/tournaments";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";

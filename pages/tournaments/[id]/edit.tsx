@@ -1,14 +1,13 @@
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
     Alert,
-    Autocomplete,
     Box,
     Button,
-    Divider,
     IconButton,
     List,
     ListItem,
     ListItemText,
-    Modal,
     Paper,
     Snackbar,
     Stack,
@@ -17,28 +16,17 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect, useState } from "react";
-import UserSummary from "../../../components/UserSummary";
+import AddUserModal from "../../../components/AddUserModal";
 import { LoginContext } from "../../../utils/auth";
 import {
-    AddTeamMember,
-    EditTeam,
-    TeamRole,
-    TeamRoleNames,
-    TeamMember,
-    useGetTeam,
-    useGetTeamMembers,
-    RemoveTeamMember,
-} from "../../../utils/teams";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import { User } from "../../../utils/users";
-import AddUserModal from "../../../components/AddUserModal";
-import {
     AddTournamentOrganizer,
+    EditTournament,
     RemoveTournamentOrganizer,
+    TournamentTypeName,
     useGetTournament,
     useGetTournamentOrganizers,
 } from "../../../utils/tournaments";
+import { User } from "../../../utils/users";
 
 const TournamentEditor = () => {
     const router = useRouter();
@@ -51,7 +39,6 @@ const TournamentEditor = () => {
     const [errorSnack, setErrorSnack] = useState<string | undefined>();
     const [successSnack, setSuccessSnack] = useState<string | undefined>();
     const [openOrganizerModal, setOpenOrganizerModal] = useState(false);
-    const [selectedRole, setSelectedRole] = useState<TeamRole>(TeamRole.PLAYER);
 
     const { data: organizers, mutate: mutateOrganizers } =
         useGetTournamentOrganizers(`${id}`);
@@ -97,14 +84,13 @@ const TournamentEditor = () => {
                 )
                     .then(() => {
                         setSuccessSnack("Organizer removed successfully");
-                        mutateOrganizers()
+                        mutateOrganizers();
                     })
                     .catch((e) => {
                         if (e.message && typeof e.message === "string")
                             setErrorSnack(e.message);
                         else setErrorSnack(JSON.stringify(e));
-                        mutateOrganizers()
-                    
+                        mutateOrganizers();
                     });
             }
         },
@@ -184,8 +170,13 @@ const TournamentEditor = () => {
                     {errorSnack}
                 </Alert>
             </Snackbar>
-            <Typography variant="h4">Edit Tournament</Typography>
-            <Stack spacing={2}>
+
+                <Typography variant="h4">Edit Tournament</Typography>
+                <Typography variant="body1">
+                    Type : {TournamentTypeName[tournament.type]}
+                </Typography>
+            <Stack spacing={2} sx={{marginTop: "1rem"}}>
+
                 <TextField
                     fullWidth
                     value={localName}

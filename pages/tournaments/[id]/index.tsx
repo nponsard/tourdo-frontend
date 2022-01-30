@@ -16,6 +16,7 @@ import {
     useGetTournamentOrganizers,
     useGetTournamentTeams,
     RemoveTournamentOrganizer,
+    TournamentTypeName,
 } from "../../../utils/tournaments";
 import useSWR from "swr";
 import Tabs from "@mui/material/Tabs";
@@ -151,6 +152,9 @@ const Tournament = () => {
                             </Link>
                         )}
                     </Box>
+                    <Typography variant="body1">
+                        Type : {TournamentTypeName[tournament.type]}
+                    </Typography>
                     <Typography color="text.secondary">
                         {tournament?.description}
                     </Typography>
