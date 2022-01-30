@@ -14,6 +14,8 @@ import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { LoginContext } from "../../../utils/auth";
 import { UpdateUser, useGetUser } from "../../../utils/users";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import Link from "next/link";
 
 export default function EditUser() {
     const router = useRouter();
@@ -100,6 +102,9 @@ export default function EditUser() {
                     {errorSnack}
                 </Alert>
             </Snackbar>
+            <Link href={`/userIs/${user.id}`} passHref>
+                <Button startIcon={<ArrowBackIcon />}>Back</Button>
+            </Link>
             <Stack spacing={2}>
                 <Typography variant="h5">
                     {user.username}{" "}

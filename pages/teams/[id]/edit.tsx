@@ -32,6 +32,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { User } from "../../../utils/users";
 import AddUserModal from "../../../components/AddUserModal";
+import Link from "next/link";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const TeamEditor = () => {
     const router = useRouter();
@@ -186,6 +188,11 @@ const TeamEditor = () => {
                     {errorSnack}
                 </Alert>
             </Snackbar>
+
+            <Link href={`/teams/${team.id}`} passHref>
+                <Button startIcon={<ArrowBackIcon />}>Back</Button>
+            </Link>
+
             <Typography variant="h4">Edit team</Typography>
             <Stack spacing={2}>
                 <TextField
@@ -280,7 +287,7 @@ const TeamEditor = () => {
                         borderColor: "divider",
                     }}
                 />
-                <List sx={{ maxHeight: "60rem", overflowY: "auto", p:0}}>
+                <List sx={{ maxHeight: "60rem", overflowY: "auto", p: 0 }}>
                     {members.map((member: TeamMember) => (
                         <ListItem
                             sx={{

@@ -58,6 +58,9 @@ import AddTeamModal from "../../../components/AddTeamModal";
 import { Team } from "../../../utils/teams";
 import TeamSelector from "../../../components/TeamSelector";
 import { Match, MatchStatus } from "../../../utils/matches";
+import Link from "next/link";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const TournamentEditor = () => {
     const router = useRouter();
@@ -306,6 +309,9 @@ const TournamentEditor = () => {
                 </Alert>
             </Snackbar>
 
+            <Link href={`/tournaments/${tournament.id}`} passHref>
+                <Button startIcon={<ArrowBackIcon />}>Back</Button>
+            </Link>
             <Typography variant="h4">
                 Edit Tournament : {tournament.name}
             </Typography>
@@ -465,7 +471,9 @@ const TournamentEditor = () => {
                                             <TableCell>
                                                 <IconButton
                                                     onClick={() => {
-                                                        handleDeleteMatch(match);
+                                                        handleDeleteMatch(
+                                                            match
+                                                        );
                                                     }}
                                                     color="error"
                                                 >
