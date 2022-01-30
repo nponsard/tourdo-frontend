@@ -12,7 +12,12 @@ import Link from "next/link";
 import { useCallback } from "react";
 import { Match, MatchStatus } from "../utils/matches";
 import { Team } from "../utils/teams";
-import { Tournament, TournamentType } from "../utils/tournaments";
+import {
+    GenerateMatches,
+    Tournament,
+    TournamentType,
+} from "../utils/tournaments";
+import MatchSummary from "./MatchSummary";
 
 const boxSx = {
     display: "flex",
@@ -84,7 +89,38 @@ export function SimpleElimination(props: {
     matches: Match[];
     teams: Team[];
 }) {
-    return <></>;
+    let maxRow = 0;
+    let maxColumn = 0;
+
+    for (const match of props.matches) {
+        if (match.row > maxRow) maxRow = match.row;
+        if (match.column > maxColumn) maxColumn = match.column;
+    }
+
+    if (props.matches.length === 0)
+        return (
+            <Typography variant="h5">Tournament not yet generated</Typography>
+        );
+
+    return (
+        <Box
+            sx={{
+                display: "grid",
+                overflowX: "auto",
+                gridTemplateColumns: `repeat(1fr,${maxColumn})`,
+                gridTemplateRows: `repeat(1fr,${maxRow})`,
+            }}
+        >
+            {props.matches.map((match) => (
+                <Box
+                    key={match.id}
+                    sx={{ gridColumn: match.column, gridRow: match.row }}
+                >
+                    <MatchSummary match={match} teams={props.teams} />
+                </Box>
+            ))}
+        </Box>
+    );
 }
 
 export default function TournamentRepresentation(props: {
