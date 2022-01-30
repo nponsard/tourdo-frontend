@@ -172,6 +172,9 @@ const ChangePassword = () => {
                 >
                     <Stack spacing={2}>
                         <Typography variant="h5">Change password</Typography>
+                        <Typography variant="h6">
+                            {context.user?.username}
+                        </Typography>
                         <TextField
                             required
                             label="Old password"
