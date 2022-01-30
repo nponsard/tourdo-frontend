@@ -6,14 +6,24 @@ import {
     Alert,
     Box,
     Button,
+    FormControl,
     IconButton,
+    InputLabel,
     List,
     ListItem,
     ListItemText,
+    MenuItem,
     Paper,
+    Select,
     Snackbar,
     Stack,
     Tab,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
     Tabs,
     TextField,
     Typography,
@@ -23,14 +33,20 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import AddUserModal from "../../../components/AddUserModal";
 import { LoginContext } from "../../../utils/auth";
 import {
+    AddMatch,
     AddTournamentOrganizer,
     AddTournamentTeam,
     EditTournament,
+    GenerateMatches,
     RemoveTournamentOrganizer,
     ShuffleTournamentTeams,
     Tournament,
+    TournamentStatus,
+    TournamentType,
     TournamentTypeName,
+    UpdateMatch,
     useGetTournament,
+    useGetTournamentMatches,
     useGetTournamentOrganizers,
     useGetTournamentTeams,
 } from "../../../utils/tournaments";
@@ -39,6 +55,8 @@ import { TabPanel } from "../../../components/TabPanel";
 import { User } from "../../../utils/users";
 import AddTeamModal from "../../../components/AddTeamModal";
 import { Team } from "../../../utils/teams";
+import TeamSelector from "../../../components/TeamSelector";
+import { Match, MatchStatus } from "../../../utils/matches";
 
 const TournamentEditor = () => {
     const router = useRouter();
@@ -63,6 +81,15 @@ const TournamentEditor = () => {
         `${id}`
     );
     const { data: teams, mutate: mutateTeams } = useGetTournamentTeams(`${id}`);
+    const { data: matches, mutate: mutateMatches } = useGetTournamentMatches(
+        `${id}`
+    );
+
+    const teamList: Team[] = teams
+        ? teams.map((entry) => {
+              return entry.team;
+          })
+        : [];
 
     useEffect(() => {
         if (tournament) {
@@ -143,7 +170,6 @@ const TournamentEditor = () => {
         },
         [context.setTokenPair, context.tokenPair, mutateTeams, tournament]
     );
-
     const handleAddOrganizers = useCallback(
         (users: User[]) => {
             const promises = users.map((user) => {
@@ -168,6 +194,52 @@ const TournamentEditor = () => {
             });
         },
         [context.setTokenPair, context.tokenPair, mutateOrganizers, tournament]
+    );
+
+    const handleAddMatch = useCallback(() => {
+        if (tournament && context.tokenPair && context.setTokenPair) {
+            AddMatch(tournament.id, context.tokenPair, context.setTokenPair)
+                .then(() => {
+                    mutateMatches();
+                })
+                .catch((e) => {
+                    setErrorSnack(JSON.stringify(e));
+                    mutateMatches();
+                });
+        }
+    }, [context.setTokenPair, context.tokenPair, mutateMatches, tournament]);
+    const handleGenerateMatches = useCallback(() => {
+        if (tournament && context.tokenPair && context.setTokenPair) {
+            GenerateMatches(
+                tournament.id,
+                context.tokenPair,
+                context.setTokenPair
+            )
+                .then(() => {
+                    mutateMatches();
+                    setSuccessSnack("Matches generated successfully");
+                })
+                .catch((e) => {
+                    setErrorSnack(JSON.stringify(e));
+                    mutateMatches();
+                });
+        }
+    }, [context.setTokenPair, context.tokenPair, mutateMatches, tournament]);
+
+    const handleUpdateMatch = useCallback(
+        (match: Match) => {
+            if (tournament && context.tokenPair && context.setTokenPair) {
+                UpdateMatch(match, context.tokenPair, context.setTokenPair)
+                    .then(() => {
+                        mutateMatches();
+                    })
+                    .catch((e) => {
+                        setErrorSnack(JSON.stringify(e));
+                        mutateMatches();
+                    });
+            }
+        },
+        [context.setTokenPair, context.tokenPair, mutateMatches, tournament]
     );
 
     const handleReset = useCallback(() => {
@@ -236,7 +308,145 @@ const TournamentEditor = () => {
                 </Tabs>
             </Box>
 
-            <TabPanel value={currentTab} index={0}></TabPanel>
+            <TabPanel value={currentTab} index={0}>
+                <Stack spacing={2} direction="row">
+                    <Typography variant="h6">Matches</Typography>
+
+                    {tournament.type == TournamentType.None ? (
+                        <Button
+                            variant="contained"
+                            size="small"
+                            onClick={handleAddMatch}
+                        >
+                            <AddIcon />
+                        </Button>
+                    ) : (
+                        <>
+                            {tournament.status === TournamentStatus.Created && (
+                                <Button
+                                    size="small"
+                                    onClick={handleGenerateMatches}
+                                >
+                                    Generate
+                                </Button>
+                            )}
+                        </>
+                    )}
+                </Stack>
+
+                <TableContainer component={Paper}>
+                    <Table
+                        aria-label="Matches table"
+                        sx={{ minWidth: "50rem" }}
+                    >
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell>Team 1</TableCell>
+                                <TableCell>Team 2</TableCell>
+                                <TableCell>Date</TableCell>
+                                <TableCell>Winner</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {matches
+                                ?.sort((a, b) => {
+                                    return a.id - b.id;
+                                })
+                                .map((match: Match) => (
+                                    <TableRow
+                                        key={match.id}
+                                        sx={{
+                                            "&:last-child td, &:last-child th":
+                                                {
+                                                    border: 0,
+                                                },
+                                        }}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {match.id}
+                                        </TableCell>
+                                        <TableCell>
+                                            <TeamSelector
+                                                position="team1_id"
+                                                teams={teamList}
+                                                match={match}
+                                                setMatch={handleUpdateMatch}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <TeamSelector
+                                                position="team2_id"
+                                                teams={teamList}
+                                                match={match}
+                                                setMatch={handleUpdateMatch}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            {match.date &&
+                                                new Date(
+                                                    match.date
+                                                ).toLocaleString()}
+                                        </TableCell>
+                                        <TableCell>
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-simple-select-label">
+                                                    Winner
+                                                </InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    value={match.status}
+                                                    label="Age"
+                                                    onChange={(e) => {
+                                                        console.log(
+                                                            e.target.value
+                                                        );
+
+                                                        handleUpdateMatch({
+                                                            ...match,
+                                                            status: e.target
+                                                                .value as MatchStatus,
+                                                        });
+                                                    }}
+                                                >
+                                                    <MenuItem value={0}>
+                                                        None
+                                                    </MenuItem>
+
+                                                    {match.team1_id && (
+                                                        <MenuItem value={1}>
+                                                            {
+                                                                teams.find(
+                                                                    (t) =>
+                                                                        t.team
+                                                                            .id ===
+                                                                        match.team1_id
+                                                                )?.team.name
+                                                            }
+                                                        </MenuItem>
+                                                    )}
+                                                    {match.team2_id && (
+                                                        <MenuItem value={2}>
+                                                            {
+                                                                teams.find(
+                                                                    (t) =>
+                                                                        t.team
+                                                                            .id ===
+                                                                        match.team2_id
+                                                                )?.team.name
+                                                            }
+                                                        </MenuItem>
+                                                    )}
+                                                </Select>
+                                            </FormControl>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </TabPanel>
 
             <TabPanel value={currentTab} index={1}>
                 <Typography variant="body1">

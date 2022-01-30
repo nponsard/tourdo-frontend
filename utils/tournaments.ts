@@ -180,3 +180,59 @@ export const ShuffleTournamentTeams = (
         setTokenPair
     );
 };
+
+export const AddMatch = (
+    tournament_id: number,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/mathes`,
+        {
+            method: "POST",
+
+            body: JSON.stringify({
+                team1: null,
+                team2: null,
+                date: new Date(),
+                tournament_id,
+                row: 0,
+                column: 0,
+            }),
+        },
+        tokenPair,
+        setTokenPair
+    );
+};
+
+export const GenerateMatches = (
+    tournament_id: number,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/tournaments/${tournament_id}/matches/generate`,
+        {
+            method: "POST",
+        },
+        tokenPair,
+        setTokenPair
+    );
+};
+
+
+export const UpdateMatch = (
+    match: Match,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/matches/${match.id}`,
+        {
+            method: "PATCH",
+            body: JSON.stringify(match),
+        },
+        tokenPair,
+        setTokenPair
+    );
+}
