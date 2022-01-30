@@ -6,7 +6,7 @@ module.exports = {
       return [
         {
           source: '/api/:path*',
-          destination: 'https://backend.juno.nponsard.net/api/path*'
+          destination: 'https://backend.juno.nponsard.net/api/:path*'
         }
       ];
     else
