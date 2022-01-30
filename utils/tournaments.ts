@@ -39,20 +39,20 @@ export interface TournamentTeam {
     team_number: number;
 }
 
-export const FetchTournament = (id: string) => {
+export const useGetTournament = (id: string) => {
     return useSWR<Tournament>(`/api/v1/tournaments/${id}`, Fetcher);
 };
-export const FetchTournamentMatches = (id: string) => {
+export const useGetTournamentMatches = (id: string) => {
     return useSWR<Match[]>(`/api/v1/tournaments/${id}/matches`, Fetcher);
 };
-export const FetchTournamentTeams = (id: string) => {
+export const useGetTournamentTeams = (id: string) => {
     return useSWR<{ team: Team; team_number: number }[]>(
         `/api/v1/tournaments/${id}/teams`,
         Fetcher
     );
 };
 
-export const FetchTournamentOrganizers = (id: string) => {
+export const useGetTournamentOrganizers = (id: string) => {
     return useSWR<User[]>(`/api/v1/tournaments/${id}/organizers`, Fetcher);
 };
 

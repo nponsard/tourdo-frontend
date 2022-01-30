@@ -11,10 +11,10 @@ import { useRouter } from "next/router";
 import {
     AddTournamentOrganizer,
     DeleteTournament,
-    FetchTournament,
-    FetchTournamentMatches,
-    FetchTournamentOrganizers,
-    FetchTournamentTeams,
+    useGetTournament as useGetTournament,
+    useGetTournamentMatches,
+    useGetTournamentOrganizers,
+    useGetTournamentTeams,
     RemoveTournamentOrganizer,
 } from "../../../utils/tournaments";
 import useSWR from "swr";
@@ -73,14 +73,14 @@ const Tournament = () => {
 
     const { user } = useContext(LoginContext);
 
-    const { data: tournament, error } = FetchTournament(`${tournamentID}`);
+    const { data: tournament, error } = useGetTournament(`${tournamentID}`);
 
-    const { data: organizers } = FetchTournamentOrganizers(`${tournamentID}`);
+    const { data: organizers } = useGetTournamentOrganizers(`${tournamentID}`);
 
-    const { data: matches, error: matchesError } = FetchTournamentMatches(
+    const { data: matches, error: matchesError } = useGetTournamentMatches(
         `${tournamentID}`
     );
-    const { data: teams, error: teamsError } = FetchTournamentTeams(
+    const { data: teams, error: teamsError } = useGetTournamentTeams(
         `${tournamentID}`
     );
 

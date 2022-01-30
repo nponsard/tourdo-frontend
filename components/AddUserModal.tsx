@@ -21,7 +21,7 @@ const modalStyle = {
 };
 
 export default function AddUserModal(props: {
-    show: boolean;
+    open: boolean;
     addUsers: (users: User[]) => any;
     close: () => any;
     title: string;
@@ -33,7 +33,7 @@ export default function AddUserModal(props: {
 
     return (
         <Modal
-            open={props.show}
+            open={props.open}
             onClose={close}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
@@ -58,6 +58,9 @@ export default function AddUserModal(props: {
                     }}
                 />
 
+                <Button onClick={props.close} color="secondary">
+                    Cancel{" "}
+                </Button>
                 <Button
                     onClick={() => {
                         props.addUsers(selectedUsers);
@@ -66,7 +69,6 @@ export default function AddUserModal(props: {
                 >
                     Add
                 </Button>
-                <Button onClick={props.close}>Cancel </Button>
             </Box>
         </Modal>
     );

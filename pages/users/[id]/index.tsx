@@ -12,10 +12,10 @@ import { FetchEvent } from "next/dist/server/web/spec-compliant/fetch-event";
 import { useRouter } from "next/router";
 import {
     AddTournamentOrganizer,
-    FetchTournament,
-    FetchTournamentMatches,
-    FetchTournamentOrganizers,
-    FetchTournamentTeams,
+    useGetTournament,
+    useGetTournamentMatches,
+    useGetTournamentOrganizers,
+    useGetTournamentTeams,
     RemoveTournamentOrganizer,
 } from "../../../utils/tournaments";
 import useSWR from "swr";

@@ -78,9 +78,13 @@ const TeamEditor = () => {
             });
 
             Promise.allSettled(promises)
-                .then(() => {
-                    setSuccessSnack("Successfully added members");
-                    mutateMembers();
+                .then((results) => {
+                    if (
+                        results.some((result) => result.status === "rejected")
+                    ) {
+                        setErrorSnack("Failed to add some users");
+                        console.log(results);
+                    } else setSuccessSnack("User(s) added successfully");
                 })
                 .catch((e) => {
                     mutateMembers();
@@ -225,7 +229,7 @@ const TeamEditor = () => {
             </Stack>
             <Typography variant="h6">Members</Typography>
             <AddUserModal
-                show={openModal}
+                open={openModal}
                 close={() => {
                     setOpenModal(false);
                 }}
@@ -269,11 +273,17 @@ const TeamEditor = () => {
                 elevation={3}
                 sx={{ maxWidth: "30rem", padding: "0.5rem", marginTop: "1rem" }}
             >
-                <List>
+                {/* for consistancy */}
+                <Box
+                    sx={{
+                        borderBottom: "1px solid",
+                        borderColor: "divider",
+                    }}
+                />
+                <List sx={{ maxHeight: "60rem", overflowY: "auto", p:0}}>
                     {members.map((member: TeamMember) => (
                         <ListItem
                             sx={{
-                                borderTop: "1px solid",
                                 borderBottom: "1px solid",
                                 borderColor: "divider",
                             }}
