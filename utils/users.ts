@@ -31,15 +31,15 @@ export const SearchUserFetch = (username: string) => {
 };
 
 export const RegisterUser = (username: string, password: string) => {
-    return BaseFetch<{ user: User }>(`/api/v1/users/register`, {
+    return BaseFetch<{ user: User }>(`/users/register`, {
         method: "POST",
         body: JSON.stringify({ username, password }),
     });
 };
 
 export const Login = (username: string, password: string) => {
-    return Fetcher<{ accessToken: string; refreshToken: string }>(
-        `/api/v1/users/login`,
+    return BaseFetch<{ accessToken: string; refreshToken: string }>(
+        `/users/login`,
         {
             method: "POST",
             body: JSON.stringify({ username, password }),
