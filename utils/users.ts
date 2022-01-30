@@ -68,9 +68,11 @@ export const useSearchUsers = (query: string, offset = 0, limit = 20) => {
     );
 };
 
-
-
-export const DeleteUser = (user_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) => {
+export const DeleteUser = (
+    user_id: number,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
     return CallApi(
         `/users/${user_id}`,
         {
@@ -79,4 +81,21 @@ export const DeleteUser = (user_id: number, tokenPair: TokenPair, setTokenPair: 
         tokenPair,
         setTokenPair
     );
-}
+};
+
+export const ChangeUserPassword = (
+    old_password: string,
+    new_password: string,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/users/me`,
+        {
+            method: "PATCH",
+            body: JSON.stringify({ old_password, new_password }),
+        },
+        tokenPair,
+        setTokenPair
+    );
+};

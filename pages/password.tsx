@@ -15,21 +15,26 @@ import {
 } from "@mui/material";
 import { typography } from "@mui/system";
 import { useContext, useState } from "react";
-import { RegisterUser, SearchUser, SearchUserFetch } from "../utils/users";
+import {
+    ChangeUserPassword,
+    RegisterUser,
+    SearchUser,
+    SearchUserFetch,
+} from "../utils/users";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
 import { LoginContext } from "../utils/auth";
 
-const Register = () => {
+const ChangePassword = () => {
     const router = useRouter();
 
     const context = useContext(LoginContext);
 
-    const [username, setUsername] = useState("");
+    const [oldPassword, setOldPassword] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
 
-    const [usernameError, setUsernameError] = useState("");
+    const [oldPasswordError, setOldPasswordError] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState("");
     const [passwordError, setPasswordError] = useState("");
 
@@ -38,26 +43,12 @@ const Register = () => {
 
     // redirect to home page if already logged in
 
-    if (context.user!=null) router.push("/");
+    if (context.user === null) router.push("/");
 
-    const handleUsernameChange = (
+    const handleOldPasswordChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        setUsername(event.target.value);
-        SearchUserFetch(event.target.value)
-            .then((data) => {
-                if (
-                    data &&
-                    data.users.some(
-                        (value) => value.username == event.target.value
-                    )
-                )
-                    setUsernameError("Username already taken");
-                else setUsernameError("");
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        setOldPassword(event.target.value);
     };
 
     const handleConfirmPasswordChange = (
@@ -85,8 +76,13 @@ const Register = () => {
     };
 
     const handleRegister = () => {
+        if (!context.tokenPair || !context.user) {
+            setErrorMessage("You must be logged in to change your password");
+            return;
+        }
+
         if (
-            usernameError.length > 0 ||
+            oldPasswordError.length > 0 ||
             passwordError.length > 0 ||
             confirmPasswordError.length > 0
         ) {
@@ -94,22 +90,27 @@ const Register = () => {
             return;
         }
 
-        if (password.length < 1 || passwordConfirm.length < 1) {
+        if (
+            password.length < 1 ||
+            passwordConfirm.length < 1 ||
+            oldPassword.length < 1
+        ) {
             setErrorMessage("please fill in all fields");
 
             if (password.length < 1) setPasswordError("Please fill this field");
             if (passwordConfirm.length < 1)
                 setConfirmPasswordError("Please fill this field");
+            if (oldPassword.length < 1)
+                setOldPasswordError("Please fill this field");
             return;
         }
 
-        if (username.length < 3) {
-            setUsernameError("Username must be at least 3 characters long");
-            setErrorMessage("Username must be at least 3 characters long");
-            return;
-        }
-
-        RegisterUser(username, password)
+        ChangeUserPassword(
+            oldPassword,
+            password,
+            context.tokenPair,
+            context.setTokenPair
+        )
             .then((res) => {
                 setShowSuccessSnack(true);
             })
@@ -122,8 +123,6 @@ const Register = () => {
 
     const closeSuccessSnack = () => {
         setShowSuccessSnack(false);
-
-        router.push("/");
     };
 
     return (
@@ -138,7 +137,7 @@ const Register = () => {
                     severity="success"
                     sx={{ width: "100%" }}
                 >
-                    Registered ! Logging you in...
+                    Password changed
                 </Alert>
             </Snackbar>
             <Snackbar
@@ -172,18 +171,19 @@ const Register = () => {
                     }}
                 >
                     <Stack spacing={2}>
-                        <Typography variant="h5">Create an account </Typography>
+                        <Typography variant="h5">Change password</Typography>
                         <TextField
                             required
-                            label="Username"
-                            value={username}
-                            onChange={handleUsernameChange}
-                            helperText={usernameError}
-                            error={usernameError.length > 0}
+                            label="Old password"
+                            value={oldPassword}
+                            onChange={handleOldPasswordChange}
+                            helperText={oldPasswordError}
+                            error={oldPasswordError.length > 0}
+                            type="password"
                         />
                         <TextField
                             required
-                            label="Password"
+                            label="New password"
                             value={password}
                             onChange={handlePasswordChange}
                             type="password"
@@ -192,7 +192,7 @@ const Register = () => {
                         />
                         <TextField
                             required
-                            label="Confirm Password"
+                            label="Confirm new password"
                             value={passwordConfirm}
                             onChange={handleConfirmPasswordChange}
                             type="password"
@@ -200,16 +200,8 @@ const Register = () => {
                             error={confirmPasswordError.length > 0}
                         />
                         <Button variant="contained" onClick={handleRegister}>
-                            Register
+                            Update
                         </Button>
-                        <Typography>
-                            Already have an account ?{" "}
-                            <Link href="/login" passHref>
-                                <Typography component="a" color="primary">
-                                    Log in here
-                                </Typography>
-                            </Link>
-                        </Typography>
                     </Stack>
                 </Box>
             </Paper>
@@ -217,4 +209,4 @@ const Register = () => {
     );
 };
 
-export default Register;
+export default ChangePassword;

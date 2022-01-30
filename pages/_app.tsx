@@ -183,6 +183,16 @@ function MyApp({ Component, pageProps }: AppProps) {
                                         >
                                             Profile
                                         </MenuItem>
+                                        <MenuItem
+                                            onClick={() => {
+                                                setUserMenuAnchor(null);
+                                                router.push(
+                                                    `/password`
+                                                );
+                                            }}
+                                        >
+                                            Change password
+                                        </MenuItem>
                                         <MenuItem onClick={handleLogout}>
                                             Logout
                                         </MenuItem>
