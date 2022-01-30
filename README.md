@@ -4,6 +4,7 @@
 - improve tournament preview
 - handle newlines in description
 - set back end url via env variable
+- reload  members on modification
 ## possible improvements 
 - use Skeleton when loading
 
