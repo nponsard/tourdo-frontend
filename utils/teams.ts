@@ -1,3 +1,4 @@
+import { mutate } from "swr";
 import { CallApi, TokenPair, TokenPairSetter, UseApi } from "./auth";
 import { Tournament } from "./tournaments";
 import { User } from "./users";
@@ -73,4 +74,28 @@ export const CreateTeam = (
         tokenPair,
         setTokenPair
     );
+};
+
+export const EditTeam = (
+    team_id: number,
+    name: string,
+    description: string,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/teams/${team_id}`,
+        {
+            method: "PATCH",
+            body: JSON.stringify({
+                name,
+                description,
+            }),
+        },
+        tokenPair,
+        setTokenPair
+    ).then((value) => {
+        mutate(`/teams/${team_id}`);
+        return value;
+    });
 };

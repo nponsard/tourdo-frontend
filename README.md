@@ -3,7 +3,7 @@
 - edition interface
 - tournament preview
 - show tournament type
-- 
+- handle newlines in description
 ## possible improvements 
 - use Skeleton when loading
 
