@@ -1,5 +1,6 @@
 
 ## todo
+- change description
 - fix login after register
 - improve tournament preview
 - handle newlines in description
