@@ -19,7 +19,9 @@ export default function TeamSelector(props: {
 
     return (
         <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Winner</InputLabel>
+            <InputLabel id="demo-simple-select-label">
+                {props.position}
+            </InputLabel>
             <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -28,9 +30,8 @@ export default function TeamSelector(props: {
                         ? -1
                         : props.match[props.position]
                 }
-                label="Age"
+                label={props.position}
                 onChange={(e) => {
-                    console.log("e :", e);
                     props.setMatch({
                         ...props.match,
                         [props.position]: e.target.value,

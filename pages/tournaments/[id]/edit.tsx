@@ -36,6 +36,7 @@ import {
     AddMatch,
     AddTournamentOrganizer,
     AddTournamentTeam,
+    DeleteMatch,
     EditTournament,
     GenerateMatches,
     RemoveTournamentOrganizer,
@@ -241,6 +242,21 @@ const TournamentEditor = () => {
         },
         [context.setTokenPair, context.tokenPair, mutateMatches, tournament]
     );
+    const handleDeleteMatch = useCallback(
+        (match: Match) => {
+            if (tournament && context.tokenPair && context.setTokenPair) {
+                DeleteMatch(match.id, context.tokenPair, context.setTokenPair)
+                    .then(() => {
+                        mutateMatches();
+                    })
+                    .catch((e) => {
+                        setErrorSnack(JSON.stringify(e));
+                        mutateMatches();
+                    });
+            }
+        },
+        [context.setTokenPair, context.tokenPair, mutateMatches, tournament]
+    );
 
     const handleReset = useCallback(() => {
         if (tournament) {
@@ -346,6 +362,9 @@ const TournamentEditor = () => {
                                 <TableCell>Team 2</TableCell>
                                 <TableCell>Date</TableCell>
                                 <TableCell>Winner</TableCell>
+                                {tournament.type === TournamentType.None && (
+                                    <TableCell></TableCell>
+                                )}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -441,6 +460,19 @@ const TournamentEditor = () => {
                                                 </Select>
                                             </FormControl>
                                         </TableCell>
+                                        {tournament.type ===
+                                            TournamentType.None && (
+                                            <TableCell>
+                                                <IconButton
+                                                    onClick={() => {
+                                                        handleDeleteMatch(match);
+                                                    }}
+                                                    color="error"
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </TableCell>
+                                        )}
                                     </TableRow>
                                 ))}
                         </TableBody>

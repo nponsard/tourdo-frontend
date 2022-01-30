@@ -220,7 +220,6 @@ export const GenerateMatches = (
     );
 };
 
-
 export const UpdateMatch = (
     match: Match,
     tokenPair: TokenPair,
@@ -235,4 +234,19 @@ export const UpdateMatch = (
         tokenPair,
         setTokenPair
     );
-}
+};
+
+export const DeleteMatch = (
+    match_id: number,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/matches/${match_id}`,
+        {
+            method: "DELETE",
+        },
+        tokenPair,
+        setTokenPair
+    );
+};
