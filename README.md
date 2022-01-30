@@ -6,6 +6,7 @@
 - set back end url via env variable
 - reload  members on modification
 - fix typo button back on user edit
+- edition not available for non admins but owner
 ## possible improvements 
 - use Skeleton when loading
 
