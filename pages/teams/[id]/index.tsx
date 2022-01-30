@@ -42,11 +42,19 @@ import Link from "next/link";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import TournamentSummary from "../../../components/TournamentSummary";
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
     value: number;
 }
+const boxSx = {
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+};
 
 function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
@@ -72,7 +80,7 @@ const TeamDetail = () => {
 
     const { data: team } = useGetTeam(`${id}`);
     const { data: members } = useGetTeamMembers(`${id}`);
-    // const { data: tournaments } = useGetTeamTournaments(`${id}`);
+    const { data: tournaments } = useGetTeamTournaments(`${id}`);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setTab(newValue);
@@ -238,7 +246,18 @@ const TeamDetail = () => {
                 )}
             </TabPanel>
             <TabPanel value={currentTab} index={1}>
-                TODO : create and use the api
+                <Box sx={boxSx}>
+                    {tournaments && tournaments.length > 0 && (
+                        <>
+                            {tournaments.map((tournament) => (
+                                <TournamentSummary
+                                    key={tournament.id}
+                                    tournament={tournament}
+                                />
+                            ))}
+                        </>
+                    )}
+                </Box>
             </TabPanel>
         </Box>
     );
