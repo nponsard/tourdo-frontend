@@ -85,7 +85,7 @@ const Tournament = () => {
         `${tournamentID}`
     );
 
-    const teamsList = teams?.map((team) => team.team) ?? [];
+    const teamList = teams?.map((team) => team.team) ?? [];
 
     if (!tournament) {
         return <div>Loading...</div>;
@@ -159,7 +159,7 @@ const Tournament = () => {
                         {tournament?.description}
                     </Typography>
                     <Typography>
-                        {tournament.start_date&&tournament.end_date ? (
+                        {tournament.start_date && tournament.end_date ? (
                             <>
                                 {new Date(
                                     tournament.start_date
@@ -191,10 +191,15 @@ const Tournament = () => {
                     </Box>
 
                     <TabPanel value={currentTab} index={0}>
-                        <TournamentRepresentation
-                            matches={matches}
-                            tournament={tournament}
-                        />
+                        {matches ? (
+                            <TournamentRepresentation
+                                matches={matches}
+                                tournament={tournament}
+                                teams={teamList}
+                            />
+                        ) : (
+                            <div>No matches</div>
+                        )}
                     </TabPanel>
                     <TabPanel value={currentTab} index={1}>
                         <Box sx={boxSx}>
@@ -211,7 +216,7 @@ const Tournament = () => {
                             {teams &&
                                 matches?.map((entry) => (
                                     <MatchSummary
-                                        teams={teamsList}
+                                        teams={teamList}
                                         match={entry}
                                         key={entry.id}
                                     />
