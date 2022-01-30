@@ -49,14 +49,9 @@ const boxSx = {
 const UserDetail = () => {
     const router = useRouter();
     const { id } = router.query;
-    const [currentTab, setTab] = useState(0);
     const context = useContext(LoginContext);
 
     const { data: user } = useGetUser(`${id}`);
-
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-        setTab(newValue);
-    };
 
     const { data: teams } = useGetTeamsOfUser(`${id}`);
 
@@ -108,7 +103,7 @@ const UserDetail = () => {
                         Delete
                     </Button>
                 )}
-                {canEdit && (
+                {context.user?.admin && (
                     <Link href={`/users/${user.id}/edit`} passHref>
                         <Button
                             variant="outlined"

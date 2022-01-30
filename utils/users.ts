@@ -99,3 +99,20 @@ export const ChangeUserPassword = (
         setTokenPair
     );
 };
+
+export const UpdateUser = (
+    user_id: number,
+    body: { admin?: boolean; password?: string },
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/users/${user_id}`,
+        {
+            method: "PATCH",
+            body: JSON.stringify(body),
+        },
+        tokenPair,
+        setTokenPair
+    );
+};
