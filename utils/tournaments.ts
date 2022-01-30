@@ -149,3 +149,19 @@ export const EditTournament = (
         setTokenPair
     );
 };
+
+export const AddTournamentTeam = (
+    tournament_id: number,
+    team_id: number,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/tournaments/${tournament_id}/teams/${team_id}`,
+        {
+            method: "PUT",
+        },
+        tokenPair,
+        setTokenPair
+    );
+};

@@ -24,16 +24,20 @@ import AddUserModal from "../../../components/AddUserModal";
 import { LoginContext } from "../../../utils/auth";
 import {
     AddTournamentOrganizer,
+    AddTournamentTeam,
     EditTournament,
     RemoveTournamentOrganizer,
     Tournament,
     TournamentTypeName,
     useGetTournament,
     useGetTournamentOrganizers,
+    useGetTournamentTeams,
 } from "../../../utils/tournaments";
 import { TabPanel } from "../../../components/TabPanel";
 
 import { User } from "../../../utils/users";
+import AddTeamModal from "../../../components/AddTeamModal";
+import { Team } from "../../../utils/teams";
 
 const TournamentEditor = () => {
     const router = useRouter();
@@ -45,6 +49,7 @@ const TournamentEditor = () => {
     const [errorSnack, setErrorSnack] = useState<string | undefined>();
     const [successSnack, setSuccessSnack] = useState<string | undefined>();
     const [openOrganizerModal, setOpenOrganizerModal] = useState(false);
+    const [openAddTeamModal, setOpenAddTeamModal] = useState(false);
     const [currentTab, setTab] = useState(0);
 
     const [localTournament, setLocalTournament] = useState<
@@ -56,6 +61,7 @@ const TournamentEditor = () => {
     const { data: tournament, mutate: mutateTournament } = useGetTournament(
         `${id}`
     );
+    const { data: teams, mutate: mutateTeams } = useGetTournamentTeams(`${id}`);
 
     useEffect(() => {
         if (tournament) {
@@ -105,6 +111,38 @@ const TournamentEditor = () => {
         [context.setTokenPair, context.tokenPair, mutateOrganizers, tournament]
     );
 
+    const handleAddTeams = useCallback(
+        (teams: Team[]) => {
+            const promises = teams.map((team) => {
+                if (tournament && context.tokenPair && context.setTokenPair) {
+                    return AddTournamentTeam(
+                        tournament.id,
+                        team.id,
+                        context.tokenPair,
+                        context.setTokenPair
+                    );
+                }
+            });
+
+            Promise.allSettled(promises).then((results) => {
+                if (results.some((result) => result.status === "rejected")) {
+                    const error = results.filter(
+                        (result) => result.status === "rejected"
+                    )[0] as { reason: any };
+                    if (error.reason.message)
+                        setErrorSnack(error.reason.message);
+                    else setErrorSnack("Some teams could not be added");
+
+                    console.log(results);
+                } else {
+                    setSuccessSnack("User(s) added successfully");
+                }
+                mutateTeams();
+            });
+        },
+        [context.setTokenPair, context.tokenPair, mutateTeams, tournament]
+    );
+
     const handleAddOrganizers = useCallback(
         (users: User[]) => {
             const promises = users.map((user) => {
@@ -136,7 +174,7 @@ const TournamentEditor = () => {
             setLocalTournament(tournament);
         }
     }, [tournament]);
-    if (!localTournament || !tournament || !organizers)
+    if (!localTournament || !tournament || !organizers || !teams)
         return <div>Loading</div>;
 
     const canEdit =
@@ -338,7 +376,66 @@ const TournamentEditor = () => {
                     </Box>
                 </Stack>
             </TabPanel>
-            <TabPanel value={currentTab} index={2}></TabPanel>
+            <TabPanel value={currentTab} index={2}>
+                <Stack spacing={2} direction="row">
+                    <Typography variant="h6">Teams</Typography>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => setOpenAddTeamModal(true)}
+                    >
+                        <AddIcon />
+                    </Button>
+                </Stack>
+                <AddTeamModal
+                    open={openAddTeamModal}
+                    close={() => setOpenAddTeamModal(false)}
+                    addTeams={handleAddTeams}
+                    title="Add team(s)"
+                />
+
+                <Paper
+                    elevation={3}
+                    sx={{
+                        maxWidth: "30rem",
+                        padding: "0.5rem",
+                        marginTop: "1rem",
+                    }}
+                >
+                    {/* for consistancy */}
+                    <Box
+                        sx={{
+                            borderBottom: "1px solid",
+                            borderColor: "divider",
+                        }}
+                    />
+                    <List sx={{ maxHeight: "60rem", overflowY: "auto", p: 0 }}>
+                        {teams.map((entry) => (
+                            <ListItem
+                                sx={{
+                                    borderBottom: "1px solid",
+                                    borderColor: "divider",
+                                }}
+                                key={entry.team.id}
+                                secondaryAction={
+                                    <IconButton
+                                        edge="end"
+                                        aria-label="delete"
+                                        color="error"
+                                        onClick={() =>
+                                            handleDeleteOrganizer(entry.team.id)
+                                        }
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                }
+                            >
+                                <ListItemText primary={entry.team.name} />
+                            </ListItem>
+                        ))}
+                    </List>
+                </Paper>
+            </TabPanel>
             <TabPanel value={currentTab} index={3}>
                 <Stack spacing={2} direction="row">
                     <Typography variant="h6">Organizers</Typography>
