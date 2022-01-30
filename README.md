@@ -7,6 +7,8 @@
 - reload  members on modification
 - fix typo button back on user edit
 - edition not available for non admins but owner
+- tournament edition : presentation : start date same as end date
+- 
 ## possible improvements 
 - use Skeleton when loading
 
