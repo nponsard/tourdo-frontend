@@ -27,6 +27,7 @@ import {
     AddTournamentTeam,
     EditTournament,
     RemoveTournamentOrganizer,
+    ShuffleTournamentTeams,
     Tournament,
     TournamentTypeName,
     useGetTournament,
@@ -386,6 +387,33 @@ const TournamentEditor = () => {
                     >
                         <AddIcon />
                     </Button>
+                    <Button
+                        size="small"
+                        variant="contained"
+                        onClick={() => {
+                            if (
+                                tournament &&
+                                context.tokenPair &&
+                                context.setTokenPair
+                            ) {
+                                ShuffleTournamentTeams(
+                                    tournament.id,
+                                    context.tokenPair,
+                                    context.setTokenPair
+                                )
+                                    .then(() => {
+                                        setSuccessSnack("Teams shuffled");
+                                        mutateTeams();
+                                    })
+                                    .catch((err: any) => {
+                                        setErrorSnack(JSON.stringify(err));
+                                        mutateTeams();
+                                    });
+                            }
+                        }}
+                    >
+                        Shuffle
+                    </Button>
                 </Stack>
                 <AddTeamModal
                     open={openAddTeamModal}
@@ -410,29 +438,33 @@ const TournamentEditor = () => {
                         }}
                     />
                     <List sx={{ maxHeight: "60rem", overflowY: "auto", p: 0 }}>
-                        {teams.map((entry) => (
-                            <ListItem
-                                sx={{
-                                    borderBottom: "1px solid",
-                                    borderColor: "divider",
-                                }}
-                                key={entry.team.id}
-                                secondaryAction={
-                                    <IconButton
-                                        edge="end"
-                                        aria-label="delete"
-                                        color="error"
-                                        onClick={() =>
-                                            handleDeleteOrganizer(entry.team.id)
-                                        }
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                                <ListItemText primary={entry.team.name} />
-                            </ListItem>
-                        ))}
+                        {teams
+                            .sort((a, b) => a.team_number - b.team_number)
+                            .map((entry) => (
+                                <ListItem
+                                    sx={{
+                                        borderBottom: "1px solid",
+                                        borderColor: "divider",
+                                    }}
+                                    key={entry.team.id}
+                                    secondaryAction={
+                                        <IconButton
+                                            edge="end"
+                                            aria-label="delete"
+                                            color="error"
+                                            onClick={() =>
+                                                handleDeleteOrganizer(
+                                                    entry.team.id
+                                                )
+                                            }
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    }
+                                >
+                                    <ListItemText primary={entry.team.name} />
+                                </ListItem>
+                            ))}
                     </List>
                 </Paper>
             </TabPanel>

@@ -165,3 +165,18 @@ export const AddTournamentTeam = (
         setTokenPair
     );
 };
+
+export const ShuffleTournamentTeams = (
+    tournament_id: number,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/tournaments/${tournament_id}/teams/shuffle`,
+        {
+            method: "POST",
+        },
+        tokenPair,
+        setTokenPair
+    );
+};
