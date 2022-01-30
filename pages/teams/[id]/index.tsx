@@ -31,7 +31,7 @@ import { useGetTeamsOfUser, useGetUser, User } from "../../../utils/users";
 import { LoginContext } from "../../../utils/auth";
 import {
     DeleteTeam,
-    Role,
+    TeamRole,
     Team,
     TeamMember,
     useGetTeam,
@@ -81,13 +81,13 @@ const TeamDetail = () => {
     if (!team || !members) return <div>Loading</div>;
 
     const captains = members.filter(
-        (member: TeamMember) => member.role == Role.LEADER
+        (member: TeamMember) => member.role == TeamRole.LEADER
     );
     const coaches = members.filter(
-        (member: TeamMember) => member.role == Role.COACH
+        (member: TeamMember) => member.role == TeamRole.COACH
     );
     const players = members.filter(
-        (member: TeamMember) => member.role == Role.PLAYER
+        (member: TeamMember) => member.role == TeamRole.PLAYER
     );
 
     const canEdit =

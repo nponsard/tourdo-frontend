@@ -3,12 +3,12 @@ import { CallApi, TokenPair, TokenPairSetter, UseApi } from "./auth";
 import { Tournament } from "./tournaments";
 import { User } from "./users";
 
-export enum Role {
+export enum TeamRole {
     PLAYER = 0,
     LEADER = 1,
     COACH = 2,
 }
-export const RoleNames = ["Player", "Captain", "Coach"];
+export const TeamRoleNames = ["Player", "Captain", "Coach"];
 
 export interface Team {
     id: number;
@@ -20,7 +20,7 @@ export interface Team {
 export interface TeamMember {
     user: User;
     team_id: number;
-    role: Role;
+    role: TeamRole;
 }
 
 export const useGetTeam = (team_id: string) => {
@@ -83,7 +83,7 @@ export const EditTeam = (
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
 ) => {
-    return CallApi(
+    return CallApi<Team>(
         `/teams/${team_id}`,
         {
             method: "PATCH",
@@ -95,7 +95,27 @@ export const EditTeam = (
         tokenPair,
         setTokenPair
     ).then((value) => {
-        mutate(`/teams/${team_id}`);
+        mutate(`/teams/${team_id}`, value, false);
         return value;
     });
+};
+
+export const AddTeamMember = (
+    team_id: number,
+    user_id: number,
+    role: TeamRole,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/teams/${team_id}/users/${user_id}`,
+        {
+            method: "PUT",
+            body: JSON.stringify({
+                role,
+            }),
+        },
+        tokenPair,
+        setTokenPair
+    );
 };

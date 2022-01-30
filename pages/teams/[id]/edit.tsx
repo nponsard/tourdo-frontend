@@ -1,11 +1,13 @@
 import {
     Alert,
+    Autocomplete,
     Box,
     Button,
     IconButton,
     List,
     ListItem,
     ListItemText,
+    Modal,
     Paper,
     Snackbar,
     Stack,
@@ -17,28 +19,34 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import UserSummary from "../../../components/UserSummary";
 import { LoginContext } from "../../../utils/auth";
 import {
+    AddTeamMember,
     EditTeam,
-    Role,
-    RoleNames,
+    TeamRole,
+    TeamRoleNames,
     TeamMember,
     useGetTeam,
     useGetTeamMembers,
 } from "../../../utils/teams";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import { User } from "../../../utils/users";
+import AddUserModal from "../../../components/AddUserModal";
+
 const TeamEditor = () => {
     const router = useRouter();
     const { id } = router.query;
     const context = useContext(LoginContext);
 
-    const [localMembers, setLocalMembers] = useState<TeamMember[]>([]);
+    // const [localMembers, setLocalMembers] = useState<TeamMember[]>([]);
     const [localName, setLocalName] = useState("");
     const [localDescription, setLocalDescription] = useState("");
     const [errorSnack, setErrorSnack] = useState<string | undefined>();
     const [successSnack, setSuccessSnack] = useState<string | undefined>();
+    const [openModal, setOpenModal] = useState(false);
+    const [selectedRole, setSelectedRole] = useState<TeamRole>(TeamRole.PLAYER);
 
     const { data: team } = useGetTeam(`${id}`);
-    const { data: members } = useGetTeamMembers(`${id}`);
+    const { data: members, mutate: mutateMembers } = useGetTeamMembers(`${id}`);
 
     useEffect(() => {
         if (team) {
@@ -47,11 +55,40 @@ const TeamEditor = () => {
         }
     }, [team]);
 
+    /*
     useEffect(() => {
         if (members !== undefined) {
             setLocalMembers(members);
         }
     }, [members]);
+*/
+    const handleAddMembers = useCallback(
+        (users: User[]) => {
+            const promises = users.map((user) => {
+                if (team && context.tokenPair && context.setTokenPair) {
+                    return AddTeamMember(
+                        team.id,
+                        user.id,
+                        selectedRole,
+                        context.tokenPair,
+                        context.setTokenPair
+                    );
+                }
+            });
+
+            Promise.allSettled(promises)
+                .then(() => {
+                    setSuccessSnack("Successfully added members");
+                    mutateMembers();
+                })
+                .catch((e) => {
+                    mutateMembers();
+                    if (e.message) setErrorSnack(e.message);
+                    else setErrorSnack(JSON.stringify(e));
+                });
+        },
+        [team, context, selectedRole, mutateMembers]
+    );
 
     const handleApply = useCallback(() => {
         if (team && context.tokenPair && context.setTokenPair) {
@@ -83,7 +120,7 @@ const TeamEditor = () => {
     const canEdit =
         members.some((captain: TeamMember) => {
             captain.user.id === context.user?.id &&
-                captain.role === Role.LEADER;
+                captain.role === TeamRole.LEADER;
         }) || context.user?.admin;
 
     console.log("context :", context);
@@ -104,7 +141,7 @@ const TeamEditor = () => {
                     severity="success"
                     sx={{ width: "100%" }}
                 >
-                    Organizers successufuly modified
+                    {successSnack}
                 </Alert>
             </Snackbar>
             <Snackbar
@@ -117,7 +154,7 @@ const TeamEditor = () => {
                     severity="error"
                     sx={{ width: "100%" }}
                 >
-                    An error occured
+                    {errorSnack}
                 </Alert>
             </Snackbar>
             <Typography variant="h4">Edit team</Typography>
@@ -162,24 +199,73 @@ const TeamEditor = () => {
                 </Box>
             </Stack>
             <Typography variant="h6">Members</Typography>
-            TODO : implement actions
-            <Button color="success" variant="contained">
-                Add
-            </Button>
-            <Paper elevation={3} sx={{ maxWidth: "30rem" }}>
+            <AddUserModal
+                show={openModal}
+                close={() => {
+                    setOpenModal(false);
+                }}
+                addUsers={handleAddMembers}
+                title={"Add " + TeamRoleNames[selectedRole]}
+            />
+
+            <Stack spacing={2} direction="row">
+                <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() => {
+                        setSelectedRole(TeamRole.PLAYER);
+                        setOpenModal(true);
+                    }}
+                >
+                    Add player
+                </Button>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() => {
+                        setSelectedRole(TeamRole.COACH);
+                        setOpenModal(true);
+                    }}
+                >
+                    Add coach
+                </Button>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() => {
+                        setSelectedRole(TeamRole.LEADER);
+                        setOpenModal(true);
+                    }}
+                >
+                    Add captain
+                </Button>
+            </Stack>
+            <Paper
+                elevation={3}
+                sx={{ maxWidth: "30rem", padding: "0.5rem", marginTop: "1rem" }}
+            >
                 <List>
-                    {localMembers.map((member: TeamMember) => (
+                    {members.map((member: TeamMember) => (
                         <ListItem
+                            sx={{
+                                borderTop: "1px solid",
+                                borderBottom: "1px solid",
+                                borderColor: "divider",
+                            }}
                             key={member.user.id}
                             secondaryAction={
-                                <IconButton edge="end" aria-label="delete">
+                                <IconButton
+                                    edge="end"
+                                    aria-label="delete"
+                                    color="error"
+                                >
                                     <DeleteIcon />
                                 </IconButton>
                             }
                         >
                             <ListItemText
                                 primary={member.user.username}
-                                secondary={RoleNames[member.role]}
+                                secondary={TeamRoleNames[member.role]}
                             />
                         </ListItem>
                     ))}
