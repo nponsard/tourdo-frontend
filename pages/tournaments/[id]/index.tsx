@@ -159,7 +159,7 @@ const Tournament = () => {
                         {tournament?.description}
                     </Typography>
                     <Typography>
-                        {tournament.start_date ? (
+                        {tournament.start_date&&tournament.end_date ? (
                             <>
                                 {new Date(
                                     tournament.start_date

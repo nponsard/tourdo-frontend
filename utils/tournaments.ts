@@ -10,11 +10,7 @@ export enum TournamentType {
     RoundRobin = 1,
     SimpleElimination = 2,
 }
-export const TournamentTypeName = [
-    "None",
-    "Round Robin",
-    "Simple Elimination",
-];
+export const TournamentTypeName = ["None", "Round Robin", "Simple Elimination"];
 
 export enum TournamentStatus {
     Created = 0,
@@ -28,8 +24,8 @@ export interface Tournament {
     type: TournamentType;
     name: string;
     description: string;
-    start_date: string;
-    end_date: string;
+    start_date: string | null;
+    end_date: string | null;
     max_teams: number;
     game_name: string;
     status: TournamentStatus;
@@ -139,28 +135,15 @@ export const CreateTournament = (
 };
 
 export const EditTournament = (
-    id: number,
-    name: string,
-    description: string,
-    start_date: Date | null,
-    end_date: Date | null,
-    max_teams: number,
-    game_name: string,
+    tournament: Tournament,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
 ) => {
     return CallApi<Tournament>(
-        `/tournaments/${id}`,
+        `/tournaments/${tournament.id}`,
         {
             method: "PATCH",
-            body: JSON.stringify({
-                name,
-                description,
-                start_date: start_date ? start_date.toISOString() : undefined,
-                end_date: end_date ? end_date.toISOString() : undefined,
-                max_teams,
-                game_name,
-            }),
+            body: JSON.stringify(tournament),
         },
         tokenPair,
         setTokenPair

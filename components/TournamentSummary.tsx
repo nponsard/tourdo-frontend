@@ -46,7 +46,7 @@ const TournamentSummary = ({ tournament }: { tournament: Tournament }) => {
                 </Typography>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Typography variant="body2">
-                        {tournament.start_date ? (
+                        {tournament.start_date && tournament.end_date ? (
                             <>
                                 {new Date(
                                     tournament.start_date

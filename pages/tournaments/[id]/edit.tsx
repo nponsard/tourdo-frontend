@@ -1,5 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { DatePicker, LocalizationProvider } from "@mui/lab";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import {
     Alert,
     Box,
@@ -11,6 +13,8 @@ import {
     Paper,
     Snackbar,
     Stack,
+    Tab,
+    Tabs,
     TextField,
     Typography,
 } from "@mui/material";
@@ -22,10 +26,13 @@ import {
     AddTournamentOrganizer,
     EditTournament,
     RemoveTournamentOrganizer,
+    Tournament,
     TournamentTypeName,
     useGetTournament,
     useGetTournamentOrganizers,
 } from "../../../utils/tournaments";
+import { TabPanel } from "../../../components/TabPanel";
+
 import { User } from "../../../utils/users";
 
 const TournamentEditor = () => {
@@ -34,11 +41,15 @@ const TournamentEditor = () => {
     const context = useContext(LoginContext);
 
     // const [localMembers, setLocalMembers] = useState<TeamMember[]>([]);
-    const [localName, setLocalName] = useState("");
-    const [localDescription, setLocalDescription] = useState("");
+
     const [errorSnack, setErrorSnack] = useState<string | undefined>();
     const [successSnack, setSuccessSnack] = useState<string | undefined>();
     const [openOrganizerModal, setOpenOrganizerModal] = useState(false);
+    const [currentTab, setTab] = useState(0);
+
+    const [localTournament, setLocalTournament] = useState<
+        Tournament | undefined
+    >(undefined);
 
     const { data: organizers, mutate: mutateOrganizers } =
         useGetTournamentOrganizers(`${id}`);
@@ -48,17 +59,14 @@ const TournamentEditor = () => {
 
     useEffect(() => {
         if (tournament) {
-            setLocalName(tournament.name);
-            setLocalDescription(tournament.description);
+            setLocalTournament(tournament);
         }
     }, [tournament]);
 
     const handleApply = useCallback(() => {
-        if (tournament && context.tokenPair && context.setTokenPair) {
+        if (localTournament && context.tokenPair && context.setTokenPair) {
             EditTournament(
-                tournament.id,
-                localName,
-                localDescription,
+                localTournament,
                 context.tokenPair,
                 context.setTokenPair
             )
@@ -71,7 +79,7 @@ const TournamentEditor = () => {
                     else setErrorSnack(JSON.stringify(e));
                 });
         }
-    }, [localDescription, localName, tournament, context]);
+    }, [context.tokenPair, context.setTokenPair, localTournament]);
 
     const handleDeleteOrganizer = useCallback(
         (id: number) => {
@@ -125,11 +133,11 @@ const TournamentEditor = () => {
 
     const handleReset = useCallback(() => {
         if (tournament) {
-            setLocalName(tournament.name);
-            setLocalDescription(tournament.description);
+            setLocalTournament(tournament);
         }
     }, [tournament]);
-    if (!tournament || !organizers) return <div>Loading</div>;
+    if (!localTournament || !tournament || !organizers)
+        return <div>Loading</div>;
 
     const canEdit =
         organizers.some((captain: User) => {
@@ -171,110 +179,226 @@ const TournamentEditor = () => {
                 </Alert>
             </Snackbar>
 
-                <Typography variant="h4">Edit Tournament</Typography>
+            <Typography variant="h4">
+                Edit Tournament : {tournament.name}
+            </Typography>
+
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs
+                    value={currentTab}
+                    onChange={(e, newValue) => setTab(newValue)}
+                    aria-label="basic tabs example"
+                    variant="fullWidth"
+                >
+                    <Tab label="Matches" />
+                    <Tab label="Presentation" />
+                    <Tab label="Teams" />
+                    <Tab label="Organizers" />
+                </Tabs>
+            </Box>
+
+            <TabPanel value={currentTab} index={0}></TabPanel>
+
+            <TabPanel value={currentTab} index={1}>
                 <Typography variant="body1">
                     Type : {TournamentTypeName[tournament.type]}
                 </Typography>
-            <Stack spacing={2} sx={{marginTop: "1rem"}}>
+                <Stack spacing={2} sx={{ marginTop: "1rem" }}>
+                    <TextField
+                        fullWidth
+                        value={localTournament?.name}
+                        label="Name"
+                        InputLabelProps={{ shrink: true }}
+                        onChange={(e) =>
+                            setLocalTournament({
+                                ...localTournament,
+                                name: e.target.value,
+                            })
+                        }
+                    />
+                    <TextField
+                        multiline
+                        maxRows={10}
+                        fullWidth
+                        value={localTournament.description}
+                        label="Description"
+                        InputLabelProps={{ shrink: true }}
+                        onChange={(e) => {
+                            setLocalTournament({
+                                ...localTournament,
+                                description: e.target.value,
+                            });
+                        }}
+                    />
 
-                <TextField
-                    fullWidth
-                    value={localName}
-                    label="Name"
-                    InputLabelProps={{ shrink: true }}
-                    onChange={(e) => setLocalName(e.target.value)}
-                />
-                <TextField
-                    multiline
-                    maxRows={10}
-                    fullWidth
-                    value={localDescription}
-                    label="Description"
-                    InputLabelProps={{ shrink: true }}
-                    onChange={(e) => setLocalDescription(e.target.value)}
-                />
-                {/* TODO :  */}
-                {/* dates */}
-                {/* game name */}
-                {/* max teams */}
+                    <Box>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            {/* start_date  */}
 
-                <Box
-                    sx={{ display: "flex", flexFlow: "row", flexWrap: "wrap" }}
-                >
-                    <Box sx={{ flexGrow: 1 }} />
+                            <DatePicker
+                                label="Start date"
+                                views={["year", "month", "day"]}
+                                value={localTournament.start_date}
+                                onChange={(newValue) => {
+                                    setLocalTournament({
+                                        ...localTournament,
+                                        start_date: newValue,
+                                    });
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        sx={{
+                                            width: "47%",
+                                            marginRight: "6%",
+                                        }}
+                                        {...params}
+                                    />
+                                )}
+                            />
 
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={handleReset}
+                            {/* end_date  */}
+                            <DatePicker
+                                label="End date"
+                                views={["year", "month", "day"]}
+                                value={localTournament.start_date}
+                                onChange={(newValue) => {
+                                    setLocalTournament({
+                                        ...localTournament,
+                                        end_date: newValue,
+                                    });
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        sx={{ width: "47%" }}
+                                        {...params}
+                                    />
+                                )}
+                            />
+                        </LocalizationProvider>
+                    </Box>
+
+                    {/* game name */}
+
+                    <TextField
+                        fullWidth
+                        value={localTournament.game_name}
+                        label="Game name"
+                        InputLabelProps={{ shrink: true }}
+                        onChange={(e) =>
+                            setLocalTournament({
+                                ...localTournament,
+                                game_name: e.target.value,
+                            })
+                        }
+                    />
+
+                    {/* max teams */}
+                    <TextField
+                        fullWidth
+                        value={localTournament.max_teams}
+                        label="Max teams"
+                        InputLabelProps={{ shrink: true }}
+                        type="number"
+                        onChange={(e) =>
+                            setLocalTournament({
+                                ...localTournament,
+                                max_teams: parseInt(e.target.value, 10),
+                            })
+                        }
+                        error={
+                            localTournament.max_teams < 1 ||
+                            isNaN(localTournament.max_teams)
+                        }
+                    />
+
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexFlow: "row",
+                            flexWrap: "wrap",
+                        }}
                     >
-                        Reset
-                    </Button>
-                    <Button
-                        sx={{ marginLeft: "1rem" }}
-                        variant="contained"
-                        color="primary"
-                        onClick={handleApply}
-                    >
-                        Apply
-                    </Button>
-                </Box>
-            </Stack>
+                        <Box sx={{ flexGrow: 1 }} />
 
-            <Stack spacing={2} direction="row">
-                <Typography variant="h6">Organizers</Typography>
-                <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => setOpenOrganizerModal(true)}
-                >
-                    <AddIcon />
-                </Button>
-            </Stack>
-            <AddUserModal
-                open={openOrganizerModal}
-                close={() => setOpenOrganizerModal(false)}
-                addUsers={handleAddOrganizers}
-                title="Add Organizer(s)"
-            />
-
-            <Paper
-                elevation={3}
-                sx={{ maxWidth: "30rem", padding: "0.5rem", marginTop: "1rem" }}
-            >
-                {/* for consistancy */}
-                <Box
-                    sx={{
-                        borderBottom: "1px solid",
-                        borderColor: "divider",
-                    }}
-                />
-                <List sx={{ maxHeight: "60rem", overflowY: "auto", p: 0 }}>
-                    {organizers.map((organizer: User) => (
-                        <ListItem
-                            sx={{
-                                borderBottom: "1px solid",
-                                borderColor: "divider",
-                            }}
-                            key={organizer.id}
-                            secondaryAction={
-                                <IconButton
-                                    edge="end"
-                                    aria-label="delete"
-                                    color="error"
-                                    onClick={() =>
-                                        handleDeleteOrganizer(organizer.id)
-                                    }
-                                >
-                                    <DeleteIcon />
-                                </IconButton>
-                            }
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={handleReset}
                         >
-                            <ListItemText primary={organizer.username} />
-                        </ListItem>
-                    ))}
-                </List>
-            </Paper>
+                            Reset
+                        </Button>
+                        <Button
+                            sx={{ marginLeft: "1rem" }}
+                            variant="contained"
+                            color="primary"
+                            onClick={handleApply}
+                        >
+                            Apply
+                        </Button>
+                    </Box>
+                </Stack>
+            </TabPanel>
+            <TabPanel value={currentTab} index={2}></TabPanel>
+            <TabPanel value={currentTab} index={3}>
+                <Stack spacing={2} direction="row">
+                    <Typography variant="h6">Organizers</Typography>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => setOpenOrganizerModal(true)}
+                    >
+                        <AddIcon />
+                    </Button>
+                </Stack>
+                <AddUserModal
+                    open={openOrganizerModal}
+                    close={() => setOpenOrganizerModal(false)}
+                    addUsers={handleAddOrganizers}
+                    title="Add Organizer(s)"
+                />
+
+                <Paper
+                    elevation={3}
+                    sx={{
+                        maxWidth: "30rem",
+                        padding: "0.5rem",
+                        marginTop: "1rem",
+                    }}
+                >
+                    {/* for consistancy */}
+                    <Box
+                        sx={{
+                            borderBottom: "1px solid",
+                            borderColor: "divider",
+                        }}
+                    />
+                    <List sx={{ maxHeight: "60rem", overflowY: "auto", p: 0 }}>
+                        {organizers.map((organizer: User) => (
+                            <ListItem
+                                sx={{
+                                    borderBottom: "1px solid",
+                                    borderColor: "divider",
+                                }}
+                                key={organizer.id}
+                                secondaryAction={
+                                    <IconButton
+                                        edge="end"
+                                        aria-label="delete"
+                                        color="error"
+                                        onClick={() =>
+                                            handleDeleteOrganizer(organizer.id)
+                                        }
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                }
+                            >
+                                <ListItemText primary={organizer.username} />
+                            </ListItem>
+                        ))}
+                    </List>
+                </Paper>
+            </TabPanel>
         </Box>
     );
 };
