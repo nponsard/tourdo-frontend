@@ -26,6 +26,7 @@ import {
     TeamMember,
     useGetTeam,
     useGetTeamMembers,
+    RemoveTeamMember,
 } from "../../../utils/teams";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -109,6 +110,30 @@ const TeamEditor = () => {
                 });
         }
     }, [localDescription, localName, team, context]);
+
+    const handleDelete = useCallback(
+        (user_id: number) => {
+            if (team && context.tokenPair && context.setTokenPair) {
+                RemoveTeamMember(
+                    team.id,
+                    user_id,
+                    context.tokenPair,
+                    context.setTokenPair
+                )
+                    .then(() => {
+                        setSuccessSnack("Team member removed successfully");
+                        mutateMembers();
+                    })
+                    .catch((e) => {
+                        if (e.message && typeof e.message === "string")
+                            setErrorSnack(e.message);
+                        else setErrorSnack(JSON.stringify(e));
+                    });
+            }
+        },
+        [team, context, mutateMembers]
+    );
+
     const handleReset = useCallback(() => {
         if (team) {
             setLocalName(team.name);
@@ -258,6 +283,7 @@ const TeamEditor = () => {
                                     edge="end"
                                     aria-label="delete"
                                     color="error"
+                                    onClick={() => handleDelete(member.user.id)}
                                 >
                                     <DeleteIcon />
                                 </IconButton>

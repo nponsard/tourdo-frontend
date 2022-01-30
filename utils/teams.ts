@@ -119,3 +119,19 @@ export const AddTeamMember = (
         setTokenPair
     );
 };
+
+export const RemoveTeamMember = (
+    team_id: number,
+    user_id: number,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) => {
+    return CallApi(
+        `/teams/${team_id}/users/${user_id}`,
+        {
+            method: "DELETE",
+        },
+        tokenPair,
+        setTokenPair
+    );
+};
