@@ -1,6 +1,7 @@
 
 ## todo
-- tournament preview
+- fix login after register
+- improve tournament preview
 - handle newlines in description
 ## possible improvements 
 - use Skeleton when loading
