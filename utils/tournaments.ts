@@ -187,7 +187,7 @@ export const AddMatch = (
     setTokenPair: TokenPairSetter
 ) => {
     return CallApi(
-        `/mathes`,
+        `/matches`,
         {
             method: "POST",
 
