@@ -154,7 +154,7 @@ const Home: NextPage = () => {
                     setCurrentPage={setUserPage}
                 />
             </TabPanel>
-            <Fab
+            {/* <Fab
                 color="primary"
                 aria-label="add..."
                 variant='circular'
@@ -167,7 +167,7 @@ const Home: NextPage = () => {
                 }}
             >
                 <AddIcon />
-            </Fab>
+            </Fab> */}
         </>
     );
 };
