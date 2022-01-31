@@ -1,4 +1,4 @@
-import { Box, Tab, Tabs, TextField, Typography } from "@mui/material";
+import { Box, Fab, Tab, Tabs, TextField, Typography } from "@mui/material";
 import type { NextPage } from "next";
 import { useState } from "react";
 import { TabPanel } from "../components/TabPanel";
@@ -10,6 +10,7 @@ import UserSummary from "../components/UserSummary";
 import TeamSummary from "../components/TeamSummary";
 import TournamentSummary from "../components/TournamentSummary";
 import { PaginationManager } from "../components/PaginationManager";
+import AddIcon from "@mui/icons-material/Add";
 
 const boxSx = {
     display: "flex",
@@ -153,6 +154,20 @@ const Home: NextPage = () => {
                     setCurrentPage={setUserPage}
                 />
             </TabPanel>
+            <Fab
+                color="primary"
+                aria-label="add..."
+                variant='circular'
+                sx={{
+                    position: "absolute",
+                    bottom: { xs: 16, sm: 16, md: "unset" },
+                    right: { xs: 16, sm: 16, md: "unset" },
+                    left: { sm: "unset", md: 16 },
+                    top: { sm: "unset", md: 80 },
+                }}
+            >
+                <AddIcon />
+            </Fab>
         </>
     );
 };

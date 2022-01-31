@@ -55,7 +55,7 @@ export const BaseFetch = async <T>(
     if (res.status >= 400) {
         throw { message: body.message, status: res.status };
     }
-    return await body;
+    return body;
 };
 
 export interface ApiError {
@@ -73,7 +73,7 @@ export const CallApi = async <T>(
         if (e.status != 401 || tokenPair == undefined) throw e;
 
         const newTokens = await refreshToken(tokenPair.refresh_token);
-
+        
         if (setTokenPair) setTokenPair(newTokens as TokenPair);
         return BaseFetch<T>(endpoint, init, newTokens);
     });
