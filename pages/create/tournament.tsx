@@ -1,3 +1,6 @@
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import DatePicker from "@mui/lab/DatePicker";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import {
     Alert,
     Button,
@@ -5,24 +8,17 @@ import {
     InputLabel,
     MenuItem,
     Paper,
-    Select,
-    Stack,
+    Select, Snackbar, Stack,
     TextField,
-    Typography,
-    Snackbar,
+    Typography
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { LoginContext } from "../../utils/auth";
 import {
-    CreateTournament,
-    TournamentTypeName,
-    TournamentType,
+    CreateTournament, TournamentType, TournamentTypeName
 } from "../../utils/tournaments";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
 
 export default function TournamentCreation() {
     const context = useContext(LoginContext);

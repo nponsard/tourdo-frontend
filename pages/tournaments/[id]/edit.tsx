@@ -1,4 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DatePicker, LocalizationProvider } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -26,12 +27,18 @@ import {
     TableRow,
     Tabs,
     TextField,
-    Typography,
+    Typography
 } from "@mui/material";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect, useState } from "react";
+import AddTeamModal from "../../../components/AddTeamModal";
 import AddUserModal from "../../../components/AddUserModal";
+import { TabPanel } from "../../../components/TabPanel";
+import TeamSelector from "../../../components/TeamSelector";
 import { LoginContext } from "../../../utils/auth";
+import { Match, MatchStatus } from "../../../utils/matches";
+import { Team } from "../../../utils/teams";
 import {
     AddMatch,
     AddTournamentOrganizer,
@@ -49,18 +56,11 @@ import {
     useGetTournament,
     useGetTournamentMatches,
     useGetTournamentOrganizers,
-    useGetTournamentTeams,
+    useGetTournamentTeams
 } from "../../../utils/tournaments";
-import { TabPanel } from "../../../components/TabPanel";
-
 import { User } from "../../../utils/users";
-import AddTeamModal from "../../../components/AddTeamModal";
-import { Team } from "../../../utils/teams";
-import TeamSelector from "../../../components/TeamSelector";
-import { Match, MatchStatus } from "../../../utils/matches";
-import Link from "next/link";
 
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 
 const TournamentEditor = () => {
     const router = useRouter();

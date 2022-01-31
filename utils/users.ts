@@ -1,16 +1,14 @@
-import { appendFile } from "fs";
 import useSWR from "swr";
 import {
     BaseFetch,
     CallApi,
     TokenPair,
     TokenPairSetter,
-    UseApi,
-    UseApi as useApi,
+    UseApi
 } from "./auth";
-
 import { Fetcher } from "./fetcher";
 import { Team } from "./teams";
+
 export interface User {
     id: number;
     username: string;

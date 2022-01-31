@@ -1,23 +1,15 @@
-import { Team } from "../utils/teams";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import {
-    Alert,
-    CardHeader,
-    Paper,
+    Alert, Paper,
     Snackbar,
     Stack,
-    TextField,
+    TextField
 } from "@mui/material";
-import { typography } from "@mui/system";
-import { useContext, useState } from "react";
-import { RegisterUser, SearchUser, SearchUserFetch } from "../utils/users";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
 import { CallLogin, LoginContext } from "../utils/auth";
 
 const Login = () => {

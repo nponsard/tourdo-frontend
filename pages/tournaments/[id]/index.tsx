@@ -1,37 +1,25 @@
-import {
-    Box,
-    Button,
-    Divider,
-    Paper,
-    Skeleton,
-    Typography,
-} from "@mui/material";
-import { FetchEvent } from "next/dist/server/web/spec-compliant/fetch-event";
-import { useRouter } from "next/router";
-import {
-    AddTournamentOrganizer,
-    DeleteTournament,
-    useGetTournament as useGetTournament,
-    useGetTournamentMatches,
-    useGetTournamentOrganizers,
-    useGetTournamentTeams,
-    RemoveTournamentOrganizer,
-    TournamentTypeName,
-} from "../../../utils/tournaments";
-import useSWR from "swr";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import { useContext, useState } from "react";
-import TournamentRepresentation from "../../../components/TournamentRepresentation";
-import TeamSummary from "../../../components/TeamSummary";
-import MatchSummary from "../../../components/MatchSummary";
-import UserSummary from "../../../components/UserSummary";
-import OrganizerManager from "../../../components/OrganizerManager";
-import { User } from "../../../utils/users";
-import { LoginContext } from "../../../utils/auth";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import {
+    Box,
+    Button, Typography
+} from "@mui/material";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
+import MatchSummary from "../../../components/MatchSummary";
+import TeamSummary from "../../../components/TeamSummary";
+import TournamentRepresentation from "../../../components/TournamentRepresentation";
+import UserSummary from "../../../components/UserSummary";
+import { LoginContext } from "../../../utils/auth";
+import {
+    DeleteTournament, TournamentTypeName, useGetTournament as useGetTournament,
+    useGetTournamentMatches,
+    useGetTournamentOrganizers,
+    useGetTournamentTeams
+} from "../../../utils/tournaments";
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;

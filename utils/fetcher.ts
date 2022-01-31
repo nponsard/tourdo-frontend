@@ -1,5 +1,3 @@
-import { useRouter } from "next/router";
-import { refreshToken } from "./auth";
 
 export const Fetcher = <T>(
     url: string,

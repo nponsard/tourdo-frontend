@@ -1,39 +1,29 @@
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
-    Alert,
-    Autocomplete,
-    Box,
+    Alert, Box,
     Button,
     IconButton,
     List,
     ListItem,
-    ListItemText,
-    Modal,
-    Paper,
+    ListItemText, Paper,
     Snackbar,
     Stack,
     TextField,
-    Typography,
+    Typography
 } from "@mui/material";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect, useState } from "react";
-import UserSummary from "../../../components/UserSummary";
+import AddUserModal from "../../../components/AddUserModal";
 import { LoginContext } from "../../../utils/auth";
 import {
     AddTeamMember,
-    EditTeam,
-    TeamRole,
-    TeamRoleNames,
-    TeamMember,
-    useGetTeam,
-    useGetTeamMembers,
-    RemoveTeamMember,
+    EditTeam, RemoveTeamMember, TeamMember, TeamRole,
+    TeamRoleNames, useGetTeam,
+    useGetTeamMembers
 } from "../../../utils/teams";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
 import { User } from "../../../utils/users";
-import AddUserModal from "../../../components/AddUserModal";
-import Link from "next/link";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const TeamEditor = () => {
     const router = useRouter();

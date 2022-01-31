@@ -1,5 +1,4 @@
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { match } from "assert";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { Match } from "../utils/matches";
 import { Team } from "../utils/teams";
 

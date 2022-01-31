@@ -6,7 +6,7 @@ import {
     Paper,
     Stack,
     TextField,
-    Typography,
+    Typography
 } from "@mui/material";
 import { useState } from "react";
 import { Team, useSearchTeams } from "../utils/teams";

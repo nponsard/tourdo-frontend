@@ -5,7 +5,7 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography,
+    Typography
 } from "@mui/material";
 import { Box } from "@mui/system";
 import Link from "next/link";
@@ -13,9 +13,8 @@ import { useCallback } from "react";
 import { Match, MatchStatus } from "../utils/matches";
 import { Team } from "../utils/teams";
 import {
-    GenerateMatches,
     Tournament,
-    TournamentType,
+    TournamentType
 } from "../utils/tournaments";
 import MatchSummary from "./MatchSummary";
 

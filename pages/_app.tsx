@@ -1,17 +1,19 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
-import Head from "next/head";
+import AddIcon from "@mui/icons-material/Add";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { Menu, MenuItem } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import { createContext, useEffect, useState } from "react";
-import { GetCurrentUser, User } from "../utils/users";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import type { AppProps } from "next/app";
+import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import "../styles/globals.css";
 import {
-    CallApi,
     CallLogout,
     CheckLocalStorage,
     ClearLocalStorage,
@@ -19,11 +21,7 @@ import {
     SaveLocalStorage,
     TokenPair,
 } from "../utils/auth";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { Menu, MenuItem } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import AddIcon from "@mui/icons-material/Add";
+import { GetCurrentUser, User } from "../utils/users";
 
 function MyApp({ Component, pageProps }: AppProps) {
     // undefined : not yet loaded

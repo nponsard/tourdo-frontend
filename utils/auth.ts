@@ -1,4 +1,3 @@
-import { endianness } from "os";
 import { createContext, useContext, useState } from "react";
 import useSWR from "swr";
 import { BASE_URL } from "./api";

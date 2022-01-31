@@ -1,15 +1,8 @@
-import { Team } from "../utils/teams";
+import { Chip, Paper } from "@mui/material";
 import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { CardHeader, Chip, IconButton, Paper } from "@mui/material";
-import { typography } from "@mui/system";
-import { User } from "../utils/users";
-import DeleteIcon from "@mui/icons-material/Delete";
 import Link from "next/link";
+import { User } from "../utils/users";
 const UserSummary = ({
     user,
 }: {

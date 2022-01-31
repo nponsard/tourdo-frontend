@@ -1,11 +1,9 @@
 import {
-    Autocomplete,
-    Box,
-    Button,
+    Autocomplete, Button,
     Modal,
     Paper,
     TextField,
-    Typography,
+    Typography
 } from "@mui/material";
 import { useState } from "react";
 import { SearchUser, User } from "../utils/users";

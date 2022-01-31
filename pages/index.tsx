@@ -1,16 +1,15 @@
-import { Box, Fab, Tab, Tabs, TextField, Typography } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import { Box, Tab, Tabs, TextField, Typography } from "@mui/material";
 import type { NextPage } from "next";
 import { useState } from "react";
+import { PaginationManager } from "../components/PaginationManager";
 import { TabPanel } from "../components/TabPanel";
-import SearchIcon from "@mui/icons-material/Search";
-import { useSearchTeams } from "../utils/teams";
-import { useSearchUsers } from "../utils/users";
-import { useSearchTournaments } from "../utils/tournaments";
-import UserSummary from "../components/UserSummary";
 import TeamSummary from "../components/TeamSummary";
 import TournamentSummary from "../components/TournamentSummary";
-import { PaginationManager } from "../components/PaginationManager";
-import AddIcon from "@mui/icons-material/Add";
+import UserSummary from "../components/UserSummary";
+import { useSearchTeams } from "../utils/teams";
+import { useSearchTournaments } from "../utils/tournaments";
+import { useSearchUsers } from "../utils/users";
 
 const boxSx = {
     display: "flex",

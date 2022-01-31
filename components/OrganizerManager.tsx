@@ -6,11 +6,10 @@ import {
     Modal,
     Snackbar,
     TextField,
-    Typography,
+    Typography
 } from "@mui/material";
-import { SearchUser, User } from "../utils/users";
-import UserSummary from "./UserSummary";
 import { useState } from "react";
+import { SearchUser, User } from "../utils/users";
 
 const modalStyle = {
     position: "absolute" as "absolute",

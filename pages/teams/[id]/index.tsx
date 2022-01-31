@@ -1,48 +1,23 @@
-import {
-    Badge,
-    Box,
-    Button,
-    Chip,
-    Divider,
-    Paper,
-    Skeleton,
-    Typography,
-} from "@mui/material";
-import { FetchEvent } from "next/dist/server/web/spec-compliant/fetch-event";
-import { useRouter } from "next/router";
-import {
-    AddTournamentOrganizer,
-    useGetTournament,
-    useGetTournamentMatches,
-    useGetTournamentOrganizers,
-    useGetTournamentTeams,
-    RemoveTournamentOrganizer,
-} from "../../../utils/tournaments";
-import useSWR from "swr";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import { useContext, useState } from "react";
-import TournamentRepresentation from "../../../components/TournamentRepresentation";
-import TeamSummary from "../../../components/TeamSummary";
-import MatchSummary from "../../../components/MatchSummary";
-import UserSummary from "../../../components/UserSummary";
-import OrganizerManager from "../../../components/OrganizerManager";
-import { useGetTeamsOfUser, useGetUser, User } from "../../../utils/users";
-import { LoginContext } from "../../../utils/auth";
-import {
-    DeleteTeam,
-    TeamRole,
-    Team,
-    TeamMember,
-    useGetTeam,
-    useGetTeamMembers,
-    useGetTeamTournaments,
-} from "../../../utils/teams";
-import Link from "next/link";
-
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import {
+    Box,
+    Button, Typography
+} from "@mui/material";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
 import TournamentSummary from "../../../components/TournamentSummary";
+import UserSummary from "../../../components/UserSummary";
+import { LoginContext } from "../../../utils/auth";
+import {
+    DeleteTeam, TeamMember, TeamRole, useGetTeam,
+    useGetTeamMembers,
+    useGetTeamTournaments
+} from "../../../utils/teams";
+
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;

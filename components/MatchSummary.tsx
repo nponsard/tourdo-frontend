@@ -1,16 +1,10 @@
-import { Team } from "../utils/teams";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import { CardHeader, Chip, Paper } from "@mui/material";
-import { typography } from "@mui/system";
-import { User } from "../utils/users";
-import { Match, MatchStatus } from "../utils/matches";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import { Paper } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { Match } from "../utils/matches";
+import { Team } from "../utils/teams";
 
 const MiniTeam = ({
     team,
