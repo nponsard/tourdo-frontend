@@ -549,7 +549,7 @@ const TournamentEditor = () => {
                             <DatePicker
                                 label="End date"
                                 views={["year", "month", "day"]}
-                                value={localTournament.start_date}
+                                value={localTournament.end_date}
                                 onChange={(newValue) => {
                                     setLocalTournament({
                                         ...localTournament,
