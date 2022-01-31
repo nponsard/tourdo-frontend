@@ -2,6 +2,8 @@
 - admin indicator in app bar
 - check start date <= end date
 - cleanup code
+- dark theme
+
 
 ## possible improvements 
 - use Skeleton when loading
