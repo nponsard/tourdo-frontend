@@ -1,4 +1,5 @@
 ## todo
+- admin indicator in app bar
 ## possible improvements 
 - use Skeleton when loading
 - improve tournament preview
