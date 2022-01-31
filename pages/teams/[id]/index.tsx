@@ -139,7 +139,7 @@ const TeamDetail = () => {
                 <Tabs
                     value={currentTab}
                     onChange={handleTabChange}
-                    aria-label="basic tabs example"
+                    aria-label="Select a tab to see the team's members or tournaments"
                     variant="fullWidth"
                 >
                     <Tab label="Members" />

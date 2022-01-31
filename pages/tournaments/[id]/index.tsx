@@ -1,6 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, useMediaQuery } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Link from "next/link";
@@ -73,10 +73,12 @@ const Tournament = () => {
     );
 
     const teamList = teams?.map((team) => team.team) ?? [];
+    const smallScreen = useMediaQuery("(max-width:25rem)");
 
     if (!tournament) {
         return <div>Loading...</div>;
     }
+
 
     const canEdit =
         user &&
@@ -170,8 +172,9 @@ const Tournament = () => {
                         <Tabs
                             value={currentTab}
                             onChange={handleTabChange}
-                            aria-label="basic tabs example"
-                            variant="fullWidth"
+                            aria-label="select what do you  want to see"
+                            scrollButtons="auto"
+                            variant={smallScreen ? "scrollable" : "fullWidth"}
                         >
                             <Tab label="Preview" />
                             <Tab label="Teams" />

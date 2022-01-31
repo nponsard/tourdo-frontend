@@ -90,7 +90,9 @@ const Home: NextPage = () => {
                 <Tabs
                     value={currentTab}
                     onChange={handleTabChange}
-                    aria-label="basic tabs example"
+                    aria-label="Select what do you want to search"
+                    // variant="scrollable"
+                    scrollButtons="auto"
                     variant="fullWidth"
                 >
                     <Tab label="Tournaments" />

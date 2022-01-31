@@ -28,6 +28,7 @@ import {
     Tabs,
     TextField,
     Typography,
+    useMediaQuery
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -56,7 +57,7 @@ import {
     useGetTournament,
     useGetTournamentMatches,
     useGetTournamentOrganizers,
-    useGetTournamentTeams,
+    useGetTournamentTeams
 } from "../../../utils/tournaments";
 import { User } from "../../../utils/users";
 
@@ -72,6 +73,9 @@ const TournamentEditor = () => {
     const [openOrganizerModal, setOpenOrganizerModal] = useState(false);
     const [openAddTeamModal, setOpenAddTeamModal] = useState(false);
     const [currentTab, setTab] = useState(0);
+
+    const smallScreen = useMediaQuery("(max-width:30rem)");
+
 
     const [localTournament, setLocalTournament] = useState<
         Tournament | undefined
@@ -326,8 +330,9 @@ const TournamentEditor = () => {
                 <Tabs
                     value={currentTab}
                     onChange={(e, newValue) => setTab(newValue)}
-                    aria-label="basic tabs example"
-                    variant="fullWidth"
+                    aria-label="select what to edit"
+                    scrollButtons="auto"
+                    variant={smallScreen ?  "scrollable": "fullWidth"}
                 >
                     <Tab label="Matches" />
                     <Tab label="Presentation" />

@@ -1,43 +1,21 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import {
-    Badge,
     Box,
     Button,
-    Chip,
-    Divider,
-    Paper,
-    Skeleton,
-    Typography,
+    Chip, Typography
 } from "@mui/material";
-import { FetchEvent } from "next/dist/server/web/spec-compliant/fetch-event";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import {
-    AddTournamentOrganizer,
-    useGetTournament,
-    useGetTournamentMatches,
-    useGetTournamentOrganizers,
-    useGetTournamentTeams,
-    RemoveTournamentOrganizer,
-} from "../../../utils/tournaments";
-import useSWR from "swr";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import { useContext, useState } from "react";
-import TournamentRepresentation from "../../../components/TournamentRepresentation";
+import { useContext } from "react";
 import TeamSummary from "../../../components/TeamSummary";
-import MatchSummary from "../../../components/MatchSummary";
-import UserSummary from "../../../components/UserSummary";
-import OrganizerManager from "../../../components/OrganizerManager";
+import { LoginContext } from "../../../utils/auth";
+import { Team } from "../../../utils/teams";
 import {
     DeleteUser,
     useGetTeamsOfUser,
-    useGetUser,
-    User,
+    useGetUser
 } from "../../../utils/users";
-import { LoginContext } from "../../../utils/auth";
-import { Team } from "../../../utils/teams";
-import Link from "next/link";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 const boxSx = {
     display: "flex",
     flexWrap: "wrap",
