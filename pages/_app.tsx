@@ -54,7 +54,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         if (tokenPair) {
             GetCurrentUser(tokenPair, setTokenPair)
                 .then((data) => {
-                    console.log(data);
                     if (data.id != undefined && data.username != undefined) {
                         setUser(data);
                     } else {
@@ -72,7 +71,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         }
     }, [tokenPair]);
 
-    console.log(user);
 
     const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(
         null
@@ -101,8 +99,6 @@ function MyApp({ Component, pageProps }: AppProps) {
                 });
         }
     };
-
-    console.log("tokenPair : ", tokenPair);
 
     return (
         <LoginContext.Provider
