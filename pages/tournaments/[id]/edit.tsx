@@ -280,6 +280,11 @@ const TournamentEditor = () => {
         router.push("/");
         return <></>;
     }
+    const invalidDate =
+        localTournament.end_date != null &&
+        localTournament.start_date != null &&
+        new Date(localTournament.end_date).getTime() <=
+            new Date(localTournament.start_date).getTime();
 
     return (
         <Box sx={{ p: { xs: "0.2rem", sm: "0.5rem", md: "1rem" } }}>
@@ -559,6 +564,12 @@ const TournamentEditor = () => {
                                 }}
                                 renderInput={(params) => (
                                     <TextField
+                                        error={invalidDate}
+                                        helperText={
+                                            invalidDate
+                                                ? "End date should be after start date"
+                                                : ""
+                                        }
                                         sx={{ width: "47%" }}
                                         {...params}
                                     />

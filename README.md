@@ -1,9 +1,8 @@
 ## todo
-- check start date <= end date
-- cleanup code
-- dark theme
 - tab too large
 - match edition : change date
+- cleanup code
+- dark theme
 
 ## possible improvements 
 - use Skeleton when loading
