@@ -15,7 +15,12 @@ import {
 } from "@mui/material";
 import { typography } from "@mui/system";
 import { useContext, useState } from "react";
-import { RegisterUser, SearchUser, SearchUserFetch } from "../utils/users";
+import {
+    Login,
+    RegisterUser,
+    SearchUser,
+    SearchUserFetch,
+} from "../utils/users";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
 import { LoginContext } from "../utils/auth";
@@ -38,7 +43,7 @@ const Register = () => {
 
     // redirect to home page if already logged in
 
-    if (context.user!=null) router.push("/");
+    if (context.user != null) router.push("/");
 
     const handleUsernameChange = (
         event: React.ChangeEvent<HTMLInputElement>
@@ -121,9 +126,17 @@ const Register = () => {
     };
 
     const closeSuccessSnack = () => {
-        setShowSuccessSnack(false);
-
-        router.push("/");
+        Login(username, password)
+            .then((res) => {
+                context.setTokenPair(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+            .finally(() => {
+                setShowSuccessSnack(false);
+                router.push("/");
+            });
     };
 
     return (

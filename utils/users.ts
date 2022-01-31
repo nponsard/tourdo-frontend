@@ -38,7 +38,7 @@ export const RegisterUser = (username: string, password: string) => {
 };
 
 export const Login = (username: string, password: string) => {
-    return BaseFetch<{ accessToken: string; refreshToken: string }>(
+    return BaseFetch<{ access_token: string; refresh_token: string }>(
         `/users/login`,
         {
             method: "POST",
