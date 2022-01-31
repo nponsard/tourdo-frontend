@@ -92,10 +92,10 @@ const Tournament = () => {
     }
 
     const canEdit =
-        user?.admin ||
-        organizers?.some((val) => {
-            user?.id == val.id;
-        });
+        user &&
+        ((organizers &&
+            organizers.some((organizer) => organizer.id === user.id)) ||
+            user.admin);
 
     return (
         <>

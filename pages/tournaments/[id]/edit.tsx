@@ -268,15 +268,20 @@ const TournamentEditor = () => {
         return <div>Loading</div>;
 
     const canEdit =
-        organizers.some((captain: User) => {
-            captain.id === context.user?.id;
-        }) || context.user?.admin;
+        context.user &&
+        ((organizers &&
+            organizers.some(
+                (organizer) => organizer.id === context.user?.id
+            )) ||
+            context.user.admin);
 
-    console.log("context :", context);
+    if (organizers === undefined || context.user === undefined)
+        return <div>Loading</div>;
 
-    console.log(canEdit);
-
-    if (organizers && context.user !== undefined && !canEdit) router.push("/");
+    if (organizers && context.user !== undefined && !canEdit) {
+        router.push("/");
+        return <></>;
+    }
 
     return (
         <Box sx={{ p: "1rem" }}>

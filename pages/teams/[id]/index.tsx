@@ -99,9 +99,14 @@ const TeamDetail = () => {
     );
 
     const canEdit =
-        captains.some((captain: TeamMember) => {
-            captain.user.id == context.user?.id;
-        }) || context.user?.admin;
+        context.user &&
+        ((members &&
+            members.some(
+                (member) =>
+                    member.user.id === context.user?.id &&
+                    member.role === TeamRole.LEADER
+            )) ||
+            context.user.admin);
 
     return (
         <Box sx={{ p: "1rem" }}>

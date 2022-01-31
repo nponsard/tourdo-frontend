@@ -150,19 +150,22 @@ const TeamEditor = () => {
             setLocalDescription(team.description);
         }
     }, [team]);
-    if (!team || !members) return <div>Loading</div>;
+    if (team === undefined || members === undefined) return <div>Loading</div>;
 
     const canEdit =
-        members.some((captain: TeamMember) => {
-            captain.user.id === context.user?.id &&
-                captain.role === TeamRole.LEADER;
-        }) || context.user?.admin;
+        context.user &&
+        ((members &&
+            members.some(
+                (member) =>
+                    member.user.id === context.user?.id &&
+                    member.role === TeamRole.LEADER
+            )) ||
+            context.user.admin);
 
-    console.log("context :", context);
-
-    console.log(canEdit);
-
-    if (members && context.user !== undefined && !canEdit) router.push("/");
+    if (!canEdit) {
+        router.push("/");
+        return <></>;
+    }
 
     return (
         <Box sx={{ p: "1rem" }}>

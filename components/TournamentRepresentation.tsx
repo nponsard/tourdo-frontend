@@ -58,9 +58,11 @@ export function DefaultTournament(props: {
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: "20rem" }}>
                     <TableHead>
-                        <TableCell>Position</TableCell>
-                        <TableCell>Team</TableCell>
-                        <TableCell>Wins</TableCell>
+                        <TableRow>
+                            <TableCell>Position</TableCell>
+                            <TableCell>Team</TableCell>
+                            <TableCell>Wins</TableCell>
+                        </TableRow>
                     </TableHead>
                     {teamsWithWins
                         .sort((a, b) => {

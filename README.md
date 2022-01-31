@@ -1,7 +1,4 @@
 ## todo
-- reload  members on modification
-- edition not available for non admins but owner
-- 
 ## possible improvements 
 - use Skeleton when loading
 - improve tournament preview
