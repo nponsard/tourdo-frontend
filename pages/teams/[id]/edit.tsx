@@ -89,9 +89,11 @@ const TeamEditor = () => {
                     } else setSuccessSnack("User(s) added successfully");
                 })
                 .catch((e) => {
-                    mutateMembers();
                     if (e.message) setErrorSnack(e.message);
                     else setErrorSnack(JSON.stringify(e));
+                })
+                .finally(() => {
+                    mutateMembers();
                 });
         },
         [team, context, selectedRole, mutateMembers]
@@ -128,12 +130,14 @@ const TeamEditor = () => {
                 )
                     .then(() => {
                         setSuccessSnack("Team member removed successfully");
-                        mutateMembers();
                     })
                     .catch((e) => {
                         if (e.message && typeof e.message === "string")
                             setErrorSnack(e.message);
                         else setErrorSnack(JSON.stringify(e));
+                    })
+                    .finally(() => {
+                        mutateMembers();
                     });
             }
         },

@@ -203,11 +203,10 @@ const TournamentEditor = () => {
     const handleAddMatch = useCallback(() => {
         if (tournament && context.tokenPair && context.setTokenPair) {
             AddMatch(tournament.id, context.tokenPair, context.setTokenPair)
-                .then(() => {
-                    mutateMatches();
-                })
                 .catch((e) => {
                     setErrorSnack(JSON.stringify(e));
+                })
+                .finally(() => {
                     mutateMatches();
                 });
         }
@@ -220,11 +219,12 @@ const TournamentEditor = () => {
                 context.setTokenPair
             )
                 .then(() => {
-                    mutateMatches();
                     setSuccessSnack("Matches generated successfully");
                 })
                 .catch((e) => {
                     setErrorSnack(JSON.stringify(e));
+                })
+                .finally(() => {
                     mutateMatches();
                 });
         }
@@ -234,11 +234,10 @@ const TournamentEditor = () => {
         (match: Match) => {
             if (tournament && context.tokenPair && context.setTokenPair) {
                 UpdateMatch(match, context.tokenPair, context.setTokenPair)
-                    .then(() => {
-                        mutateMatches();
-                    })
                     .catch((e) => {
                         setErrorSnack(JSON.stringify(e));
+                    })
+                    .finally(() => {
                         mutateMatches();
                     });
             }
@@ -249,11 +248,10 @@ const TournamentEditor = () => {
         (match: Match) => {
             if (tournament && context.tokenPair && context.setTokenPair) {
                 DeleteMatch(match.id, context.tokenPair, context.setTokenPair)
-                    .then(() => {
-                        mutateMatches();
-                    })
                     .catch((e) => {
                         setErrorSnack(JSON.stringify(e));
+                    })
+                    .finally(() => {
                         mutateMatches();
                     });
             }
