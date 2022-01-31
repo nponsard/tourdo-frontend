@@ -102,7 +102,7 @@ export default function EditUser() {
                     {errorSnack}
                 </Alert>
             </Snackbar>
-            <Link href={`/userIs/${user.id}`} passHref>
+            <Link href={`/users/${user.id}`} passHref>
                 <Button startIcon={<ArrowBackIcon />}>Back</Button>
             </Link>
             <Stack spacing={2}>
