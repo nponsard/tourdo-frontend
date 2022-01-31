@@ -73,7 +73,7 @@ export const CallApi = async <T>(
         if (e.status != 401 || tokenPair == undefined) throw e;
 
         const newTokens = await refreshToken(tokenPair.refresh_token);
-        
+
         if (setTokenPair) setTokenPair(newTokens as TokenPair);
         return BaseFetch<T>(endpoint, init, newTokens);
     });

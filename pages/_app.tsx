@@ -66,12 +66,12 @@ function MyApp({ Component, pageProps }: AppProps) {
                     setTokenPair(null);
                 });
         } else if (tokenPair === null) {
+            ClearLocalStorage();
             setUser(null);
         } else {
             setUser(undefined);
         }
     }, [tokenPair]);
-
 
     const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(
         null
@@ -117,10 +117,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <div>
                 <Head>
                     <title>TOURDO</title>
-                    <meta
-                        name="description"
-                        content="DO tournament manager"
-                    />
+                    <meta name="description" content="DO tournament manager" />
                     <link rel="icon" href="/favicon.ico" />
                 </Head>
 
@@ -150,7 +147,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                 <>
                                     <IconButton
                                         color="inherit"
-                                        size='large'
+                                        size="large"
                                         onClick={(e) => {
                                             setAddMenuAnchor(e.currentTarget);
                                         }}
