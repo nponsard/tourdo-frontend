@@ -1,9 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import {
-    Box,
-    Button, Typography
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Link from "next/link";
@@ -15,10 +12,12 @@ import TournamentRepresentation from "../../../components/TournamentRepresentati
 import UserSummary from "../../../components/UserSummary";
 import { LoginContext } from "../../../utils/auth";
 import {
-    DeleteTournament, TournamentTypeName, useGetTournament as useGetTournament,
+    DeleteTournament,
+    TournamentTypeName,
+    useGetTournament as useGetTournament,
     useGetTournamentMatches,
     useGetTournamentOrganizers,
-    useGetTournamentTeams
+    useGetTournamentTeams,
 } from "../../../utils/tournaments";
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -87,7 +86,7 @@ const Tournament = () => {
 
     return (
         <>
-            <Box sx={{ padding: "1em", m: "1em" }}>
+            <Box sx={{ p: { xs: "0.2rem", sm: "0.5rem", md: "1rem" } }}>
                 <Box>
                     <Typography variant="body1" color="text.secondary">
                         Tournament

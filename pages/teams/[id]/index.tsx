@@ -1,9 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import {
-    Box,
-    Button, Typography
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Link from "next/link";
@@ -13,9 +10,12 @@ import TournamentSummary from "../../../components/TournamentSummary";
 import UserSummary from "../../../components/UserSummary";
 import { LoginContext } from "../../../utils/auth";
 import {
-    DeleteTeam, TeamMember, TeamRole, useGetTeam,
+    DeleteTeam,
+    TeamMember,
+    TeamRole,
+    useGetTeam,
     useGetTeamMembers,
-    useGetTeamTournaments
+    useGetTeamTournaments,
 } from "../../../utils/teams";
 
 interface TabPanelProps {
@@ -84,7 +84,7 @@ const TeamDetail = () => {
             context.user.admin);
 
     return (
-        <Box sx={{ p: "1rem" }}>
+        <Box sx={{ p: { xs: "0.2rem", sm: "0.5rem", md: "1rem" } }}>
             <Typography variant="body1" color="text.secondary">
                 Team
             </Typography>

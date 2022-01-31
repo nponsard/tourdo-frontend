@@ -158,7 +158,7 @@ const TeamEditor = () => {
     }
 
     return (
-        <Box sx={{ p: "1rem" }}>
+        <Box sx={{ p: { xs: "0.2rem", sm: "0.5rem", md: "1rem" } }}>
             <Snackbar
                 open={successSnack !== undefined}
                 autoHideDuration={6000}

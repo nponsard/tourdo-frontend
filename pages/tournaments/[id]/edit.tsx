@@ -27,7 +27,7 @@ import {
     TableRow,
     Tabs,
     TextField,
-    Typography
+    Typography,
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -56,11 +56,9 @@ import {
     useGetTournament,
     useGetTournamentMatches,
     useGetTournamentOrganizers,
-    useGetTournamentTeams
+    useGetTournamentTeams,
 } from "../../../utils/tournaments";
 import { User } from "../../../utils/users";
-
-
 
 const TournamentEditor = () => {
     const router = useRouter();
@@ -284,7 +282,7 @@ const TournamentEditor = () => {
     }
 
     return (
-        <Box sx={{ p: "1rem" }}>
+        <Box sx={{ p: { xs: "0.2rem", sm: "0.5rem", md: "1rem" } }}>
             <Snackbar
                 open={successSnack !== undefined}
                 autoHideDuration={6000}
