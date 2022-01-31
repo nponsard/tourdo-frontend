@@ -200,7 +200,8 @@ function MyApp({ Component, pageProps }: AppProps) {
                                         sx={{ textTransform: "none" }}
                                         endIcon={<ArrowDropDownIcon />}
                                     >
-                                        {user.username}
+                                        {user.username}{" "}
+                                        {user.admin && "(admin)"}
                                     </Button>
                                     <Menu
                                         id="user-menu"
