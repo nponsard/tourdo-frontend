@@ -95,49 +95,52 @@ const Tournament = () => {
                     <Box
                         sx={{
                             display: "flex",
-                            flexWrap: "wrap",
+                            flexWrap: "wrap-reverse",
                             alignItems: "center",
                         }}
                     >
                         <Typography variant="h2">{tournament?.name}</Typography>
+
                         <Box sx={{ flexGrow: 1 }} />
-                        {canEdit && (
-                            <Button
-                                variant="outlined"
-                                startIcon={<DeleteIcon />}
-                                color="error"
-                                onClick={() => {
-                                    if (
-                                        context.tokenPair &&
-                                        context.setTokenPair
-                                    )
-                                        DeleteTournament(
-                                            tournament.id,
-                                            context.tokenPair,
-                                            context.setTokenPair
-                                        )
-                                            .then(() => router.push("/"))
-                                            .catch(console.error);
-                                }}
-                            >
-                                Delete
-                            </Button>
-                        )}
-                        {canEdit && (
-                            <Link
-                                href={`/tournaments/${tournament.id}/edit`}
-                                passHref
-                            >
+                        <Box>
+                            {canEdit && (
                                 <Button
                                     variant="outlined"
-                                    startIcon={<EditIcon />}
-                                    color="primary"
-                                    sx={{ marginLeft: "1rem" }}
+                                    startIcon={<DeleteIcon />}
+                                    color="error"
+                                    onClick={() => {
+                                        if (
+                                            context.tokenPair &&
+                                            context.setTokenPair
+                                        )
+                                            DeleteTournament(
+                                                tournament.id,
+                                                context.tokenPair,
+                                                context.setTokenPair
+                                            )
+                                                .then(() => router.push("/"))
+                                                .catch(console.error);
+                                    }}
                                 >
-                                    Edit
+                                    Delete
                                 </Button>
-                            </Link>
-                        )}
+                            )}
+                            {canEdit && (
+                                <Link
+                                    href={`/tournaments/${tournament.id}/edit`}
+                                    passHref
+                                >
+                                    <Button
+                                        variant="outlined"
+                                        startIcon={<EditIcon />}
+                                        color="primary"
+                                        sx={{ marginLeft: "1rem" }}
+                                    >
+                                        Edit
+                                    </Button>
+                                </Link>
+                            )}
+                        </Box>
                     </Box>
                     <Typography variant="body1">
                         Type : {TournamentTypeName[tournament.type]}

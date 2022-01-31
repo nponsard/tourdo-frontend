@@ -65,7 +65,11 @@ const UserDetail = () => {
                 User
             </Typography>
             <Box
-                sx={{ display: "flex", flexWrap: "wrap", alignItems: "center" }}
+                sx={{
+                    display: "flex",
+                    flexWrap: "wrap-reverse",
+                    alignItems: "center",
+                }}
             >
                 <Typography variant="h4">
                     {user.username}{" "}
@@ -79,42 +83,44 @@ const UserDetail = () => {
                 </Typography>
 
                 <Box sx={{ flexGrow: 1 }} />
-                {canEdit && (
-                    <Button
-                        variant="outlined"
-                        startIcon={<DeleteIcon />}
-                        color="error"
-                        onClick={() => {
-                            if (context.tokenPair && context.setTokenPair)
-                                DeleteUser(
-                                    user.id,
-                                    context.tokenPair,
-                                    context.setTokenPair
-                                )
-                                    .then(() => {
-                                        if (user.id == context.user?.id)
-                                            context.setTokenPair(null);
-
-                                        router.push("/");
-                                    })
-                                    .catch(console.error);
-                        }}
-                    >
-                        Delete
-                    </Button>
-                )}
-                {context.user?.admin && (
-                    <Link href={`/users/${user.id}/edit`} passHref>
+                <Box>
+                    {canEdit && (
                         <Button
                             variant="outlined"
-                            startIcon={<EditIcon />}
-                            color="primary"
-                            sx={{ marginLeft: "1rem" }}
+                            startIcon={<DeleteIcon />}
+                            color="error"
+                            onClick={() => {
+                                if (context.tokenPair && context.setTokenPair)
+                                    DeleteUser(
+                                        user.id,
+                                        context.tokenPair,
+                                        context.setTokenPair
+                                    )
+                                        .then(() => {
+                                            if (user.id == context.user?.id)
+                                                context.setTokenPair(null);
+
+                                            router.push("/");
+                                        })
+                                        .catch(console.error);
+                            }}
                         >
-                            Edit
+                            Delete
                         </Button>
-                    </Link>
-                )}
+                    )}
+                    {context.user?.admin && (
+                        <Link href={`/users/${user.id}/edit`} passHref>
+                            <Button
+                                variant="outlined"
+                                startIcon={<EditIcon />}
+                                color="primary"
+                                sx={{ marginLeft: "1rem" }}
+                            >
+                                Edit
+                            </Button>
+                        </Link>
+                    )}
+                </Box>
             </Box>
             <Typography variant="h5" sx={{ marginTop: "1rem" }}>
                 Teams

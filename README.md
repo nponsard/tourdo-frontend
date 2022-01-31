@@ -4,6 +4,7 @@
 - cleanup code
 - dark theme
 - tab too large
+- match edition : change date
 
 ## possible improvements 
 - use Skeleton when loading
