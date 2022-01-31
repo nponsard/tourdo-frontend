@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { DatePicker, LocalizationProvider } from "@mui/lab";
+import { DatePicker, DateTimePicker, LocalizationProvider } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import {
     Alert,
@@ -28,7 +28,7 @@ import {
     Tabs,
     TextField,
     Typography,
-    useMediaQuery
+    useMediaQuery,
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -57,7 +57,7 @@ import {
     useGetTournament,
     useGetTournamentMatches,
     useGetTournamentOrganizers,
-    useGetTournamentTeams
+    useGetTournamentTeams,
 } from "../../../utils/tournaments";
 import { User } from "../../../utils/users";
 
@@ -76,20 +76,12 @@ const TournamentEditor = () => {
 
     const smallScreen = useMediaQuery("(max-width:30rem)");
 
+    const [localTournament, setLocalTournament] = useState<Tournament | undefined>(undefined);
 
-    const [localTournament, setLocalTournament] = useState<
-        Tournament | undefined
-    >(undefined);
-
-    const { data: organizers, mutate: mutateOrganizers } =
-        useGetTournamentOrganizers(`${id}`);
-    const { data: tournament, mutate: mutateTournament } = useGetTournament(
-        `${id}`
-    );
+    const { data: organizers, mutate: mutateOrganizers } = useGetTournamentOrganizers(`${id}`);
+    const { data: tournament, mutate: mutateTournament } = useGetTournament(`${id}`);
     const { data: teams, mutate: mutateTeams } = useGetTournamentTeams(`${id}`);
-    const { data: matches, mutate: mutateMatches } = useGetTournamentMatches(
-        `${id}`
-    );
+    const { data: matches, mutate: mutateMatches } = useGetTournamentMatches(`${id}`);
 
     const teamList: Team[] = teams
         ? teams.map((entry) => {
@@ -105,17 +97,12 @@ const TournamentEditor = () => {
 
     const handleApply = useCallback(() => {
         if (localTournament && context.tokenPair && context.setTokenPair) {
-            EditTournament(
-                localTournament,
-                context.tokenPair,
-                context.setTokenPair
-            )
+            EditTournament(localTournament, context.tokenPair, context.setTokenPair)
                 .then(() => {
                     setSuccessSnack("Team edited successfully");
                 })
                 .catch((e) => {
-                    if (e.message && typeof e.message === "string")
-                        setErrorSnack(e.message);
+                    if (e.message && typeof e.message === "string") setErrorSnack(e.message);
                     else setErrorSnack(JSON.stringify(e));
                 });
         }
@@ -124,19 +111,13 @@ const TournamentEditor = () => {
     const handleDeleteOrganizer = useCallback(
         (id: number) => {
             if (tournament && context.tokenPair && context.setTokenPair) {
-                RemoveTournamentOrganizer(
-                    tournament.id,
-                    id,
-                    context.tokenPair,
-                    context.setTokenPair
-                )
+                RemoveTournamentOrganizer(tournament.id, id, context.tokenPair, context.setTokenPair)
                     .then(() => {
                         setSuccessSnack("Organizer removed successfully");
                         mutateOrganizers();
                     })
                     .catch((e) => {
-                        if (e.message && typeof e.message === "string")
-                            setErrorSnack(e.message);
+                        if (e.message && typeof e.message === "string") setErrorSnack(e.message);
                         else setErrorSnack(JSON.stringify(e));
                         mutateOrganizers();
                     });
@@ -149,22 +130,14 @@ const TournamentEditor = () => {
         (teams: Team[]) => {
             const promises = teams.map((team) => {
                 if (tournament && context.tokenPair && context.setTokenPair) {
-                    return AddTournamentTeam(
-                        tournament.id,
-                        team.id,
-                        context.tokenPair,
-                        context.setTokenPair
-                    );
+                    return AddTournamentTeam(tournament.id, team.id, context.tokenPair, context.setTokenPair);
                 }
             });
 
             Promise.allSettled(promises).then((results) => {
                 if (results.some((result) => result.status === "rejected")) {
-                    const error = results.filter(
-                        (result) => result.status === "rejected"
-                    )[0] as { reason: any };
-                    if (error.reason.message)
-                        setErrorSnack(error.reason.message);
+                    const error = results.filter((result) => result.status === "rejected")[0] as { reason: any };
+                    if (error.reason.message) setErrorSnack(error.reason.message);
                     else setErrorSnack("Some teams could not be added");
 
                     console.log(results);
@@ -180,12 +153,7 @@ const TournamentEditor = () => {
         (users: User[]) => {
             const promises = users.map((user) => {
                 if (tournament && context.tokenPair && context.setTokenPair) {
-                    return AddTournamentOrganizer(
-                        tournament.id,
-                        user.id,
-                        context.tokenPair,
-                        context.setTokenPair
-                    );
+                    return AddTournamentOrganizer(tournament.id, user.id, context.tokenPair, context.setTokenPair);
                 }
             });
 
@@ -215,11 +183,7 @@ const TournamentEditor = () => {
     }, [context.setTokenPair, context.tokenPair, mutateMatches, tournament]);
     const handleGenerateMatches = useCallback(() => {
         if (tournament && context.tokenPair && context.setTokenPair) {
-            GenerateMatches(
-                tournament.id,
-                context.tokenPair,
-                context.setTokenPair
-            )
+            GenerateMatches(tournament.id, context.tokenPair, context.setTokenPair)
                 .then(() => {
                     setSuccessSnack("Matches generated successfully");
                 })
@@ -266,19 +230,13 @@ const TournamentEditor = () => {
             setLocalTournament(tournament);
         }
     }, [tournament]);
-    if (!localTournament || !tournament || !organizers || !teams)
-        return <div>Loading</div>;
+    if (!localTournament || !tournament || !organizers || !teams) return <div>Loading</div>;
 
     const canEdit =
         context.user &&
-        ((organizers &&
-            organizers.some(
-                (organizer) => organizer.id === context.user?.id
-            )) ||
-            context.user.admin);
+        ((organizers && organizers.some((organizer) => organizer.id === context.user?.id)) || context.user.admin);
 
-    if (organizers === undefined || context.user === undefined)
-        return <div>Loading</div>;
+    if (organizers === undefined || context.user === undefined) return <div>Loading</div>;
 
     if (organizers && context.user !== undefined && !canEdit) {
         router.push("/");
@@ -287,252 +245,215 @@ const TournamentEditor = () => {
     const invalidDate =
         localTournament.end_date != null &&
         localTournament.start_date != null &&
-        new Date(localTournament.end_date).getTime() <=
-            new Date(localTournament.start_date).getTime();
+        new Date(localTournament.end_date).getTime() <= new Date(localTournament.start_date).getTime();
 
     return (
         <Box sx={{ p: { xs: "0.2rem", sm: "0.5rem", md: "1rem" } }}>
-            <Snackbar
-                open={successSnack !== undefined}
-                autoHideDuration={6000}
-                onClose={() => setSuccessSnack(undefined)}
-            >
-                <Alert
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <Snackbar
+                    open={successSnack !== undefined}
+                    autoHideDuration={6000}
                     onClose={() => setSuccessSnack(undefined)}
-                    severity="success"
-                    sx={{ width: "100%" }}
                 >
-                    {successSnack}
-                </Alert>
-            </Snackbar>
-            <Snackbar
-                open={errorSnack !== undefined}
-                autoHideDuration={6000}
-                onClose={() => setErrorSnack(undefined)}
-            >
-                <Alert
+                    <Alert onClose={() => setSuccessSnack(undefined)} severity="success" sx={{ width: "100%" }}>
+                        {successSnack}
+                    </Alert>
+                </Snackbar>
+                <Snackbar
+                    open={errorSnack !== undefined}
+                    autoHideDuration={6000}
                     onClose={() => setErrorSnack(undefined)}
-                    severity="error"
-                    sx={{ width: "100%" }}
                 >
-                    {errorSnack}
-                </Alert>
-            </Snackbar>
+                    <Alert onClose={() => setErrorSnack(undefined)} severity="error" sx={{ width: "100%" }}>
+                        {errorSnack}
+                    </Alert>
+                </Snackbar>
 
-            <Link href={`/tournaments/${tournament.id}`} passHref>
-                <Button startIcon={<ArrowBackIcon />}>Back</Button>
-            </Link>
-            <Typography variant="h4">
-                Edit Tournament : {tournament.name}
-            </Typography>
+                <Link href={`/tournaments/${tournament.id}`} passHref>
+                    <Button startIcon={<ArrowBackIcon />}>Back</Button>
+                </Link>
+                <Typography variant="h4">Edit Tournament : {tournament.name}</Typography>
 
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <Tabs
-                    value={currentTab}
-                    onChange={(e, newValue) => setTab(newValue)}
-                    aria-label="select what to edit"
-                    scrollButtons="auto"
-                    variant={smallScreen ?  "scrollable": "fullWidth"}
-                >
-                    <Tab label="Matches" />
-                    <Tab label="Presentation" />
-                    <Tab label="Teams" />
-                    <Tab label="Organizers" />
-                </Tabs>
-            </Box>
-
-            <TabPanel value={currentTab} index={0}>
-                <Stack spacing={2} direction="row">
-                    <Typography variant="h6">Matches</Typography>
-
-                    {tournament.type == TournamentType.None ? (
-                        <Button
-                            variant="contained"
-                            size="small"
-                            onClick={handleAddMatch}
-                        >
-                            <AddIcon />
-                        </Button>
-                    ) : (
-                        <>
-                            {tournament.status === TournamentStatus.Created && (
-                                <Button
-                                    size="small"
-                                    onClick={handleGenerateMatches}
-                                >
-                                    Generate
-                                </Button>
-                            )}
-                        </>
-                    )}
-                </Stack>
-
-                <TableContainer component={Paper}>
-                    <Table
-                        aria-label="Matches table"
-                        sx={{ minWidth: "50rem" }}
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <Tabs
+                        value={currentTab}
+                        onChange={(e, newValue) => setTab(newValue)}
+                        aria-label="select what to edit"
+                        scrollButtons="auto"
+                        variant={smallScreen ? "scrollable" : "fullWidth"}
                     >
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>ID</TableCell>
-                                <TableCell>Team 1</TableCell>
-                                <TableCell>Team 2</TableCell>
-                                <TableCell>Date</TableCell>
-                                <TableCell>Winner</TableCell>
-                                {tournament.type === TournamentType.None && (
-                                    <TableCell></TableCell>
+                        <Tab label="Matches" />
+                        <Tab label="Presentation" />
+                        <Tab label="Teams" />
+                        <Tab label="Organizers" />
+                    </Tabs>
+                </Box>
+
+                <TabPanel value={currentTab} index={0}>
+                    <Stack spacing={2} direction="row">
+                        <Typography variant="h6">Matches</Typography>
+
+                        {tournament.type == TournamentType.None ? (
+                            <Button variant="contained" size="small" onClick={handleAddMatch}>
+                                <AddIcon />
+                            </Button>
+                        ) : (
+                            <>
+                                {tournament.status === TournamentStatus.Created && (
+                                    <Button size="small" onClick={handleGenerateMatches}>
+                                        Generate
+                                    </Button>
                                 )}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {matches
-                                ?.sort((a, b) => {
-                                    return a.id - b.id;
-                                })
-                                .map((match: Match) => (
-                                    <TableRow
-                                        key={match.id}
-                                        sx={{
-                                            "&:last-child td, &:last-child th":
-                                                {
+                            </>
+                        )}
+                    </Stack>
+
+                    <TableContainer component={Paper}>
+                        <Table aria-label="Matches table" sx={{ minWidth: "50rem" }}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell>Team 1</TableCell>
+                                    <TableCell>Team 2</TableCell>
+                                    <TableCell>Date</TableCell>
+                                    <TableCell>Winner</TableCell>
+                                    {tournament.type === TournamentType.None && <TableCell></TableCell>}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {matches
+                                    ?.sort((a, b) => {
+                                        return a.id - b.id;
+                                    })
+                                    .map((match: Match) => (
+                                        <TableRow
+                                            key={match.id}
+                                            sx={{
+                                                "&:last-child td, &:last-child th": {
                                                     border: 0,
                                                 },
-                                        }}
-                                    >
-                                        <TableCell component="th" scope="row">
-                                            {match.id}
-                                        </TableCell>
-                                        <TableCell>
-                                            <TeamSelector
-                                                position="team1_id"
-                                                teams={teamList}
-                                                match={match}
-                                                setMatch={handleUpdateMatch}
-                                            />
-                                        </TableCell>
-                                        <TableCell>
-                                            <TeamSelector
-                                                position="team2_id"
-                                                teams={teamList}
-                                                match={match}
-                                                setMatch={handleUpdateMatch}
-                                            />
-                                        </TableCell>
-                                        <TableCell>
-                                            {match.date &&
-                                                new Date(
-                                                    match.date
-                                                ).toLocaleString()}
-                                        </TableCell>
-                                        <TableCell>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">
-                                                    Winner
-                                                </InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={match.status}
-                                                    label="Age"
-                                                    onChange={(e) => {
-                                                        console.log(
-                                                            e.target.value
-                                                        );
-
+                                            }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {match.id}
+                                            </TableCell>
+                                            <TableCell>
+                                                <TeamSelector
+                                                    position="team1_id"
+                                                    teams={teamList}
+                                                    match={match}
+                                                    setMatch={handleUpdateMatch}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <TeamSelector
+                                                    position="team2_id"
+                                                    teams={teamList}
+                                                    match={match}
+                                                    setMatch={handleUpdateMatch}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <DateTimePicker
+                                                    label="Date"
+                                                    value={match.date}
+                                                    onChange={(newValue) => {
                                                         handleUpdateMatch({
                                                             ...match,
-                                                            status: e.target
-                                                                .value as MatchStatus,
+                                                            date: newValue,
                                                         });
                                                     }}
-                                                >
-                                                    <MenuItem value={0}>
-                                                        None
-                                                    </MenuItem>
-
-                                                    {match.team1_id && (
-                                                        <MenuItem value={1}>
-                                                            {
-                                                                teams.find(
-                                                                    (t) =>
-                                                                        t.team
-                                                                            .id ===
-                                                                        match.team1_id
-                                                                )?.team.name
-                                                            }
-                                                        </MenuItem>
-                                                    )}
-                                                    {match.team2_id && (
-                                                        <MenuItem value={2}>
-                                                            {
-                                                                teams.find(
-                                                                    (t) =>
-                                                                        t.team
-                                                                            .id ===
-                                                                        match.team2_id
-                                                                )?.team.name
-                                                            }
-                                                        </MenuItem>
-                                                    )}
-                                                </Select>
-                                            </FormControl>
-                                        </TableCell>
-                                        {tournament.type ===
-                                            TournamentType.None && (
-                                            <TableCell>
-                                                <IconButton
-                                                    onClick={() => {
-                                                        handleDeleteMatch(
-                                                            match
-                                                        );
-                                                    }}
-                                                    color="error"
-                                                >
-                                                    <DeleteIcon />
-                                                </IconButton>
+                                                    renderInput={(params) => <TextField {...params} />}
+                                                />
                                             </TableCell>
-                                        )}
-                                    </TableRow>
-                                ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </TabPanel>
+                                            <TableCell>
+                                                <FormControl fullWidth sx={{ minWidth: "7rem" }}>
+                                                    <InputLabel id="demo-simple-select-label">Winner</InputLabel>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        value={match.status}
+                                                        label="Age"
+                                                        onChange={(e) => {
+                                                            console.log(e.target.value);
 
-            <TabPanel value={currentTab} index={1}>
-                <Typography variant="body1">
-                    Type : {TournamentTypeName[tournament.type]}
-                </Typography>
-                <Stack spacing={2} sx={{ marginTop: "1rem" }}>
-                    <TextField
-                        fullWidth
-                        value={localTournament?.name}
-                        label="Name"
-                        InputLabelProps={{ shrink: true }}
-                        onChange={(e) =>
-                            setLocalTournament({
-                                ...localTournament,
-                                name: e.target.value,
-                            })
-                        }
-                    />
-                    <TextField
-                        multiline
-                        maxRows={10}
-                        fullWidth
-                        value={localTournament.description}
-                        label="Description"
-                        InputLabelProps={{ shrink: true }}
-                        onChange={(e) => {
-                            setLocalTournament({
-                                ...localTournament,
-                                description: e.target.value,
-                            });
-                        }}
-                    />
+                                                            handleUpdateMatch({
+                                                                ...match,
+                                                                status: e.target.value as MatchStatus,
+                                                            });
+                                                        }}
+                                                    >
+                                                        <MenuItem value={0}>None</MenuItem>
 
-                    <Box>
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                                        {match.team1_id && (
+                                                            <MenuItem value={1}>
+                                                                {
+                                                                    teams.find((t) => t.team.id === match.team1_id)
+                                                                        ?.team.name
+                                                                }
+                                                            </MenuItem>
+                                                        )}
+                                                        {match.team2_id && (
+                                                            <MenuItem value={2}>
+                                                                {
+                                                                    teams.find((t) => t.team.id === match.team2_id)
+                                                                        ?.team.name
+                                                                }
+                                                            </MenuItem>
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+                                            </TableCell>
+                                            {tournament.type === TournamentType.None && (
+                                                <TableCell>
+                                                    <IconButton
+                                                        onClick={() => {
+                                                            handleDeleteMatch(match);
+                                                        }}
+                                                        color="error"
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </TableCell>
+                                            )}
+                                        </TableRow>
+                                    ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </TabPanel>
+
+                <TabPanel value={currentTab} index={1}>
+                    <Typography variant="body1">Type : {TournamentTypeName[tournament.type]}</Typography>
+                    <Stack spacing={2} sx={{ marginTop: "1rem" }}>
+                        <TextField
+                            fullWidth
+                            value={localTournament?.name}
+                            label="Name"
+                            InputLabelProps={{ shrink: true }}
+                            onChange={(e) =>
+                                setLocalTournament({
+                                    ...localTournament,
+                                    name: e.target.value,
+                                })
+                            }
+                        />
+                        <TextField
+                            multiline
+                            maxRows={10}
+                            fullWidth
+                            value={localTournament.description}
+                            label="Description"
+                            InputLabelProps={{ shrink: true }}
+                            onChange={(e) => {
+                                setLocalTournament({
+                                    ...localTournament,
+                                    description: e.target.value,
+                                });
+                            }}
+                        />
+
+                        <Box>
                             {/* start_date  */}
 
                             <DatePicker
@@ -570,231 +491,198 @@ const TournamentEditor = () => {
                                 renderInput={(params) => (
                                     <TextField
                                         error={invalidDate}
-                                        helperText={
-                                            invalidDate
-                                                ? "End date should be after start date"
-                                                : ""
-                                        }
+                                        helperText={invalidDate ? "End date should be after start date" : ""}
                                         sx={{ width: "47%" }}
                                         {...params}
                                     />
                                 )}
                             />
-                        </LocalizationProvider>
-                    </Box>
+                        </Box>
 
-                    {/* game name */}
+                        {/* game name */}
 
-                    <TextField
-                        fullWidth
-                        value={localTournament.game_name}
-                        label="Game name"
-                        InputLabelProps={{ shrink: true }}
-                        onChange={(e) =>
-                            setLocalTournament({
-                                ...localTournament,
-                                game_name: e.target.value,
-                            })
-                        }
-                    />
-
-                    {/* max teams */}
-                    <TextField
-                        fullWidth
-                        value={localTournament.max_teams}
-                        label="Max teams"
-                        InputLabelProps={{ shrink: true }}
-                        type="number"
-                        onChange={(e) =>
-                            setLocalTournament({
-                                ...localTournament,
-                                max_teams: parseInt(e.target.value, 10),
-                            })
-                        }
-                        error={
-                            localTournament.max_teams < 1 ||
-                            isNaN(localTournament.max_teams)
-                        }
-                    />
-
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexFlow: "row",
-                            flexWrap: "wrap",
-                        }}
-                    >
-                        <Box sx={{ flexGrow: 1 }} />
-
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleReset}
-                        >
-                            Reset
-                        </Button>
-                        <Button
-                            sx={{ marginLeft: "1rem" }}
-                            variant="contained"
-                            color="primary"
-                            onClick={handleApply}
-                        >
-                            Apply
-                        </Button>
-                    </Box>
-                </Stack>
-            </TabPanel>
-            <TabPanel value={currentTab} index={2}>
-                <Stack spacing={2} direction="row">
-                    <Typography variant="h6">Teams</Typography>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        onClick={() => setOpenAddTeamModal(true)}
-                    >
-                        <AddIcon />
-                    </Button>
-                    <Button
-                        size="small"
-                        variant="contained"
-                        onClick={() => {
-                            if (
-                                tournament &&
-                                context.tokenPair &&
-                                context.setTokenPair
-                            ) {
-                                ShuffleTournamentTeams(
-                                    tournament.id,
-                                    context.tokenPair,
-                                    context.setTokenPair
-                                )
-                                    .then(() => {
-                                        setSuccessSnack("Teams shuffled");
-                                        mutateTeams();
-                                    })
-                                    .catch((err: any) => {
-                                        setErrorSnack(JSON.stringify(err));
-                                        mutateTeams();
-                                    });
+                        <TextField
+                            fullWidth
+                            value={localTournament.game_name}
+                            label="Game name"
+                            InputLabelProps={{ shrink: true }}
+                            onChange={(e) =>
+                                setLocalTournament({
+                                    ...localTournament,
+                                    game_name: e.target.value,
+                                })
                             }
+                        />
+
+                        {/* max teams */}
+                        <TextField
+                            fullWidth
+                            value={localTournament.max_teams}
+                            label="Max teams"
+                            InputLabelProps={{ shrink: true }}
+                            type="number"
+                            onChange={(e) =>
+                                setLocalTournament({
+                                    ...localTournament,
+                                    max_teams: parseInt(e.target.value, 10),
+                                })
+                            }
+                            error={localTournament.max_teams < 1 || isNaN(localTournament.max_teams)}
+                        />
+
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexFlow: "row",
+                                flexWrap: "wrap",
+                            }}
+                        >
+                            <Box sx={{ flexGrow: 1 }} />
+
+                            <Button variant="contained" color="secondary" onClick={handleReset}>
+                                Reset
+                            </Button>
+                            <Button
+                                sx={{ marginLeft: "1rem" }}
+                                variant="contained"
+                                color="primary"
+                                onClick={handleApply}
+                            >
+                                Apply
+                            </Button>
+                        </Box>
+                    </Stack>
+                </TabPanel>
+                <TabPanel value={currentTab} index={2}>
+                    <Stack spacing={2} direction="row">
+                        <Typography variant="h6">Teams</Typography>
+                        <Button variant="contained" size="small" onClick={() => setOpenAddTeamModal(true)}>
+                            <AddIcon />
+                        </Button>
+                        <Button
+                            size="small"
+                            variant="contained"
+                            onClick={() => {
+                                if (tournament && context.tokenPair && context.setTokenPair) {
+                                    ShuffleTournamentTeams(tournament.id, context.tokenPair, context.setTokenPair)
+                                        .then(() => {
+                                            setSuccessSnack("Teams shuffled");
+                                            mutateTeams();
+                                        })
+                                        .catch((err: any) => {
+                                            setErrorSnack(JSON.stringify(err));
+                                            mutateTeams();
+                                        });
+                                }
+                            }}
+                        >
+                            Shuffle
+                        </Button>
+                    </Stack>
+                    <AddTeamModal
+                        open={openAddTeamModal}
+                        close={() => setOpenAddTeamModal(false)}
+                        addTeams={handleAddTeams}
+                        title="Add team(s)"
+                    />
+
+                    <Paper
+                        elevation={3}
+                        sx={{
+                            maxWidth: "30rem",
+                            padding: "0.5rem",
+                            marginTop: "1rem",
                         }}
                     >
-                        Shuffle
-                    </Button>
-                </Stack>
-                <AddTeamModal
-                    open={openAddTeamModal}
-                    close={() => setOpenAddTeamModal(false)}
-                    addTeams={handleAddTeams}
-                    title="Add team(s)"
-                />
-
-                <Paper
-                    elevation={3}
-                    sx={{
-                        maxWidth: "30rem",
-                        padding: "0.5rem",
-                        marginTop: "1rem",
-                    }}
-                >
-                    {/* for consistancy */}
-                    <Box
-                        sx={{
-                            borderBottom: "1px solid",
-                            borderColor: "divider",
-                        }}
+                        {/* for consistancy */}
+                        <Box
+                            sx={{
+                                borderBottom: "1px solid",
+                                borderColor: "divider",
+                            }}
+                        />
+                        <List sx={{ maxHeight: "60rem", overflowY: "auto", p: 0 }}>
+                            {teams
+                                .sort((a, b) => a.team_number - b.team_number)
+                                .map((entry) => (
+                                    <ListItem
+                                        sx={{
+                                            borderBottom: "1px solid",
+                                            borderColor: "divider",
+                                        }}
+                                        key={entry.team.id}
+                                        secondaryAction={
+                                            <IconButton
+                                                edge="end"
+                                                aria-label="delete"
+                                                color="error"
+                                                onClick={() => handleDeleteOrganizer(entry.team.id)}
+                                            >
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        }
+                                    >
+                                        <ListItemText primary={entry.team.name} />
+                                    </ListItem>
+                                ))}
+                        </List>
+                    </Paper>
+                </TabPanel>
+                <TabPanel value={currentTab} index={3}>
+                    <Stack spacing={2} direction="row">
+                        <Typography variant="h6">Organizers</Typography>
+                        <Button variant="contained" size="small" onClick={() => setOpenOrganizerModal(true)}>
+                            <AddIcon />
+                        </Button>
+                    </Stack>
+                    <AddUserModal
+                        open={openOrganizerModal}
+                        close={() => setOpenOrganizerModal(false)}
+                        addUsers={handleAddOrganizers}
+                        title="Add Organizer(s)"
                     />
-                    <List sx={{ maxHeight: "60rem", overflowY: "auto", p: 0 }}>
-                        {teams
-                            .sort((a, b) => a.team_number - b.team_number)
-                            .map((entry) => (
+
+                    <Paper
+                        elevation={3}
+                        sx={{
+                            maxWidth: "30rem",
+                            padding: "0.5rem",
+                            marginTop: "1rem",
+                        }}
+                    >
+                        {/* for consistancy */}
+                        <Box
+                            sx={{
+                                borderBottom: "1px solid",
+                                borderColor: "divider",
+                            }}
+                        />
+                        <List sx={{ maxHeight: "60rem", overflowY: "auto", p: 0 }}>
+                            {organizers.map((organizer: User) => (
                                 <ListItem
                                     sx={{
                                         borderBottom: "1px solid",
                                         borderColor: "divider",
                                     }}
-                                    key={entry.team.id}
+                                    key={organizer.id}
                                     secondaryAction={
                                         <IconButton
                                             edge="end"
                                             aria-label="delete"
                                             color="error"
-                                            onClick={() =>
-                                                handleDeleteOrganizer(
-                                                    entry.team.id
-                                                )
-                                            }
+                                            onClick={() => handleDeleteOrganizer(organizer.id)}
                                         >
                                             <DeleteIcon />
                                         </IconButton>
                                     }
                                 >
-                                    <ListItemText primary={entry.team.name} />
+                                    <ListItemText primary={organizer.username} />
                                 </ListItem>
                             ))}
-                    </List>
-                </Paper>
-            </TabPanel>
-            <TabPanel value={currentTab} index={3}>
-                <Stack spacing={2} direction="row">
-                    <Typography variant="h6">Organizers</Typography>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        onClick={() => setOpenOrganizerModal(true)}
-                    >
-                        <AddIcon />
-                    </Button>
-                </Stack>
-                <AddUserModal
-                    open={openOrganizerModal}
-                    close={() => setOpenOrganizerModal(false)}
-                    addUsers={handleAddOrganizers}
-                    title="Add Organizer(s)"
-                />
-
-                <Paper
-                    elevation={3}
-                    sx={{
-                        maxWidth: "30rem",
-                        padding: "0.5rem",
-                        marginTop: "1rem",
-                    }}
-                >
-                    {/* for consistancy */}
-                    <Box
-                        sx={{
-                            borderBottom: "1px solid",
-                            borderColor: "divider",
-                        }}
-                    />
-                    <List sx={{ maxHeight: "60rem", overflowY: "auto", p: 0 }}>
-                        {organizers.map((organizer: User) => (
-                            <ListItem
-                                sx={{
-                                    borderBottom: "1px solid",
-                                    borderColor: "divider",
-                                }}
-                                key={organizer.id}
-                                secondaryAction={
-                                    <IconButton
-                                        edge="end"
-                                        aria-label="delete"
-                                        color="error"
-                                        onClick={() =>
-                                            handleDeleteOrganizer(organizer.id)
-                                        }
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                                <ListItemText primary={organizer.username} />
-                            </ListItem>
-                        ))}
-                    </List>
-                </Paper>
-            </TabPanel>
+                        </List>
+                    </Paper>
+                </TabPanel>
+            </LocalizationProvider>
         </Box>
     );
 };

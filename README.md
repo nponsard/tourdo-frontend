@@ -1,6 +1,4 @@
 ## todo
-- tab too large
-- match edition : change date
 - cleanup code
 - dark theme
 

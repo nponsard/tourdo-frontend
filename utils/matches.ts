@@ -6,7 +6,7 @@ export interface Match {
     column: number;
     tournament_id: number;
     status: MatchStatus;
-    date: Date;
+    date: string | null;
 }
 export enum MatchStatus {
     Created = 0,
