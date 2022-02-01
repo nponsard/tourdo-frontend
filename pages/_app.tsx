@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@emotion/react";
+import { useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import { orange } from "@mui/material/colors";
 import { createTheme } from "@mui/material/styles";
@@ -34,7 +35,7 @@ const DOTheme = createTheme({
         },
     },
 });
-
+const currentTheme = DOTheme;
 
 function MyApp({ Component, pageProps }: AppProps) {
     // const { mode, toggleMode } = useGetThemeVariant();
@@ -96,8 +97,8 @@ function MyApp({ Component, pageProps }: AppProps) {
                 </Head>
                 <Box
                     sx={{
-                        bgcolor: theme.palette.background.default,
-                        color: theme.palette.text.primary,
+                        bgcolor: currentTheme.palette.background.default,
+                        color: currentTheme.palette.text.primary,
                         minHeight: "100vh",
                     }}
                 >
