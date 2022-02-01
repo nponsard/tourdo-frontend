@@ -119,7 +119,7 @@ const TeamDetail = () => {
             </Box>
             <Typography variant="body1">{team.description}</Typography>
             <Typography variant="body1">
-                {team.winCount} Wins on {team.matchCount} matches played
+                {team.win_count} Wins on {team.match_count} matches played
             </Typography>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <Tabs

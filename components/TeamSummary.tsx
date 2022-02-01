@@ -30,7 +30,7 @@ const TeamSummary = ({ team }: { team: Team }) => {
                     </Typography>
                     <Box sx={{ flexGrow: 1, minWidth: "1em" }} />
                     <Typography sx={{ minWidth: "3em" }}>
-                        {team.winCount}W {team.matchCount - team.winCount}L
+                        {team.win_count}W {team.match_count - team.win_count}L
                     </Typography>
                 </Box>
                 <Typography
