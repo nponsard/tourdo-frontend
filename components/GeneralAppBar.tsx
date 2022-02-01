@@ -1,4 +1,3 @@
-import { useTheme } from "@emotion/react";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { AppBar, Box, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
@@ -6,8 +5,6 @@ import Link from "next/link";
 import router from "next/router";
 import { useContext, useState } from "react";
 import { ClearLocalStorage, FetchLogout, LoginContext } from "../utils/auth";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
 
 export default function GeneralAppBar() {
     // const themeContext = useTheme() as { palette: { mode: "light" | "dark" } };
