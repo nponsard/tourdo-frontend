@@ -244,9 +244,9 @@ const TournamentEditor = () => {
         return <></>;
     }
     const invalidDate =
-        localTournament.endDate != null &&
-        localTournament.startDate != null &&
-        new Date(localTournament.endDate).getTime() <= new Date(localTournament.startDate).getTime();
+        localTournament.end_date != null &&
+        localTournament.start_date != null &&
+        new Date(localTournament.end_date).getTime() <= new Date(localTournament.start_date).getTime();
 
     return (
         <Box sx={{ p: { xs: "0.2rem", sm: "0.5rem", md: "1rem" } }}>
@@ -324,7 +324,7 @@ const TournamentEditor = () => {
                                             </TableCell>
                                             <TableCell>
                                                 <TeamSelector
-                                                    position="team1ID"
+                                                    position="team1_id"
                                                     teams={teamList}
                                                     match={match}
                                                     setMatch={handleUpdateMatch}
@@ -332,7 +332,7 @@ const TournamentEditor = () => {
                                             </TableCell>
                                             <TableCell>
                                                 <TeamSelector
-                                                    position="team2ID"
+                                                    position="team2_id"
                                                     teams={teamList}
                                                     match={match}
                                                     setMatch={handleUpdateMatch}
@@ -370,19 +370,19 @@ const TournamentEditor = () => {
                                                     >
                                                         <MenuItem value={0}>None</MenuItem>
 
-                                                        {match.team1ID && (
+                                                        {match.team1_id && (
                                                             <MenuItem value={1}>
                                                                 {
-                                                                    teams.find((t) => t.team.id === match.team1ID)?.team
-                                                                        .name
+                                                                    teams.find((t) => t.team.id === match.team1_id)
+                                                                        ?.team.name
                                                                 }
                                                             </MenuItem>
                                                         )}
-                                                        {match.team2ID && (
+                                                        {match.team2_id && (
                                                             <MenuItem value={2}>
                                                                 {
-                                                                    teams.find((t) => t.team.id === match.team2ID)?.team
-                                                                        .name
+                                                                    teams.find((t) => t.team.id === match.team2_id)
+                                                                        ?.team.name
                                                                 }
                                                             </MenuItem>
                                                         )}
@@ -444,11 +444,11 @@ const TournamentEditor = () => {
                             <DatePicker
                                 label="Start date"
                                 views={["year", "month", "day"]}
-                                value={localTournament.startDate}
+                                value={localTournament.start_date}
                                 onChange={(newValue) => {
                                     setLocalTournament({
                                         ...localTournament,
-                                        startDate: newValue,
+                                        start_date: newValue,
                                     });
                                 }}
                                 renderInput={(params) => (
@@ -466,11 +466,11 @@ const TournamentEditor = () => {
                             <DatePicker
                                 label="End date"
                                 views={["year", "month", "day"]}
-                                value={localTournament.endDate}
+                                value={localTournament.end_date}
                                 onChange={(newValue) => {
                                     setLocalTournament({
                                         ...localTournament,
-                                        endDate: newValue,
+                                        end_date: newValue,
                                     });
                                 }}
                                 renderInput={(params) => (
@@ -488,13 +488,13 @@ const TournamentEditor = () => {
 
                         <TextField
                             fullWidth
-                            value={localTournament.gameName}
+                            value={localTournament.game_name}
                             label="Game name"
                             InputLabelProps={{ shrink: true }}
                             onChange={(e) =>
                                 setLocalTournament({
                                     ...localTournament,
-                                    gameName: e.target.value,
+                                    game_name: e.target.value,
                                 })
                             }
                         />
@@ -502,17 +502,17 @@ const TournamentEditor = () => {
                         {/* max teams */}
                         <TextField
                             fullWidth
-                            value={localTournament.maxTeams}
+                            value={localTournament.max_teams}
                             label="Max teams"
                             InputLabelProps={{ shrink: true }}
                             type="number"
                             onChange={(e) =>
                                 setLocalTournament({
                                     ...localTournament,
-                                    maxTeams: parseInt(e.target.value, 10),
+                                    max_teams: parseInt(e.target.value, 10),
                                 })
                             }
-                            error={localTournament.maxTeams < 1 || isNaN(localTournament.maxTeams)}
+                            error={localTournament.max_teams < 1 || isNaN(localTournament.max_teams)}
                         />
 
                         <Box

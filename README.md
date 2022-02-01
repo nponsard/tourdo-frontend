@@ -7,6 +7,8 @@
 - improve tournament preview
 - handle newlines in description
 
+## api
+The bodies sent to and recieved from the api is using snake_case naming to keep compatiblity with the database
 
 
 

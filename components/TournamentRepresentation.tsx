@@ -20,8 +20,8 @@ export function DefaultTournament(props: { tournament: Tournament; matches: Matc
         (team: Team) => {
             return props.matches.filter(
                 (match) =>
-                    (match.team1ID === team.id && match.status === MatchStatus.Team1Won) ||
-                    (match.team2ID === team.id && match.status === MatchStatus.Team2Won)
+                    (match.team1_id === team.id && match.status === MatchStatus.Team1Won) ||
+                    (match.team2_id === team.id && match.status === MatchStatus.Team2Won)
             ).length;
         },
         [props.matches]

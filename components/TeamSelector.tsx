@@ -6,9 +6,9 @@ export default function TeamSelector(props: {
     teams: Team[];
     match: Match;
     setMatch: (match: Match) => void;
-    position: "team1ID" | "team2ID";
+    position: "team1_id" | "team2_id";
 }) {
-    const opposite = props.position === "team1ID" ? "team2ID" : "team1ID";
+    const opposite = props.position === "team1_id" ? "team2_id" : "team1_id";
 
     const available = props.teams.filter((team) => {
         return team.id !== props.match[opposite];
