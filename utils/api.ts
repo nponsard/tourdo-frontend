@@ -1,8 +1,15 @@
 import { useContext } from "react";
+import getConfig from "next/config";
 import useSWR from "swr";
 import { TokenPair, FetchRefreshToken, LoginContext } from "./auth";
 
-export const BASE_URL = "/api/v1";
+const { publicRuntimeConfig } = getConfig();
+
+const server =
+    publicRuntimeConfig.NODE_ENV === "production"
+        ? publicRuntimeConfig.BASE_URL ?? "https://woa-backen.juno.nponsard.net"
+        : "http://localhost:8080";
+export const BASE_URL = server + "/api/v1";
 
 export async function BaseFetch<T>(endpoint: string, init?: RequestInit | undefined, tokenPair?: TokenPair | null) {
     const res = await fetch(BASE_URL + endpoint, {
