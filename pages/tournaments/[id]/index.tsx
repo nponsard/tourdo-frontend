@@ -12,7 +12,7 @@ import TournamentRepresentation from "../../../components/TournamentRepresentati
 import UserSummary from "../../../components/UserSummary";
 import { LoginContext } from "../../../utils/auth";
 import {
-    DeleteTournament,
+    FetchDeleteTournament,
     TournamentTypeName,
     useGetTournament as useGetTournament,
     useGetTournamentMatches,
@@ -65,12 +65,8 @@ const Tournament = () => {
 
     const { data: organizers } = useGetTournamentOrganizers(`${tournamentID}`);
 
-    const { data: matches, error: matchesError } = useGetTournamentMatches(
-        `${tournamentID}`
-    );
-    const { data: teams, error: teamsError } = useGetTournamentTeams(
-        `${tournamentID}`
-    );
+    const { data: matches, error: matchesError } = useGetTournamentMatches(`${tournamentID}`);
+    const { data: teams, error: teamsError } = useGetTournamentTeams(`${tournamentID}`);
 
     const teamList = teams?.map((team) => team.team) ?? [];
     const smallScreen = useMediaQuery("(max-width:25rem)");
@@ -79,12 +75,7 @@ const Tournament = () => {
         return <div>Loading...</div>;
     }
 
-
-    const canEdit =
-        user &&
-        ((organizers &&
-            organizers.some((organizer) => organizer.id === user.id)) ||
-            user.admin);
+    const canEdit = user && ((organizers && organizers.some((organizer) => organizer.id === user.id)) || user.admin);
 
     return (
         <>
@@ -111,11 +102,8 @@ const Tournament = () => {
                                     startIcon={<DeleteIcon />}
                                     color="error"
                                     onClick={() => {
-                                        if (
-                                            context.tokenPair &&
-                                            context.setTokenPair
-                                        )
-                                            DeleteTournament(
+                                        if (context.tokenPair && context.setTokenPair)
+                                            FetchDeleteTournament(
                                                 tournament.id,
                                                 context.tokenPair,
                                                 context.setTokenPair
@@ -128,10 +116,7 @@ const Tournament = () => {
                                 </Button>
                             )}
                             {canEdit && (
-                                <Link
-                                    href={`/tournaments/${tournament.id}/edit`}
-                                    passHref
-                                >
+                                <Link href={`/tournaments/${tournament.id}/edit`} passHref>
                                     <Button
                                         variant="outlined"
                                         startIcon={<EditIcon />}
@@ -144,22 +129,13 @@ const Tournament = () => {
                             )}
                         </Box>
                     </Box>
-                    <Typography variant="body1">
-                        Type : {TournamentTypeName[tournament.type]}
-                    </Typography>
-                    <Typography color="text.secondary">
-                        {tournament?.description}
-                    </Typography>
+                    <Typography variant="body1">Type : {TournamentTypeName[tournament.type]}</Typography>
+                    <Typography color="text.secondary">{tournament?.description}</Typography>
                     <Typography>
                         {tournament.start_date && tournament.end_date ? (
                             <>
-                                {new Date(
-                                    tournament.start_date
-                                ).toLocaleDateString()}{" "}
-                                -
-                                {new Date(
-                                    tournament.end_date
-                                ).toLocaleDateString()}
+                                {new Date(tournament.start_date).toLocaleDateString()} -
+                                {new Date(tournament.end_date).toLocaleDateString()}
                             </>
                         ) : (
                             <>No date specified</>
@@ -185,11 +161,7 @@ const Tournament = () => {
 
                     <TabPanel value={currentTab} index={0}>
                         {matches ? (
-                            <TournamentRepresentation
-                                matches={matches}
-                                tournament={tournament}
-                                teams={teamList}
-                            />
+                            <TournamentRepresentation matches={matches} tournament={tournament} teams={teamList} />
                         ) : (
                             <div>No matches</div>
                         )}
@@ -197,23 +169,14 @@ const Tournament = () => {
                     <TabPanel value={currentTab} index={1}>
                         <Box sx={boxSx}>
                             {teams?.map((entry) => (
-                                <TeamSummary
-                                    key={entry.team.id}
-                                    team={entry.team}
-                                />
+                                <TeamSummary key={entry.team.id} team={entry.team} />
                             ))}
                         </Box>
                     </TabPanel>
                     <TabPanel value={currentTab} index={2}>
                         <Box sx={boxSx}>
                             {teams &&
-                                matches?.map((entry) => (
-                                    <MatchSummary
-                                        teams={teamList}
-                                        match={entry}
-                                        key={entry.id}
-                                    />
-                                ))}
+                                matches?.map((entry) => <MatchSummary teams={teamList} match={entry} key={entry.id} />)}
                         </Box>
                     </TabPanel>
                     <TabPanel value={currentTab} index={3}>

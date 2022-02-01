@@ -1,15 +1,6 @@
-import {
-    Alert,
-    Autocomplete,
-    Box,
-    Button,
-    Modal,
-    Snackbar,
-    TextField,
-    Typography
-} from "@mui/material";
+import { Alert, Autocomplete, Box, Button, Modal, Snackbar, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { SearchUser, User } from "../utils/users";
+import { useSearchUser, User } from "../utils/users";
 
 const modalStyle = {
     position: "absolute" as "absolute",
@@ -35,7 +26,7 @@ const OrganizerManager = ({
     const [openModal, setOpenModal] = useState(false);
     const [search, setSearch] = useState("");
 
-    const { data: searchResult } = SearchUser(search);
+    const { data: searchResult } = useSearchUser(search);
 
     const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
     const [errorSnack, setErrorSnack] = useState(false);
@@ -85,29 +76,13 @@ const OrganizerManager = ({
 
     return (
         <>
-            <Snackbar
-                open={successSnack}
-                autoHideDuration={6000}
-                onClose={() => setSuccessSnack(false)}
-            >
-                <Alert
-                    onClose={() => setSuccessSnack(false)}
-                    severity="success"
-                    sx={{ width: "100%" }}
-                >
+            <Snackbar open={successSnack} autoHideDuration={6000} onClose={() => setSuccessSnack(false)}>
+                <Alert onClose={() => setSuccessSnack(false)} severity="success" sx={{ width: "100%" }}>
                     Organizers successufuly modified
                 </Alert>
             </Snackbar>
-            <Snackbar
-                open={errorSnack}
-                autoHideDuration={6000}
-                onClose={() => setErrorSnack(false)}
-            >
-                <Alert
-                    onClose={() => setErrorSnack(false)}
-                    severity="error"
-                    sx={{ width: "100%" }}
-                >
+            <Snackbar open={errorSnack} autoHideDuration={6000} onClose={() => setErrorSnack(false)}>
+                <Alert onClose={() => setErrorSnack(false)} severity="error" sx={{ width: "100%" }}>
                     An error occured
                 </Alert>
             </Snackbar>
@@ -122,9 +97,7 @@ const OrganizerManager = ({
                     <Autocomplete
                         multiple
                         options={searchResult ? searchResult.users : []}
-                        renderInput={(params) => (
-                            <TextField {...params} label="User" />
-                        )}
+                        renderInput={(params) => <TextField {...params} label="User" />}
                         getOptionLabel={(option) => option.username}
                         onInputChange={(_, value) => {
                             setSearch(value);
@@ -149,19 +122,12 @@ const OrganizerManager = ({
             </Modal>
             <Box sx={{ marginBottom: "1rem" }}>
                 {addOrganizer && (
-                    <Button
-                        variant="outlined"
-                        sx={{ marginRight: "1rem" }}
-                        onClick={() => setOpenModal(true)}
-                    >
+                    <Button variant="outlined" sx={{ marginRight: "1rem" }} onClick={() => setOpenModal(true)}>
                         Add Organizer
                     </Button>
                 )}
                 {removeOrganizer && (
-                    <Button
-                        variant="outlined"
-                        onClick={() => setEditMode(!editMode)}
-                    >
+                    <Button variant="outlined" onClick={() => setEditMode(!editMode)}>
                         Remove Organizer
                     </Button>
                 )}

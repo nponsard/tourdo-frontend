@@ -3,11 +3,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { User } from "../utils/users";
-const UserSummary = ({
-    user,
-}: {
-    user: User;
-}) => {
+const UserSummary = ({ user }: { user: User }) => {
     return (
         <Link href={`/users/${user.id}`} passHref>
             <Paper
@@ -17,7 +13,7 @@ const UserSummary = ({
                     width: "23em",
                     p: "0.5rem",
                     height: "3rem",
-                    margin:"1rem"
+                    margin: "1rem",
                 }}
             >
                 <Box
@@ -40,17 +36,9 @@ const UserSummary = ({
                         {user.username}
                     </Typography>
                     <Box sx={{ flexGrow: 1, minWidth: "1em" }} />
-                    <
-                        Box sx={{ minWidth: "3em" }}>
-                        {user.admin && (
-                            <Chip
-                                label="admin"
-                                color="secondary"
-                                variant="outlined"
-                            />
-                        )}
+                    <Box sx={{ minWidth: "3em" }}>
+                        {user.admin && <Chip label="admin" color="secondary" variant="outlined" />}
                     </Box>
-                    
                 </Box>
             </Paper>
         </Link>

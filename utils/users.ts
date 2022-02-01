@@ -1,7 +1,5 @@
-import useSWR from "swr";
 import { BaseFetch, FetchApi, useApi } from "./api";
 import { TokenPair, TokenPairSetter } from "./auth";
-import { Fetcher } from "./fetcher";
 import { Team } from "./teams";
 
 export interface User {
@@ -11,10 +9,10 @@ export interface User {
 }
 
 export function useSearchUser(username: string) {
-    return useSWR<{ users: User[]; total: number }>(`/api/v1/users?search=${username}`, Fetcher);
+    return useApi<{ users: User[]; total: number }>(`/users?search=${username}`);
 }
 
-export function SearchUserFetch(username: string) {
+export function FetchSearchUser(username: string) {
     return BaseFetch<{ users: User[]; total: number }>(`/users?search=${username}`);
 }
 
@@ -25,7 +23,7 @@ export function RegisterUser(username: string, password: string) {
     });
 }
 
-export function LoginFetch(username: string, password: string) {
+export function FetchLogin(username: string, password: string) {
     return BaseFetch<{ access_token: string; refresh_token: string }>(`/users/login`, {
         method: "POST",
         body: JSON.stringify({ username, password }),
@@ -48,7 +46,7 @@ export const useSearchUsers = (query: string, offset = 0, limit = 20) => {
     return useApi<{ users: User[]; total: number }>(`/users?search=${query}&offset=${offset}&limit=${limit}`);
 };
 
-export const DeleteUser = (user_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) => {
+export const FetchDeleteUser = (user_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) => {
     return FetchApi(
         `/users/${user_id}`,
         {
@@ -59,7 +57,7 @@ export const DeleteUser = (user_id: number, tokenPair: TokenPair, setTokenPair: 
     );
 };
 
-export const ChangeUserPassword = (
+export const FetchChangeUserPassword = (
     old_password: string,
     new_password: string,
     tokenPair: TokenPair,

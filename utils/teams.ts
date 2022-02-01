@@ -1,5 +1,6 @@
 import { mutate } from "swr";
-import { CallApi, TokenPair, TokenPairSetter, UseApi } from "./auth";
+import { useApi, FetchApi } from "./api";
+import { TokenPair, TokenPairSetter } from "./auth";
 import { Tournament } from "./tournaments";
 import { User } from "./users";
 
@@ -23,30 +24,24 @@ export interface TeamMember {
     role: TeamRole;
 }
 
-export const useGetTeam = (team_id: string) => {
-    return UseApi<Team>(`/teams/${team_id}`);
-};
+export function useGetTeam(team_id: string) {
+    return useApi<Team>(`/teams/${team_id}`);
+}
 
-export const useGetTeamMembers = (team_id: string) => {
-    return UseApi<TeamMember[]>(`/teams/${team_id}/users`);
-};
+export function useGetTeamMembers(team_id: string) {
+    return useApi<TeamMember[]>(`/teams/${team_id}/users`);
+}
 
-export const useGetTeamTournaments = (team_id: string) => {
-    return UseApi<Tournament[]>(`/teams/${team_id}/tournaments`);
-};
+export function useGetTeamTournaments(team_id: string) {
+    return useApi<Tournament[]>(`/teams/${team_id}/tournaments`);
+}
 
-export const useSearchTeams = (query: string, offset = 0, limit = 20) => {
-    return UseApi<{ teams: Team[]; total: number }>(
-        `/teams?search=${query}&offset=${offset}&limit=${limit}`
-    );
-};
+export function useSearchTeams(query: string, offset = 0, limit = 20) {
+    return useApi<{ teams: Team[]; total: number }>(`/teams?search=${query}&offset=${offset}&limit=${limit}`);
+}
 
-export const DeleteTeam = (
-    team_id: number,
-    tokenPair: TokenPair,
-    setTokenPair: TokenPairSetter
-) => {
-    return CallApi(
+export function FetchDeleteTeam(team_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
+    return FetchApi(
         `/teams/${team_id}`,
         {
             method: "DELETE",
@@ -54,15 +49,15 @@ export const DeleteTeam = (
         tokenPair,
         setTokenPair
     );
-};
+}
 
-export const CreateTeam = (
+export function FetchCreateTeam(
     name: string,
     description: string,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
-) => {
-    return CallApi(
+) {
+    return FetchApi<Team>(
         `/teams`,
         {
             method: "POST",
@@ -74,16 +69,16 @@ export const CreateTeam = (
         tokenPair,
         setTokenPair
     );
-};
+}
 
-export const EditTeam = (
+export async function FetchEditTeam(
     team_id: number,
     name: string,
     description: string,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
-) => {
-    return CallApi<Team>(
+) {
+    const value_1 = await FetchApi<Team>(
         `/teams/${team_id}`,
         {
             method: "PATCH",
@@ -94,20 +89,19 @@ export const EditTeam = (
         },
         tokenPair,
         setTokenPair
-    ).then((value) => {
-        mutate(`/teams/${team_id}`, value, false);
-        return value;
-    });
-};
+    );
+    mutate(`/teams/${team_id}`, value_1, false);
+    return value_1;
+}
 
-export const AddTeamMember = (
+export function FetchAddTeamMember(
     team_id: number,
     user_id: number,
     role: TeamRole,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
-) => {
-    return CallApi(
+) {
+    return FetchApi(
         `/teams/${team_id}/users/${user_id}`,
         {
             method: "PUT",
@@ -118,15 +112,15 @@ export const AddTeamMember = (
         tokenPair,
         setTokenPair
     );
-};
+}
 
-export const RemoveTeamMember = (
+export function FetchRemoveTeamMember(
     team_id: number,
     user_id: number,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
-) => {
-    return CallApi(
+) {
+    return FetchApi(
         `/teams/${team_id}/users/${user_id}`,
         {
             method: "DELETE",
@@ -134,4 +128,4 @@ export const RemoveTeamMember = (
         tokenPair,
         setTokenPair
     );
-};
+}

@@ -1,6 +1,5 @@
-import useSWR from "swr";
-import { CallApi, TokenPair, TokenPairSetter, UseApi } from "./auth";
-import { Fetcher } from "./fetcher";
+import { FetchApi, useApi } from "./api";
+import { TokenPair, TokenPairSetter } from "./auth";
 import { Match } from "./matches";
 import { Team } from "./teams";
 import { User } from "./users";
@@ -35,30 +34,27 @@ export interface TournamentTeam {
     team_number: number;
 }
 
-export const useGetTournament = (id: string) => {
-    return useSWR<Tournament>(`/api/v1/tournaments/${id}`, Fetcher);
-};
-export const useGetTournamentMatches = (id: string) => {
-    return useSWR<Match[]>(`/api/v1/tournaments/${id}/matches`, Fetcher);
-};
-export const useGetTournamentTeams = (id: string) => {
-    return useSWR<{ team: Team; team_number: number }[]>(
-        `/api/v1/tournaments/${id}/teams`,
-        Fetcher
-    );
-};
+export function useGetTournament(id: string) {
+    return useApi<Tournament>(`/tournaments/${id}`);
+}
+export function useGetTournamentMatches(id: string) {
+    return useApi<Match[]>(`/tournaments/${id}/matches`);
+}
+export function useGetTournamentTeams(id: string) {
+    return useApi<{ team: Team; team_number: number }[]>(`/tournaments/${id}/teams`);
+}
 
-export const useGetTournamentOrganizers = (id: string) => {
-    return useSWR<User[]>(`/api/v1/tournaments/${id}/organizers`, Fetcher);
-};
+export function useGetTournamentOrganizers(id: string) {
+    return useApi<User[]>(`/tournaments/${id}/organizers`);
+}
 
-export const AddTournamentOrganizer = (
+export function FetchAddTournamentOrganizer(
     tournament_id: number,
     user_id: number,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
-) => {
-    return CallApi(
+) {
+    return FetchApi(
         `/tournaments/${tournament_id}/organizers/${user_id}`,
         {
             method: "PUT",
@@ -66,14 +62,14 @@ export const AddTournamentOrganizer = (
         tokenPair,
         setTokenPair
     );
-};
-export const RemoveTournamentOrganizer = (
+}
+export function FetchRemoveTournamentOrganizer(
     tournament_id: number,
     user_id: number,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
-) => {
-    return CallApi(
+) {
+    return FetchApi(
         `/tournaments/${tournament_id}/organizers/${user_id}`,
         {
             method: "DELETE",
@@ -81,20 +77,16 @@ export const RemoveTournamentOrganizer = (
         tokenPair,
         setTokenPair
     );
-};
+}
 
-export const useSearchTournaments = (query: string, offset = 0, limit = 20) => {
-    return UseApi<{ tournaments: Tournament[]; total: number }>(
+export function useSearchTournaments(query: string, offset = 0, limit = 20) {
+    return useApi<{ tournaments: Tournament[]; total: number }>(
         `/tournaments?search=${query}&offset=${offset}&limit=${limit}`
     );
-};
+}
 
-export const DeleteTournament = (
-    tournament_id: number,
-    tokenPair: TokenPair,
-    setTokenPair: TokenPairSetter
-) => {
-    return CallApi(
+export function FetchDeleteTournament(tournament_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
+    return FetchApi(
         `/tournaments/${tournament_id}`,
         {
             method: "DELETE",
@@ -102,9 +94,9 @@ export const DeleteTournament = (
         tokenPair,
         setTokenPair
     );
-};
+}
 
-export const CreateTournament = (
+export function FetchCreateTournament(
     name: string,
     description: string,
     start_date: Date | null,
@@ -114,8 +106,8 @@ export const CreateTournament = (
     type: TournamentType,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
-) => {
-    return CallApi<Tournament>(
+) {
+    return FetchApi<Tournament>(
         "/tournaments",
         {
             method: "POST",
@@ -132,14 +124,10 @@ export const CreateTournament = (
         tokenPair,
         setTokenPair
     );
-};
+}
 
-export const EditTournament = (
-    tournament: Tournament,
-    tokenPair: TokenPair,
-    setTokenPair: TokenPairSetter
-) => {
-    return CallApi<Tournament>(
+export function FetchEditTournament(tournament: Tournament, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
+    return FetchApi<Tournament>(
         `/tournaments/${tournament.id}`,
         {
             method: "PATCH",
@@ -148,15 +136,15 @@ export const EditTournament = (
         tokenPair,
         setTokenPair
     );
-};
+}
 
-export const AddTournamentTeam = (
+export function FetchAddTournamentTeam(
     tournament_id: number,
     team_id: number,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
-) => {
-    return CallApi(
+) {
+    return FetchApi(
         `/tournaments/${tournament_id}/teams/${team_id}`,
         {
             method: "PUT",
@@ -164,14 +152,14 @@ export const AddTournamentTeam = (
         tokenPair,
         setTokenPair
     );
-};
+}
 
-export const ShuffleTournamentTeams = (
+export function FetchShuffleTournamentTeams(
     tournament_id: number,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
-) => {
-    return CallApi(
+) {
+    return FetchApi(
         `/tournaments/${tournament_id}/teams/shuffle`,
         {
             method: "POST",
@@ -179,14 +167,10 @@ export const ShuffleTournamentTeams = (
         tokenPair,
         setTokenPair
     );
-};
+}
 
-export const AddMatch = (
-    tournament_id: number,
-    tokenPair: TokenPair,
-    setTokenPair: TokenPairSetter
-) => {
-    return CallApi(
+export function FetchAddMatch(tournament_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
+    return FetchApi(
         `/matches`,
         {
             method: "POST",
@@ -203,14 +187,10 @@ export const AddMatch = (
         tokenPair,
         setTokenPair
     );
-};
+}
 
-export const GenerateMatches = (
-    tournament_id: number,
-    tokenPair: TokenPair,
-    setTokenPair: TokenPairSetter
-) => {
-    return CallApi(
+export function FetchGenerateMatches(tournament_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
+    return FetchApi(
         `/tournaments/${tournament_id}/matches/generate`,
         {
             method: "POST",
@@ -218,14 +198,10 @@ export const GenerateMatches = (
         tokenPair,
         setTokenPair
     );
-};
+}
 
-export const UpdateMatch = (
-    match: Match,
-    tokenPair: TokenPair,
-    setTokenPair: TokenPairSetter
-) => {
-    return CallApi(
+export function FetchUpdateMatch(match: Match, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
+    return FetchApi(
         `/matches/${match.id}`,
         {
             method: "PATCH",
@@ -234,14 +210,10 @@ export const UpdateMatch = (
         tokenPair,
         setTokenPair
     );
-};
+}
 
-export const DeleteMatch = (
-    match_id: number,
-    tokenPair: TokenPair,
-    setTokenPair: TokenPairSetter
-) => {
-    return CallApi(
+export function FetchDeleteMatch(match_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
+    return FetchApi(
         `/matches/${match_id}`,
         {
             method: "DELETE",
@@ -249,4 +221,4 @@ export const DeleteMatch = (
         tokenPair,
         setTokenPair
     );
-};
+}

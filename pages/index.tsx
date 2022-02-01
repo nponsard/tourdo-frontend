@@ -29,21 +29,9 @@ const Home: NextPage = () => {
     const [teamPage, setTeamPage] = useState(1);
     const [userPage, setUserPage] = useState(1);
 
-    const { data: teams } = useSearchTeams(
-        search,
-        (teamPage - 1) * pagination,
-        pagination
-    );
-    const { data: users } = useSearchUsers(
-        search,
-        (userPage - 1) * pagination,
-        pagination
-    );
-    const { data: tournaments } = useSearchTournaments(
-        search,
-        (tournamentPage - 1) * pagination,
-        pagination
-    );
+    const { data: teams } = useSearchTeams(search, (teamPage - 1) * pagination, pagination);
+    const { data: users } = useSearchUsers(search, (userPage - 1) * pagination, pagination);
+    const { data: tournaments } = useSearchTournaments(search, (tournamentPage - 1) * pagination, pagination);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setTab(newValue);
@@ -53,10 +41,7 @@ const Home: NextPage = () => {
             <Typography variant="h2" sx={{ textAlign: "center" }}>
                 Tournament Manager
             </Typography>
-            <Typography
-                variant="body1"
-                sx={{ textAlign: "center", color: "text.secondary" }}
-            >
+            <Typography variant="body1" sx={{ textAlign: "center", color: "text.secondary" }}>
                 A simple tournament manager for the web
             </Typography>
             <Box
@@ -73,9 +58,7 @@ const Home: NextPage = () => {
                 <Typography variant="h4">Explore</Typography>
                 <Box sx={{ flexGrow: 1, minWidth: "2rem" }}></Box>
                 <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                    <SearchIcon
-                        sx={{ color: "action.active", mr: 1, my: 0.5 }}
-                    />
+                    <SearchIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
                     <TextField
                         id="search"
                         label="Search..."
@@ -106,10 +89,7 @@ const Home: NextPage = () => {
                     {tournaments && tournaments.tournaments.length > 0 && (
                         <>
                             {tournaments.tournaments.map((tournament) => (
-                                <TournamentSummary
-                                    key={tournament.id}
-                                    tournament={tournament}
-                                />
+                                <TournamentSummary key={tournament.id} tournament={tournament} />
                             ))}
                         </>
                     )}

@@ -10,7 +10,7 @@ import TournamentSummary from "../../../components/TournamentSummary";
 import UserSummary from "../../../components/UserSummary";
 import { LoginContext } from "../../../utils/auth";
 import {
-    DeleteTeam,
+    FetchDeleteTeam,
     TeamMember,
     TeamRole,
     useGetTeam,
@@ -63,24 +63,14 @@ const TeamDetail = () => {
 
     if (!team || !members) return <div>Loading</div>;
 
-    const captains = members.filter(
-        (member: TeamMember) => member.role == TeamRole.LEADER
-    );
-    const coaches = members.filter(
-        (member: TeamMember) => member.role == TeamRole.COACH
-    );
-    const players = members.filter(
-        (member: TeamMember) => member.role == TeamRole.PLAYER
-    );
+    const captains = members.filter((member: TeamMember) => member.role == TeamRole.LEADER);
+    const coaches = members.filter((member: TeamMember) => member.role == TeamRole.COACH);
+    const players = members.filter((member: TeamMember) => member.role == TeamRole.PLAYER);
 
     const canEdit =
         context.user &&
         ((members &&
-            members.some(
-                (member) =>
-                    member.user.id === context.user?.id &&
-                    member.role === TeamRole.LEADER
-            )) ||
+            members.some((member) => member.user.id === context.user?.id && member.role === TeamRole.LEADER)) ||
             context.user.admin);
 
     return (
@@ -105,11 +95,7 @@ const TeamDetail = () => {
                             color="error"
                             onClick={() => {
                                 if (context.tokenPair && context.setTokenPair)
-                                    DeleteTeam(
-                                        team.id,
-                                        context.tokenPair,
-                                        context.setTokenPair
-                                    )
+                                    FetchDeleteTeam(team.id, context.tokenPair, context.setTokenPair)
                                         .then(() => router.push("/"))
                                         .catch(console.error);
                             }}
@@ -150,10 +136,7 @@ const TeamDetail = () => {
             <TabPanel value={currentTab} index={0}>
                 {captains.length > 0 && (
                     <>
-                        <Typography
-                            variant="h5"
-                            sx={{ textAlign: "center", marginTop: "1rem" }}
-                        >
+                        <Typography variant="h5" sx={{ textAlign: "center", marginTop: "1rem" }}>
                             Captain{captains.length > 1 ? "s" : ""}
                         </Typography>
 
@@ -167,20 +150,14 @@ const TeamDetail = () => {
                             }}
                         >
                             {captains.map((captain: TeamMember) => (
-                                <UserSummary
-                                    key={captain.user.id}
-                                    user={captain.user}
-                                />
+                                <UserSummary key={captain.user.id} user={captain.user} />
                             ))}
                         </Box>
                     </>
                 )}
                 {coaches.length > 0 && (
                     <>
-                        <Typography
-                            variant="h5"
-                            sx={{ textAlign: "center", marginTop: "1rem" }}
-                        >
+                        <Typography variant="h5" sx={{ textAlign: "center", marginTop: "1rem" }}>
                             Coach{captains.length > 1 ? "es" : ""}
                         </Typography>
 
@@ -194,10 +171,7 @@ const TeamDetail = () => {
                             }}
                         >
                             {coaches.map((member: TeamMember) => (
-                                <UserSummary
-                                    key={member.user.id}
-                                    user={member.user}
-                                />
+                                <UserSummary key={member.user.id} user={member.user} />
                             ))}
                         </Box>
                     </>
@@ -205,10 +179,7 @@ const TeamDetail = () => {
 
                 {players.length > 0 && (
                     <>
-                        <Typography
-                            variant="h5"
-                            sx={{ textAlign: "center", marginTop: "1rem" }}
-                        >
+                        <Typography variant="h5" sx={{ textAlign: "center", marginTop: "1rem" }}>
                             Player{captains.length > 1 ? "s" : ""}
                         </Typography>
 
@@ -222,10 +193,7 @@ const TeamDetail = () => {
                             }}
                         >
                             {players.map((member: TeamMember) => (
-                                <UserSummary
-                                    key={member.user.id}
-                                    user={member.user}
-                                />
+                                <UserSummary key={member.user.id} user={member.user} />
                             ))}
                         </Box>
                     </>
@@ -236,10 +204,7 @@ const TeamDetail = () => {
                     {tournaments && tournaments.length > 0 && (
                         <>
                             {tournaments.map((tournament) => (
-                                <TournamentSummary
-                                    key={tournament.id}
-                                    tournament={tournament}
-                                />
+                                <TournamentSummary key={tournament.id} tournament={tournament} />
                             ))}
                         </>
                     )}

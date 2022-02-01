@@ -18,17 +18,11 @@ export default function TeamSelector(props: {
 
     return (
         <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">
-                {props.position}
-            </InputLabel>
+            <InputLabel id="demo-simple-select-label">{props.position}</InputLabel>
             <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={
-                    props.match[props.position] === null
-                        ? -1
-                        : props.match[props.position]
-                }
+                value={props.match[props.position] === null ? -1 : props.match[props.position]}
                 label={props.position}
                 onChange={(e) => {
                     props.setMatch({

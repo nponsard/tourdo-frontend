@@ -8,17 +8,17 @@ import {
     InputLabel,
     MenuItem,
     Paper,
-    Select, Snackbar, Stack,
+    Select,
+    Snackbar,
+    Stack,
     TextField,
-    Typography
+    Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { LoginContext } from "../../utils/auth";
-import {
-    CreateTournament, TournamentType, TournamentTypeName
-} from "../../utils/tournaments";
+import { FetchCreateTournament, TournamentType, TournamentTypeName } from "../../utils/tournaments";
 
 export default function TournamentCreation() {
     const context = useContext(LoginContext);
@@ -40,7 +40,7 @@ export default function TournamentCreation() {
 
     const handleCreate = () => {
         if (context.tokenPair && context.setTokenPair) {
-            CreateTournament(
+            FetchCreateTournament(
                 name,
                 description,
                 startDate,
@@ -52,8 +52,7 @@ export default function TournamentCreation() {
                 context.setTokenPair
             )
                 .then((value) => {
-                    if (value.id || value.id === 0)
-                        router.push(`/tournaments/${value.id}/edit`);
+                    if (value.id || value.id === 0) router.push(`/tournaments/${value.id}/edit`);
                     else setErrorMessage("An error occured");
                 })
                 .catch((error) => {
@@ -65,16 +64,8 @@ export default function TournamentCreation() {
 
     return (
         <>
-            <Snackbar
-                open={errorMessage.length > 0}
-                autoHideDuration={6000}
-                onClose={() => setErrorMessage("")}
-            >
-                <Alert
-                    onClose={() => setErrorMessage("")}
-                    severity="error"
-                    sx={{ width: "100%" }}
-                >
+            <Snackbar open={errorMessage.length > 0} autoHideDuration={6000} onClose={() => setErrorMessage("")}>
+                <Alert onClose={() => setErrorMessage("")} severity="error" sx={{ width: "100%" }}>
                     {errorMessage}
                 </Alert>
             </Snackbar>
@@ -90,10 +81,7 @@ export default function TournamentCreation() {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <Box component="form">
                         <Stack spacing={2}>
-                            <Typography
-                                variant="h5"
-                                sx={{ textAlign: "center" }}
-                            >
+                            <Typography variant="h5" sx={{ textAlign: "center" }}>
                                 Create a tournament
                             </Typography>
 
@@ -103,25 +91,17 @@ export default function TournamentCreation() {
                                 fullWidth
                                 label="Tournament Name"
                                 value={name}
-                                onChange={(event) =>
-                                    setName(event.target.value)
-                                }
+                                onChange={(event) => setName(event.target.value)}
                             />
 
                             {/* type  */}
                             <FormControl fullWidth>
-                                <InputLabel id="type-select-label">
-                                    Tournament Type
-                                </InputLabel>
+                                <InputLabel id="type-select-label">Tournament Type</InputLabel>
                                 <Select
                                     labelId="type-select-label"
                                     value={type}
                                     label="Tournament type"
-                                    onChange={(event) =>
-                                        setType(
-                                            event.target.value as TournamentType
-                                        )
-                                    }
+                                    onChange={(event) => setType(event.target.value as TournamentType)}
                                 >
                                     {TournamentTypeName.map((name, index) => (
                                         <MenuItem key={index} value={index}>
@@ -160,12 +140,7 @@ export default function TournamentCreation() {
                                     onChange={(newValue) => {
                                         setEndDate(newValue);
                                     }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            sx={{ width: "47%" }}
-                                            {...params}
-                                        />
-                                    )}
+                                    renderInput={(params) => <TextField sx={{ width: "47%" }} {...params} />}
                                 />
                             </Box>
 
@@ -176,9 +151,7 @@ export default function TournamentCreation() {
                                 maxRows={10}
                                 value={description}
                                 fullWidth
-                                onChange={(event) =>
-                                    setDescription(event.target.value)
-                                }
+                                onChange={(event) => setDescription(event.target.value)}
                             />
 
                             {/* max_teams  */}
@@ -190,21 +163,13 @@ export default function TournamentCreation() {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
-                                onChange={(event) =>
-                                    setMaxTeams(parseInt(event.target.value))
-                                }
+                                onChange={(event) => setMaxTeams(parseInt(event.target.value))}
                                 error={maxTeams < 1}
                             />
 
                             {/* game_name  */}
 
-                            <TextField
-                                label="Game"
-                                value={game}
-                                onChange={(event) =>
-                                    setGame(event.target.value)
-                                }
-                            />
+                            <TextField label="Game" value={game} onChange={(event) => setGame(event.target.value)} />
 
                             <Button variant="contained" onClick={handleCreate}>
                                 Create

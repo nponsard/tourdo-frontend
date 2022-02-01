@@ -12,7 +12,7 @@ import TeamSummary from "../../../components/TeamSummary";
 import { LoginContext } from "../../../utils/auth";
 import { Team } from "../../../utils/teams";
 import {
-    DeleteUser,
+    FetchDeleteUser,
     useGetTeamsOfUser,
     useGetUser
 } from "../../../utils/users";
@@ -69,7 +69,7 @@ const UserDetail = () => {
                             color="error"
                             onClick={() => {
                                 if (context.tokenPair && context.setTokenPair)
-                                    DeleteUser(
+                                    FetchDeleteUser(
                                         user.id,
                                         context.tokenPair,
                                         context.setTokenPair

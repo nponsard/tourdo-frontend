@@ -1,21 +1,10 @@
-import {
-    Paper,
-    Table,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Typography
-} from "@mui/material";
+import { Paper, Table, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import Link from "next/link";
 import { useCallback } from "react";
 import { Match, MatchStatus } from "../utils/matches";
 import { Team } from "../utils/teams";
-import {
-    Tournament,
-    TournamentType
-} from "../utils/tournaments";
+import { Tournament, TournamentType } from "../utils/tournaments";
 import MatchSummary from "./MatchSummary";
 
 const boxSx = {
@@ -26,19 +15,13 @@ const boxSx = {
     justifyContent: "center",
 };
 
-export function DefaultTournament(props: {
-    tournament: Tournament;
-    matches: Match[];
-    teams: Team[];
-}) {
+export function DefaultTournament(props: { tournament: Tournament; matches: Match[]; teams: Team[] }) {
     const getTeamWins = useCallback(
         (team: Team) => {
             return props.matches.filter(
                 (match) =>
-                    (match.team1_id === team.id &&
-                        match.status === MatchStatus.Team1Won) ||
-                    (match.team2_id === team.id &&
-                        match.status === MatchStatus.Team2Won)
+                    (match.team1_id === team.id && match.status === MatchStatus.Team1Won) ||
+                    (match.team2_id === team.id && match.status === MatchStatus.Team2Won)
             ).length;
         },
         [props.matches]
@@ -68,11 +51,7 @@ export function DefaultTournament(props: {
                             return b.wins - a.wins;
                         })
                         .map((team, index) => (
-                            <Link
-                                key={team.id}
-                                href={`/teams/${team.id}`}
-                                passHref
-                            >
+                            <Link key={team.id} href={`/teams/${team.id}`} passHref>
                                 <TableRow>
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{team.name}</TableCell>
@@ -85,11 +64,7 @@ export function DefaultTournament(props: {
         </>
     );
 }
-export function SimpleElimination(props: {
-    tournament: Tournament;
-    matches: Match[];
-    teams: Team[];
-}) {
+export function SimpleElimination(props: { tournament: Tournament; matches: Match[]; teams: Team[] }) {
     let maxRow = 0;
     let maxColumn = 0;
 
@@ -98,10 +73,7 @@ export function SimpleElimination(props: {
         if (match.column > maxColumn) maxColumn = match.column;
     }
 
-    if (props.matches.length === 0)
-        return (
-            <Typography variant="h5">Tournament not yet generated</Typography>
-        );
+    if (props.matches.length === 0) return <Typography variant="h5">Tournament not yet generated</Typography>;
 
     return (
         <Box
@@ -113,10 +85,7 @@ export function SimpleElimination(props: {
             }}
         >
             {props.matches.map((match) => (
-                <Box
-                    key={match.id}
-                    sx={{ gridColumn: match.column, gridRow: match.row }}
-                >
+                <Box key={match.id} sx={{ gridColumn: match.column, gridRow: match.row }}>
                     <MatchSummary match={match} teams={props.teams} />
                 </Box>
             ))}
@@ -124,27 +93,11 @@ export function SimpleElimination(props: {
     );
 }
 
-export default function TournamentRepresentation(props: {
-    tournament: Tournament;
-    matches: Match[];
-    teams: Team[];
-}) {
+export default function TournamentRepresentation(props: { tournament: Tournament; matches: Match[]; teams: Team[] }) {
     switch (props.tournament.type) {
         case TournamentType.SimpleElimination:
-            return (
-                <SimpleElimination
-                    tournament={props.tournament}
-                    teams={props.teams}
-                    matches={props.matches}
-                />
-            );
+            return <SimpleElimination tournament={props.tournament} teams={props.teams} matches={props.matches} />;
         default:
-            return (
-                <DefaultTournament
-                    tournament={props.tournament}
-                    teams={props.teams}
-                    matches={props.matches}
-                />
-            );
+            return <DefaultTournament tournament={props.tournament} teams={props.teams} matches={props.matches} />;
     }
 }

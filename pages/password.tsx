@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { LoginContext } from "../utils/auth";
 import {
-    ChangeUserPassword
+    FetchChangeUserPassword
 } from "../utils/users";
 
 const ChangePassword = () => {
@@ -94,7 +94,7 @@ const ChangePassword = () => {
             return;
         }
 
-        ChangeUserPassword(
+        FetchChangeUserPassword(
             oldPassword,
             password,
             context.tokenPair,

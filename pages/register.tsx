@@ -12,8 +12,8 @@ import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { LoginContext } from "../utils/auth";
 import {
-    LoginFetch,
-    RegisterUser, SearchUserFetch
+    FetchLogin,
+    RegisterUser, FetchSearchUser
 } from "../utils/users";
 
 const Register = () => {
@@ -40,7 +40,7 @@ const Register = () => {
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         setUsername(event.target.value);
-        SearchUserFetch(event.target.value)
+        FetchSearchUser(event.target.value)
             .then((data) => {
                 if (
                     data &&
@@ -117,7 +117,7 @@ const Register = () => {
     };
 
     const closeSuccessSnack = () => {
-        LoginFetch(username, password)
+        FetchLogin(username, password)
             .then((res) => {
                 context.setTokenPair(res);
             })

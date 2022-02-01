@@ -6,7 +6,7 @@ import {
     Typography
 } from "@mui/material";
 import { useState } from "react";
-import { SearchUser, User } from "../utils/users";
+import { useSearchUser, User } from "../utils/users";
 
 const modalStyle = {
     position: "absolute" as "absolute",
@@ -27,7 +27,7 @@ export default function AddUserModal(props: {
     const [search, setSearch] = useState("");
     const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
 
-    const { data: searchResult } = SearchUser(search);
+    const { data: searchResult } = useSearchUser(search);
 
     return (
         <Modal

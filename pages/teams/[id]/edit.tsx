@@ -1,16 +1,18 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
-    Alert, Box,
+    Alert,
+    Box,
     Button,
     IconButton,
     List,
     ListItem,
-    ListItemText, Paper,
+    ListItemText,
+    Paper,
     Snackbar,
     Stack,
     TextField,
-    Typography
+    Typography,
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -18,10 +20,14 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import AddUserModal from "../../../components/AddUserModal";
 import { LoginContext } from "../../../utils/auth";
 import {
-    AddTeamMember,
-    EditTeam, RemoveTeamMember, TeamMember, TeamRole,
-    TeamRoleNames, useGetTeam,
-    useGetTeamMembers
+    FetchAddTeamMember,
+    FetchEditTeam,
+    FetchRemoveTeamMember,
+    TeamMember,
+    TeamRole,
+    TeamRoleNames,
+    useGetTeam,
+    useGetTeamMembers,
 } from "../../../utils/teams";
 import { User } from "../../../utils/users";
 
@@ -59,21 +65,13 @@ const TeamEditor = () => {
         (users: User[]) => {
             const promises = users.map((user) => {
                 if (team && context.tokenPair && context.setTokenPair) {
-                    return AddTeamMember(
-                        team.id,
-                        user.id,
-                        selectedRole,
-                        context.tokenPair,
-                        context.setTokenPair
-                    );
+                    return FetchAddTeamMember(team.id, user.id, selectedRole, context.tokenPair, context.setTokenPair);
                 }
             });
 
             Promise.allSettled(promises)
                 .then((results) => {
-                    if (
-                        results.some((result) => result.status === "rejected")
-                    ) {
+                    if (results.some((result) => result.status === "rejected")) {
                         setErrorSnack("Failed to add some users");
                         console.log(results);
                     } else setSuccessSnack("User(s) added successfully");
@@ -91,19 +89,12 @@ const TeamEditor = () => {
 
     const handleApply = useCallback(() => {
         if (team && context.tokenPair && context.setTokenPair) {
-            EditTeam(
-                team.id,
-                localName,
-                localDescription,
-                context.tokenPair,
-                context.setTokenPair
-            )
+            FetchEditTeam(team.id, localName, localDescription, context.tokenPair, context.setTokenPair)
                 .then(() => {
                     setSuccessSnack("Team edited successfully");
                 })
                 .catch((e) => {
-                    if (e.message && typeof e.message === "string")
-                        setErrorSnack(e.message);
+                    if (e.message && typeof e.message === "string") setErrorSnack(e.message);
                     else setErrorSnack(JSON.stringify(e));
                 });
         }
@@ -112,18 +103,12 @@ const TeamEditor = () => {
     const handleDelete = useCallback(
         (user_id: number) => {
             if (team && context.tokenPair && context.setTokenPair) {
-                RemoveTeamMember(
-                    team.id,
-                    user_id,
-                    context.tokenPair,
-                    context.setTokenPair
-                )
+                FetchRemoveTeamMember(team.id, user_id, context.tokenPair, context.setTokenPair)
                     .then(() => {
                         setSuccessSnack("Team member removed successfully");
                     })
                     .catch((e) => {
-                        if (e.message && typeof e.message === "string")
-                            setErrorSnack(e.message);
+                        if (e.message && typeof e.message === "string") setErrorSnack(e.message);
                         else setErrorSnack(JSON.stringify(e));
                     })
                     .finally(() => {
@@ -145,11 +130,7 @@ const TeamEditor = () => {
     const canEdit =
         context.user &&
         ((members &&
-            members.some(
-                (member) =>
-                    member.user.id === context.user?.id &&
-                    member.role === TeamRole.LEADER
-            )) ||
+            members.some((member) => member.user.id === context.user?.id && member.role === TeamRole.LEADER)) ||
             context.user.admin);
 
     if (!canEdit) {
@@ -164,24 +145,12 @@ const TeamEditor = () => {
                 autoHideDuration={6000}
                 onClose={() => setSuccessSnack(undefined)}
             >
-                <Alert
-                    onClose={() => setSuccessSnack(undefined)}
-                    severity="success"
-                    sx={{ width: "100%" }}
-                >
+                <Alert onClose={() => setSuccessSnack(undefined)} severity="success" sx={{ width: "100%" }}>
                     {successSnack}
                 </Alert>
             </Snackbar>
-            <Snackbar
-                open={errorSnack !== undefined}
-                autoHideDuration={6000}
-                onClose={() => setErrorSnack(undefined)}
-            >
-                <Alert
-                    onClose={() => setErrorSnack(undefined)}
-                    severity="error"
-                    sx={{ width: "100%" }}
-                >
+            <Snackbar open={errorSnack !== undefined} autoHideDuration={6000} onClose={() => setErrorSnack(undefined)}>
+                <Alert onClose={() => setErrorSnack(undefined)} severity="error" sx={{ width: "100%" }}>
                     {errorSnack}
                 </Alert>
             </Snackbar>
@@ -209,24 +178,13 @@ const TeamEditor = () => {
                     onChange={(e) => setLocalDescription(e.target.value)}
                 />
 
-                <Box
-                    sx={{ display: "flex", flexFlow: "row", flexWrap: "wrap" }}
-                >
+                <Box sx={{ display: "flex", flexFlow: "row", flexWrap: "wrap" }}>
                     <Box sx={{ flexGrow: 1 }} />
 
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={handleReset}
-                    >
+                    <Button variant="contained" color="secondary" onClick={handleReset}>
                         Reset
                     </Button>
-                    <Button
-                        sx={{ marginLeft: "1rem" }}
-                        variant="contained"
-                        color="primary"
-                        onClick={handleApply}
-                    >
+                    <Button sx={{ marginLeft: "1rem" }} variant="contained" color="primary" onClick={handleApply}>
                         Apply
                     </Button>
                 </Box>
@@ -273,10 +231,7 @@ const TeamEditor = () => {
                     Add captain
                 </Button>
             </Stack>
-            <Paper
-                elevation={3}
-                sx={{ maxWidth: "30rem", padding: "0.5rem", marginTop: "1rem" }}
-            >
+            <Paper elevation={3} sx={{ maxWidth: "30rem", padding: "0.5rem", marginTop: "1rem" }}>
                 {/* for consistancy */}
                 <Box
                     sx={{
@@ -303,10 +258,7 @@ const TeamEditor = () => {
                                 </IconButton>
                             }
                         >
-                            <ListItemText
-                                primary={member.user.username}
-                                secondary={TeamRoleNames[member.role]}
-                            />
+                            <ListItemText primary={member.user.username} secondary={TeamRoleNames[member.role]} />
                         </ListItem>
                     ))}
                 </List>

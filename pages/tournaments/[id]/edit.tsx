@@ -41,19 +41,19 @@ import { LoginContext } from "../../../utils/auth";
 import { Match, MatchStatus } from "../../../utils/matches";
 import { Team } from "../../../utils/teams";
 import {
-    AddMatch,
-    AddTournamentOrganizer,
-    AddTournamentTeam,
-    DeleteMatch,
-    EditTournament,
-    GenerateMatches,
-    RemoveTournamentOrganizer,
-    ShuffleTournamentTeams,
+    FetchAddMatch,
+    FetchAddTournamentOrganizer,
+    FetchAddTournamentTeam,
+    FetchDeleteMatch,
+    FetchEditTournament,
+    FetchGenerateMatches,
+    FetchRemoveTournamentOrganizer,
+    FetchShuffleTournamentTeams,
     Tournament,
     TournamentStatus,
     TournamentType,
     TournamentTypeName,
-    UpdateMatch,
+    FetchUpdateMatch,
     useGetTournament,
     useGetTournamentMatches,
     useGetTournamentOrganizers,
@@ -97,7 +97,7 @@ const TournamentEditor = () => {
 
     const handleApply = useCallback(() => {
         if (localTournament && context.tokenPair && context.setTokenPair) {
-            EditTournament(localTournament, context.tokenPair, context.setTokenPair)
+            FetchEditTournament(localTournament, context.tokenPair, context.setTokenPair)
                 .then(() => {
                     setSuccessSnack("Team edited successfully");
                 })
@@ -111,7 +111,7 @@ const TournamentEditor = () => {
     const handleDeleteOrganizer = useCallback(
         (id: number) => {
             if (tournament && context.tokenPair && context.setTokenPair) {
-                RemoveTournamentOrganizer(tournament.id, id, context.tokenPair, context.setTokenPair)
+                FetchRemoveTournamentOrganizer(tournament.id, id, context.tokenPair, context.setTokenPair)
                     .then(() => {
                         setSuccessSnack("Organizer removed successfully");
                         mutateOrganizers();
@@ -130,7 +130,7 @@ const TournamentEditor = () => {
         (teams: Team[]) => {
             const promises = teams.map((team) => {
                 if (tournament && context.tokenPair && context.setTokenPair) {
-                    return AddTournamentTeam(tournament.id, team.id, context.tokenPair, context.setTokenPair);
+                    return FetchAddTournamentTeam(tournament.id, team.id, context.tokenPair, context.setTokenPair);
                 }
             });
 
@@ -153,7 +153,7 @@ const TournamentEditor = () => {
         (users: User[]) => {
             const promises = users.map((user) => {
                 if (tournament && context.tokenPair && context.setTokenPair) {
-                    return AddTournamentOrganizer(tournament.id, user.id, context.tokenPair, context.setTokenPair);
+                    return FetchAddTournamentOrganizer(tournament.id, user.id, context.tokenPair, context.setTokenPair);
                 }
             });
 
@@ -172,7 +172,7 @@ const TournamentEditor = () => {
 
     const handleAddMatch = useCallback(() => {
         if (tournament && context.tokenPair && context.setTokenPair) {
-            AddMatch(tournament.id, context.tokenPair, context.setTokenPair)
+            FetchAddMatch(tournament.id, context.tokenPair, context.setTokenPair)
                 .catch((e) => {
                     setErrorSnack(JSON.stringify(e));
                 })
@@ -183,7 +183,7 @@ const TournamentEditor = () => {
     }, [context.setTokenPair, context.tokenPair, mutateMatches, tournament]);
     const handleGenerateMatches = useCallback(() => {
         if (tournament && context.tokenPair && context.setTokenPair) {
-            GenerateMatches(tournament.id, context.tokenPair, context.setTokenPair)
+            FetchGenerateMatches(tournament.id, context.tokenPair, context.setTokenPair)
                 .then(() => {
                     setSuccessSnack("Matches generated successfully");
                 })
@@ -199,7 +199,7 @@ const TournamentEditor = () => {
     const handleUpdateMatch = useCallback(
         (match: Match) => {
             if (tournament && context.tokenPair && context.setTokenPair) {
-                UpdateMatch(match, context.tokenPair, context.setTokenPair)
+                FetchUpdateMatch(match, context.tokenPair, context.setTokenPair)
                     .catch((e) => {
                         setErrorSnack(JSON.stringify(e));
                     })
@@ -213,7 +213,7 @@ const TournamentEditor = () => {
     const handleDeleteMatch = useCallback(
         (match: Match) => {
             if (tournament && context.tokenPair && context.setTokenPair) {
-                DeleteMatch(match.id, context.tokenPair, context.setTokenPair)
+                FetchDeleteMatch(match.id, context.tokenPair, context.setTokenPair)
                     .catch((e) => {
                         setErrorSnack(JSON.stringify(e));
                     })
@@ -564,7 +564,7 @@ const TournamentEditor = () => {
                             variant="contained"
                             onClick={() => {
                                 if (tournament && context.tokenPair && context.setTokenPair) {
-                                    ShuffleTournamentTeams(tournament.id, context.tokenPair, context.setTokenPair)
+                                    FetchShuffleTournamentTeams(tournament.id, context.tokenPair, context.setTokenPair)
                                         .then(() => {
                                             setSuccessSnack("Teams shuffled");
                                             mutateTeams();

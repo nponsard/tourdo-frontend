@@ -1,16 +1,11 @@
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import {
-    Alert,
-    Button, Paper, Snackbar, Stack,
-    TextField,
-    Typography
-} from "@mui/material";
+import { Alert, Button, Paper, Snackbar, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { LoginContext } from "../../utils/auth";
-import { CreateTeam } from "../../utils/teams";
+import { FetchCreateTeam } from "../../utils/teams";
 
 export default function TeamCreation() {
     const context = useContext(LoginContext);
@@ -26,15 +21,9 @@ export default function TeamCreation() {
 
     const handleCreate = () => {
         if (context.tokenPair && context.setTokenPair) {
-            CreateTeam(
-                name,
-                description,
-                context.tokenPair,
-                context.setTokenPair
-            )
+            FetchCreateTeam(name, description, context.tokenPair, context.setTokenPair)
                 .then((value) => {
-                    if (value.id || value.id === 0)
-                        router.push(`/teams/${value.id}/edit`);
+                    if (value.id || value.id === 0) router.push(`/teams/${value.id}/edit`);
                     else setErrorMessage("An error occured");
                 })
                 .catch((error) => {
@@ -46,16 +35,8 @@ export default function TeamCreation() {
 
     return (
         <>
-            <Snackbar
-                open={errorMessage.length > 0}
-                autoHideDuration={6000}
-                onClose={() => setErrorMessage("")}
-            >
-                <Alert
-                    onClose={() => setErrorMessage("")}
-                    severity="error"
-                    sx={{ width: "100%" }}
-                >
+            <Snackbar open={errorMessage.length > 0} autoHideDuration={6000} onClose={() => setErrorMessage("")}>
+                <Alert onClose={() => setErrorMessage("")} severity="error" sx={{ width: "100%" }}>
                     {errorMessage}
                 </Alert>
             </Snackbar>
@@ -71,10 +52,7 @@ export default function TeamCreation() {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <Box component="form">
                         <Stack spacing={2}>
-                            <Typography
-                                variant="h5"
-                                sx={{ textAlign: "center" }}
-                            >
+                            <Typography variant="h5" sx={{ textAlign: "center" }}>
                                 Create a team
                             </Typography>
 
@@ -84,9 +62,7 @@ export default function TeamCreation() {
                                 fullWidth
                                 label="Tournament Name"
                                 value={name}
-                                onChange={(event) =>
-                                    setName(event.target.value)
-                                }
+                                onChange={(event) => setName(event.target.value)}
                             />
 
                             {/* description  */}
@@ -96,9 +72,7 @@ export default function TeamCreation() {
                                 maxRows={10}
                                 value={description}
                                 fullWidth
-                                onChange={(event) =>
-                                    setDescription(event.target.value)
-                                }
+                                onChange={(event) => setDescription(event.target.value)}
                             />
 
                             <Button variant="contained" onClick={handleCreate}>
