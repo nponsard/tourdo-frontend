@@ -41,7 +41,7 @@ export function useGetTournamentMatches(id: string) {
     return useApi<Match[]>(`/tournaments/${id}/matches`);
 }
 export function useGetTournamentTeams(id: string) {
-    return useApi<{ team: Team; teamNumber: number }[]>(`/tournaments/${id}/teams`);
+    return useApi<{ team: Team; team_number: number }[]>(`/tournaments/${id}/teams`);
 }
 
 export function useGetTournamentOrganizers(id: string) {
