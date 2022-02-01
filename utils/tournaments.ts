@@ -31,7 +31,7 @@ export interface Tournament {
 }
 export interface TournamentTeam {
     team: Team;
-    teamNumber: number;
+    team_number: number;
 }
 
 export function useGetTournament(id: string) {
