@@ -18,7 +18,7 @@ console.log(defaultServer, publicRuntimeConfig);
 async function getBaseURL() {
     const res = await urlFetch;
 
-    return res.BACKEND_URL ?? defaultServer + "/api/v1";
+    return (res.BACKEND_URL ?? defaultServer) + "/api/v1";
 }
 
 export async function BaseFetch<T>(endpoint: string, init?: RequestInit | undefined, tokenPair?: TokenPair | null) {
