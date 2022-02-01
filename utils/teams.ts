@@ -20,7 +20,7 @@ export interface Team {
 }
 export interface TeamMember {
     user: User;
-    teamID: number;
+    team_id: number;
     role: TeamRole;
 }
 

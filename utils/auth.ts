@@ -3,8 +3,8 @@ import { BaseFetch, FetchApi } from "./api";
 import { User } from "./users";
 
 export interface TokenPair {
-    accessToken: string;
-    refreshToken: string;
+    access_token: string;
+    refresh_token: string;
 }
 export type TokenPairSetter = (newTokenPair: TokenPair) => void;
 
@@ -19,7 +19,7 @@ export const LoginContext = createContext({
 export async function FetchRefreshToken(refreshToken: string) {
     return BaseFetch<TokenPair>("/tokens/refresh", {
         method: "POST",
-        body: JSON.stringify({ refreshToken }),
+        body: JSON.stringify({ refresh_token: refreshToken }),
     });
 }
 
@@ -42,17 +42,17 @@ export async function FetchLogout(tokenPair: TokenPair, setTokenPair: (newTokenP
 }
 
 export function CheckLocalStorage() {
-    const accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
-    if (accessToken && refreshToken) {
-        return { accessToken, refreshToken };
+    const access_token = localStorage.getItem("accessToken");
+    const refresh_token = localStorage.getItem("refreshToken");
+    if (access_token && refresh_token) {
+        return { access_token, refresh_token };
     }
     return null;
 }
 
 export function SaveLocalStorage(tokenPair: TokenPair) {
-    localStorage.setItem("accessToken", tokenPair.accessToken);
-    localStorage.setItem("refreshToken", tokenPair.refreshToken);
+    localStorage.setItem("accessToken", tokenPair.access_token);
+    localStorage.setItem("refreshToken", tokenPair.refresh_token);
 }
 
 export function ClearLocalStorage() {

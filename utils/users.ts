@@ -67,7 +67,7 @@ export const FetchChangeUserPassword = (
         `/users/me`,
         {
             method: "PATCH",
-            body: JSON.stringify({ oldPassword, newPassword }),
+            body: JSON.stringify({ old_password: oldPassword, new_password: newPassword }),
         },
         tokenPair,
         setTokenPair

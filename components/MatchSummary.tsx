@@ -38,8 +38,8 @@ const MiniTeam = ({
 };
 
 const MatchSummary = ({ match, teams }: { match: Match; teams: Team[] }) => {
-    let team1 = teams.find((t) => t.id === match.team1_id);
-    let team2 = teams.find((t) => t.id === match.team2_id);
+    let team1 = teams.find((t) => t.id === match.team1ID);
+    let team2 = teams.find((t) => t.id === match.team2ID);
 
     console.log(teams);
 

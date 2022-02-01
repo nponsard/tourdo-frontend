@@ -36,21 +36,21 @@ const TournamentSummary = ({ tournament }: { tournament: Tournament }) => {
                         whiteSpace: "nowrap",
                     }}
                 >
-                    {tournament.game_name}
+                    {tournament.gameName}
                 </Typography>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Typography variant="body2">
-                        {tournament.start_date && tournament.end_date ? (
+                        {tournament.startDate && tournament.endDate ? (
                             <>
-                                {new Date(tournament.start_date).toLocaleDateString()} -
-                                {new Date(tournament.end_date).toLocaleDateString()}
+                                {new Date(tournament.startDate).toLocaleDateString()} -
+                                {new Date(tournament.endDate).toLocaleDateString()}
                             </>
                         ) : (
                             <>No date specified</>
                         )}
                     </Typography>
                     <Box sx={{ flexGrow: 1, minWidth: "1em" }} />
-                    <Typography variant="body2">{tournament.max_teams} teams</Typography>
+                    <Typography variant="body2">{tournament.maxTeams} teams</Typography>
                 </Box>
             </Paper>
         </Link>

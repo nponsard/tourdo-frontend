@@ -1,10 +1,10 @@
 export interface Match {
     id: number;
-    team1ID: number | null;
-    team2ID: number | null;
+    team1_id: number | null;
+    team2_id: number | null;
     row: number;
     column: number;
-    tournamentID: number;
+    tournament_id: number;
     status: MatchStatus;
     date: string | null;
 }

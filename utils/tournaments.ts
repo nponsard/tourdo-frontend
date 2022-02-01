@@ -23,10 +23,10 @@ export interface Tournament {
     type: TournamentType;
     name: string;
     description: string;
-    startDate: string | null;
-    endDate: string | null;
-    maxTeams: number;
-    gameName: string;
+    start_date: string | null;
+    end_date: string | null;
+    max_teams: number;
+    game_name: string;
     status: TournamentStatus;
 }
 export interface TournamentTeam {
@@ -114,10 +114,10 @@ export function FetchCreateTournament(
             body: JSON.stringify({
                 name,
                 description,
-                startDate: startDate ? startDate.toISOString() : null,
-                endDate: endDate ? endDate.toISOString() : null,
-                maxTeams,
-                gameName,
+                start_date: startDate ? startDate.toISOString() : null,
+                end_date: endDate ? endDate.toISOString() : null,
+                max_teams: maxTeams,
+                game_name: gameName,
                 type,
             }),
         },
@@ -175,7 +175,7 @@ export function FetchAddMatch(tournamentID: number, tokenPair: TokenPair, setTok
                 team1: null,
                 team2: null,
                 date: new Date(),
-                tournamentID,
+                tournament_id: tournamentID,
                 row: 0,
                 column: 0,
             }),

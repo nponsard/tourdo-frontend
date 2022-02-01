@@ -588,7 +588,7 @@ const TournamentEditor = () => {
                         />
                         <List sx={{ maxHeight: "60rem", overflowY: "auto", p: 0 }}>
                             {teams
-                                .sort((a, b) => a.team_number - b.team_number)
+                                .sort((a, b) => a.teamNumber - b.teamNumber)
                                 .map((entry) => (
                                     <ListItem
                                         sx={{

@@ -7,7 +7,7 @@ export const BASE_URL = "/api/v1";
 export async function BaseFetch<T>(endpoint: string, init?: RequestInit | undefined, tokenPair?: TokenPair | null) {
     const res = await fetch(BASE_URL + endpoint, {
         headers: {
-            Authorization: tokenPair?.accessToken ?? "",
+            Authorization: tokenPair?.access_token ?? "",
             ...init?.headers,
         },
         ...init,
@@ -34,7 +34,7 @@ export async function FetchApi<T>(
     return BaseFetch<T>(endpoint, init, tokenPair).catch(async (e) => {
         if (e.status != 401 || tokenPair == undefined) throw e;
 
-        const newTokens = await FetchRefreshToken(tokenPair.refreshToken);
+        const newTokens = await FetchRefreshToken(tokenPair.refresh_token);
 
         if (setTokenPair) setTokenPair(newTokens as TokenPair);
         return BaseFetch<T>(endpoint, init, newTokens);
