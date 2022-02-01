@@ -1,30 +1,33 @@
-import AddIcon from "@mui/icons-material/Add";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { Menu, MenuItem } from "@mui/material";
-import AppBar from "@mui/material/AppBar";
+import { ThemeProvider } from "@emotion/react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
+import { orange } from "@mui/material/colors";
+import { createTheme } from "@mui/material/styles";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import GeneralAppBar from "../components/GeneralAppBar";
 import "../styles/globals.css";
-import {
-    FetchLogout,
-    CheckLocalStorage,
-    ClearLocalStorage,
-    LoginContext,
-    SaveLocalStorage,
-    TokenPair,
-} from "../utils/auth";
+import { CheckLocalStorage, ClearLocalStorage, LoginContext, SaveLocalStorage, TokenPair } from "../utils/auth";
+import useGetThemeVariant from "../utils/theme";
 import { FetchCurrentUser, User } from "../utils/users";
 
 function MyApp({ Component, pageProps }: AppProps) {
+    const { mode, toggleMode } = useGetThemeVariant();
+
+    const theme = useMemo(() => {
+        return createTheme({
+            palette: {
+                mode,
+                primary: {
+                    main: "#2b9eb3",
+                },
+                secondary: {
+                    main: "#B87D4B",
+                },
+            },
+        });
+    }, [mode]);
+
     // undefined : not yet loaded
     // null : not logged in
     const [user, setUser] = useState<User | undefined | null>(undefined);
@@ -74,26 +77,35 @@ function MyApp({ Component, pageProps }: AppProps) {
                 setTokenPair: (newTokenPair: TokenPair | undefined | null) => setTokenPair(newTokenPair),
             }}
         >
-            <Head>
-                <title>TOURDO</title>
-                <meta name="description" content="DO tournament manager" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
+            <ThemeProvider theme={theme}>
+                <Head>
+                    <title>TOURDO</title>
+                    <meta name="description" content="DO tournament manager" />
+                    <link rel="icon" href="/favicon.ico" />
+                </Head>
+                <Box
+                    sx={{
+                        bgcolor: theme.palette.background.default,
+                        color: theme.palette.text.primary,
+                        minHeight: "100vh",
+                    }}
+                >
+                    <GeneralAppBar toggleDarkMode={toggleMode} />
 
-            <GeneralAppBar />
-
-            <Box
-                sx={{
-                    maxWidth: "60rem",
-                    marginRight: "auto",
-                    marginLeft: "auto",
-                    paddingRight: { sm: 0, md: "1rem" },
-                    paddingLeft: { sm: 0, md: "1rem" },
-                    paddingTop: "1rem",
-                }}
-            >
-                <Component {...pageProps} />
-            </Box>
+                    <Box
+                        sx={{
+                            maxWidth: "60rem",
+                            marginRight: "auto",
+                            marginLeft: "auto",
+                            paddingRight: { sm: 0, md: "1rem" },
+                            paddingLeft: { sm: 0, md: "1rem" },
+                            paddingTop: "1rem",
+                        }}
+                    >
+                        <Component {...pageProps} />
+                    </Box>
+                </Box>
+            </ThemeProvider>
         </LoginContext.Provider>
     );
 }

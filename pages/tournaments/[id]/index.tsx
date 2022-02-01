@@ -144,7 +144,7 @@ const Tournament = () => {
                     <Typography>{tournament.game_name}</Typography>
                 </Box>
                 <Box>
-                    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <Box sx={{ borderBottom: 1, borderColor: "palette.divider" }}>
                         <Tabs
                             value={currentTab}
                             onChange={handleTabChange}

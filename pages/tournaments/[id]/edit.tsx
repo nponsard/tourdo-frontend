@@ -259,7 +259,7 @@ const TournamentEditor = () => {
                 </Link>
                 <Typography variant="h4">Edit Tournament : {tournament.name}</Typography>
 
-                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Box sx={{ borderBottom: 1, borderColor: "palette.divider" }}>
                     <Tabs
                         value={currentTab}
                         onChange={(e, newValue) => setTab(newValue)}
@@ -583,7 +583,7 @@ const TournamentEditor = () => {
                         <Box
                             sx={{
                                 borderBottom: "1px solid",
-                                borderColor: "divider",
+                                borderColor: "palette.divider",
                             }}
                         />
                         <List sx={{ maxHeight: "60rem", overflowY: "auto", p: 0 }}>
@@ -593,7 +593,7 @@ const TournamentEditor = () => {
                                     <ListItem
                                         sx={{
                                             borderBottom: "1px solid",
-                                            borderColor: "divider",
+                                            borderColor: "palette.divider",
                                         }}
                                         key={entry.team.id}
                                         secondaryAction={
@@ -639,7 +639,7 @@ const TournamentEditor = () => {
                         <Box
                             sx={{
                                 borderBottom: "1px solid",
-                                borderColor: "divider",
+                                borderColor: "palette.divider",
                             }}
                         />
                         <List sx={{ maxHeight: "60rem", overflowY: "auto", p: 0 }}>
@@ -647,7 +647,7 @@ const TournamentEditor = () => {
                                 <ListItem
                                     sx={{
                                         borderBottom: "1px solid",
-                                        borderColor: "divider",
+                                        borderColor: "palette.divider",
                                     }}
                                     key={organizer.id}
                                     secondaryAction={

@@ -218,7 +218,7 @@ const TeamEditor = () => {
                 <Box
                     sx={{
                         borderBottom: "1px solid",
-                        borderColor: "divider",
+                        borderColor: "palette.divider",
                     }}
                 />
                 <List sx={{ maxHeight: "60rem", overflowY: "auto", p: 0 }}>
@@ -226,7 +226,7 @@ const TeamEditor = () => {
                         <ListItem
                             sx={{
                                 borderBottom: "1px solid",
-                                borderColor: "divider",
+                                borderColor: "palette.divider",
                             }}
                             key={member.user.id}
                             secondaryAction={
