@@ -23,15 +23,15 @@ export interface Tournament {
     type: TournamentType;
     name: string;
     description: string;
-    start_date: string | null;
-    end_date: string | null;
-    max_teams: number;
-    game_name: string;
+    startDate: string | null;
+    endDate: string | null;
+    maxTeams: number;
+    gameName: string;
     status: TournamentStatus;
 }
 export interface TournamentTeam {
     team: Team;
-    team_number: number;
+    teamNumber: number;
 }
 
 export function useGetTournament(id: string) {
@@ -41,7 +41,7 @@ export function useGetTournamentMatches(id: string) {
     return useApi<Match[]>(`/tournaments/${id}/matches`);
 }
 export function useGetTournamentTeams(id: string) {
-    return useApi<{ team: Team; team_number: number }[]>(`/tournaments/${id}/teams`);
+    return useApi<{ team: Team; teamNumber: number }[]>(`/tournaments/${id}/teams`);
 }
 
 export function useGetTournamentOrganizers(id: string) {
@@ -49,13 +49,13 @@ export function useGetTournamentOrganizers(id: string) {
 }
 
 export function FetchAddTournamentOrganizer(
-    tournament_id: number,
-    user_id: number,
+    tournamentID: number,
+    userID: number,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
 ) {
     return FetchApi(
-        `/tournaments/${tournament_id}/organizers/${user_id}`,
+        `/tournaments/${tournamentID}/organizers/${userID}`,
         {
             method: "PUT",
         },
@@ -64,13 +64,13 @@ export function FetchAddTournamentOrganizer(
     );
 }
 export function FetchRemoveTournamentOrganizer(
-    tournament_id: number,
-    user_id: number,
+    tournamentID: number,
+    userID: number,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
 ) {
     return FetchApi(
-        `/tournaments/${tournament_id}/organizers/${user_id}`,
+        `/tournaments/${tournamentID}/organizers/${userID}`,
         {
             method: "DELETE",
         },
@@ -85,9 +85,9 @@ export function useSearchTournaments(query: string, offset = 0, limit = 20) {
     );
 }
 
-export function FetchDeleteTournament(tournament_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
+export function FetchDeleteTournament(tounamentID: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
     return FetchApi(
-        `/tournaments/${tournament_id}`,
+        `/tournaments/${tounamentID}`,
         {
             method: "DELETE",
         },
@@ -99,10 +99,10 @@ export function FetchDeleteTournament(tournament_id: number, tokenPair: TokenPai
 export function FetchCreateTournament(
     name: string,
     description: string,
-    start_date: Date | null,
-    end_date: Date | null,
-    max_teams: number,
-    game_name: string,
+    startDate: Date | null,
+    endDate: Date | null,
+    maxTeams: number,
+    gameName: string,
     type: TournamentType,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
@@ -114,10 +114,10 @@ export function FetchCreateTournament(
             body: JSON.stringify({
                 name,
                 description,
-                start_date: start_date ? start_date.toISOString() : null,
-                end_date: end_date ? end_date.toISOString() : null,
-                max_teams,
-                game_name,
+                startDate: startDate ? startDate.toISOString() : null,
+                endDate: endDate ? endDate.toISOString() : null,
+                maxTeams,
+                gameName,
                 type,
             }),
         },
@@ -139,13 +139,13 @@ export function FetchEditTournament(tournament: Tournament, tokenPair: TokenPair
 }
 
 export function FetchAddTournamentTeam(
-    tournament_id: number,
-    team_id: number,
+    tournamentID: number,
+    teamID: number,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
 ) {
     return FetchApi(
-        `/tournaments/${tournament_id}/teams/${team_id}`,
+        `/tournaments/${tournamentID}/teams/${teamID}`,
         {
             method: "PUT",
         },
@@ -154,13 +154,9 @@ export function FetchAddTournamentTeam(
     );
 }
 
-export function FetchShuffleTournamentTeams(
-    tournament_id: number,
-    tokenPair: TokenPair,
-    setTokenPair: TokenPairSetter
-) {
+export function FetchShuffleTournamentTeams(tournamentID: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
     return FetchApi(
-        `/tournaments/${tournament_id}/teams/shuffle`,
+        `/tournaments/${tournamentID}/teams/shuffle`,
         {
             method: "POST",
         },
@@ -169,7 +165,7 @@ export function FetchShuffleTournamentTeams(
     );
 }
 
-export function FetchAddMatch(tournament_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
+export function FetchAddMatch(tournamentID: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
     return FetchApi(
         `/matches`,
         {
@@ -179,7 +175,7 @@ export function FetchAddMatch(tournament_id: number, tokenPair: TokenPair, setTo
                 team1: null,
                 team2: null,
                 date: new Date(),
-                tournament_id,
+                tournamentID,
                 row: 0,
                 column: 0,
             }),
@@ -189,9 +185,9 @@ export function FetchAddMatch(tournament_id: number, tokenPair: TokenPair, setTo
     );
 }
 
-export function FetchGenerateMatches(tournament_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
+export function FetchGenerateMatches(tournamentID: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
     return FetchApi(
-        `/tournaments/${tournament_id}/matches/generate`,
+        `/tournaments/${tournamentID}/matches/generate`,
         {
             method: "POST",
         },
@@ -212,9 +208,9 @@ export function FetchUpdateMatch(match: Match, tokenPair: TokenPair, setTokenPai
     );
 }
 
-export function FetchDeleteMatch(match_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
+export function FetchDeleteMatch(tournamentID: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
     return FetchApi(
-        `/matches/${match_id}`,
+        `/matches/${tournamentID}`,
         {
             method: "DELETE",
         },

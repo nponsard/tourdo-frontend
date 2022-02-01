@@ -3,8 +3,8 @@ import { BaseFetch, FetchApi } from "./api";
 import { User } from "./users";
 
 export interface TokenPair {
-    access_token: string;
-    refresh_token: string;
+    accessToken: string;
+    refreshToken: string;
 }
 export type TokenPairSetter = (newTokenPair: TokenPair) => void;
 
@@ -16,10 +16,10 @@ export const LoginContext = createContext({
     setTokenPair: (newTokenPair: TokenPair | undefined | null) => {},
 });
 
-export async function FetchRefreshToken(refresh_token: string) {
+export async function FetchRefreshToken(refreshToken: string) {
     return BaseFetch<TokenPair>("/tokens/refresh", {
         method: "POST",
-        body: JSON.stringify({ refresh_token }),
+        body: JSON.stringify({ refreshToken }),
     });
 }
 
@@ -42,20 +42,20 @@ export async function FetchLogout(tokenPair: TokenPair, setTokenPair: (newTokenP
 }
 
 export function CheckLocalStorage() {
-    const access_token = localStorage.getItem("access_token");
-    const refresh_token = localStorage.getItem("refresh_token");
-    if (access_token && refresh_token) {
-        return { access_token, refresh_token };
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (accessToken && refreshToken) {
+        return { accessToken, refreshToken };
     }
     return null;
 }
 
 export function SaveLocalStorage(tokenPair: TokenPair) {
-    localStorage.setItem("access_token", tokenPair.access_token);
-    localStorage.setItem("refresh_token", tokenPair.refresh_token);
+    localStorage.setItem("accessToken", tokenPair.accessToken);
+    localStorage.setItem("refreshToken", tokenPair.refreshToken);
 }
 
 export function ClearLocalStorage() {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
 }

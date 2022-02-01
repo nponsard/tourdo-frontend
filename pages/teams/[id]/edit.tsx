@@ -95,9 +95,9 @@ const TeamEditor = () => {
     }, [localDescription, localName, team, context]);
 
     const handleDelete = useCallback(
-        (user_id: number) => {
+        (userID: number) => {
             if (team && context.tokenPair && context.setTokenPair) {
-                FetchRemoveTeamMember(team.id, user_id, context.tokenPair, context.setTokenPair)
+                FetchRemoveTeamMember(team.id, userID, context.tokenPair, context.setTokenPair)
                     .then(() => {
                         setSuccessSnack("Team member removed successfully");
                     })

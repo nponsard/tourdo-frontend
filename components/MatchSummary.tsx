@@ -8,12 +8,12 @@ import { Team } from "../utils/teams";
 
 const MiniTeam = ({
     team,
-    team_number,
-    match_status,
+    teamNumber,
+    matchStatus,
 }: {
     team: Team | undefined;
-    team_number: number;
-    match_status: number;
+    teamNumber: number;
+    matchStatus: number;
 }) => {
     return (
         <Box sx={{ display: "flex" }}>
@@ -25,14 +25,14 @@ const MiniTeam = ({
                     textOverflow: "clip",
                     fontStyle: team ? "normal" : "italic",
                 }}
-                color={team_number === match_status ? "text.primary" : "text.secondary"}
+                color={teamNumber === matchStatus ? "text.primary" : "text.secondary"}
             >
                 {team ? team.name : "TBD"}
             </Typography>
             <Box sx={{ flexGrow: 1, minWidth: "1em" }} />
-            {match_status >= 1 &&
-                match_status <= 2 &&
-                (match_status === team_number ? <CheckIcon color="success" /> : <CloseIcon color="error" />)}
+            {matchStatus >= 1 &&
+                matchStatus <= 2 &&
+                (matchStatus === teamNumber ? <CheckIcon color="success" /> : <CloseIcon color="error" />)}
         </Box>
     );
 };
@@ -53,8 +53,8 @@ const MatchSummary = ({ match, teams }: { match: Match; teams: Team[] }) => {
 
     return (
         <Paper elevation={3} sx={{ width: "20em", p: "0.5rem", m: "1rem" }}>
-            <MiniTeam team={team1} team_number={1} match_status={match.status} />
-            <MiniTeam team={team2} team_number={2} match_status={match.status} />
+            <MiniTeam team={team1} teamNumber={1} matchStatus={match.status} />
+            <MiniTeam team={team2} teamNumber={2} matchStatus={match.status} />
         </Paper>
     );
 };

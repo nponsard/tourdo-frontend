@@ -15,34 +15,34 @@ export interface Team {
     id: number;
     name: string;
     description: string;
-    match_count: number;
-    win_count: number;
+    matchCount: number;
+    winCount: number;
 }
 export interface TeamMember {
     user: User;
-    team_id: number;
+    teamID: number;
     role: TeamRole;
 }
 
-export function useGetTeam(team_id: string) {
-    return useApi<Team>(`/teams/${team_id}`);
+export function useGetTeam(teamID: string) {
+    return useApi<Team>(`/teams/${teamID}`);
 }
 
-export function useGetTeamMembers(team_id: string) {
-    return useApi<TeamMember[]>(`/teams/${team_id}/users`);
+export function useGetTeamMembers(teamID: string) {
+    return useApi<TeamMember[]>(`/teams/${teamID}/users`);
 }
 
-export function useGetTeamTournaments(team_id: string) {
-    return useApi<Tournament[]>(`/teams/${team_id}/tournaments`);
+export function useGetTeamTournaments(teamID: string) {
+    return useApi<Tournament[]>(`/teams/${teamID}/tournaments`);
 }
 
 export function useSearchTeams(query: string, offset = 0, limit = 20) {
     return useApi<{ teams: Team[]; total: number }>(`/teams?search=${query}&offset=${offset}&limit=${limit}`);
 }
 
-export function FetchDeleteTeam(team_id: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
+export function FetchDeleteTeam(teamID: number, tokenPair: TokenPair, setTokenPair: TokenPairSetter) {
     return FetchApi(
-        `/teams/${team_id}`,
+        `/teams/${teamID}`,
         {
             method: "DELETE",
         },
@@ -72,14 +72,14 @@ export function FetchCreateTeam(
 }
 
 export async function FetchEditTeam(
-    team_id: number,
+    teamID: number,
     name: string,
     description: string,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
 ) {
-    const value_1 = await FetchApi<Team>(
-        `/teams/${team_id}`,
+    const result = await FetchApi<Team>(
+        `/teams/${teamID}`,
         {
             method: "PATCH",
             body: JSON.stringify({
@@ -90,19 +90,19 @@ export async function FetchEditTeam(
         tokenPair,
         setTokenPair
     );
-    mutate(`/teams/${team_id}`, value_1, false);
-    return value_1;
+    mutate(`/teams/${teamID}`, result, false);
+    return result;
 }
 
 export function FetchAddTeamMember(
-    team_id: number,
-    user_id: number,
+    teamID: number,
+    userID: number,
     role: TeamRole,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
 ) {
     return FetchApi(
-        `/teams/${team_id}/users/${user_id}`,
+        `/teams/${teamID}/users/${userID}`,
         {
             method: "PUT",
             body: JSON.stringify({
@@ -115,13 +115,13 @@ export function FetchAddTeamMember(
 }
 
 export function FetchRemoveTeamMember(
-    team_id: number,
-    user_id: number,
+    teamID: number,
+    userID: number,
     tokenPair: TokenPair,
     setTokenPair: TokenPairSetter
 ) {
     return FetchApi(
-        `/teams/${team_id}/users/${user_id}`,
+        `/teams/${teamID}/users/${userID}`,
         {
             method: "DELETE",
         },
