@@ -4,6 +4,7 @@ module.exports = {
     async rewrites() {
 
         let destination = "https://woa-backend.juno.nponsard.net/api/:path*";
+        console.log(process.env)
         if (process.env.BACKEND_URL)
             destination = process.env.BACKEND_URL+"/api/:path*";
         else if (process.env.NODE_ENV != "production")
