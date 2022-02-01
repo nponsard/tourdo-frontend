@@ -18,6 +18,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect, useState } from "react";
 import AddUserModal from "../../../components/AddUserModal";
+import GenericSnackBar from "../../../components/GenericSnackBar";
 import { LoginContext } from "../../../utils/auth";
 import {
     FetchAddTeamMember,
@@ -54,13 +55,6 @@ const TeamEditor = () => {
         }
     }, [team]);
 
-    /*
-    useEffect(() => {
-        if (members !== undefined) {
-            setLocalMembers(members);
-        }
-    }, [members]);
-*/
     const handleAddMembers = useCallback(
         (users: User[]) => {
             const promises = users.map((user) => {
@@ -140,20 +134,8 @@ const TeamEditor = () => {
 
     return (
         <Box sx={{ p: { xs: "0.2rem", sm: "0.5rem", md: "1rem" } }}>
-            <Snackbar
-                open={successSnack !== undefined}
-                autoHideDuration={6000}
-                onClose={() => setSuccessSnack(undefined)}
-            >
-                <Alert onClose={() => setSuccessSnack(undefined)} severity="success" sx={{ width: "100%" }}>
-                    {successSnack}
-                </Alert>
-            </Snackbar>
-            <Snackbar open={errorSnack !== undefined} autoHideDuration={6000} onClose={() => setErrorSnack(undefined)}>
-                <Alert onClose={() => setErrorSnack(undefined)} severity="error" sx={{ width: "100%" }}>
-                    {errorSnack}
-                </Alert>
-            </Snackbar>
+            <GenericSnackBar message={successSnack} setMessage={setSuccessSnack} severity="success" />
+            <GenericSnackBar message={errorSnack} setMessage={setErrorSnack} severity="error" />
 
             <Link href={`/teams/${team.id}`} passHref>
                 <Button startIcon={<ArrowBackIcon />}>Back</Button>

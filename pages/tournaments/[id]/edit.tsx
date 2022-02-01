@@ -35,6 +35,7 @@ import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect, useState } from "react";
 import AddTeamModal from "../../../components/AddTeamModal";
 import AddUserModal from "../../../components/AddUserModal";
+import GenericSnackBar from "../../../components/GenericSnackBar";
 import { TabPanel } from "../../../components/TabPanel";
 import TeamSelector from "../../../components/TeamSelector";
 import { LoginContext } from "../../../utils/auth";
@@ -250,24 +251,8 @@ const TournamentEditor = () => {
     return (
         <Box sx={{ p: { xs: "0.2rem", sm: "0.5rem", md: "1rem" } }}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Snackbar
-                    open={successSnack !== undefined}
-                    autoHideDuration={6000}
-                    onClose={() => setSuccessSnack(undefined)}
-                >
-                    <Alert onClose={() => setSuccessSnack(undefined)} severity="success" sx={{ width: "100%" }}>
-                        {successSnack}
-                    </Alert>
-                </Snackbar>
-                <Snackbar
-                    open={errorSnack !== undefined}
-                    autoHideDuration={6000}
-                    onClose={() => setErrorSnack(undefined)}
-                >
-                    <Alert onClose={() => setErrorSnack(undefined)} severity="error" sx={{ width: "100%" }}>
-                        {errorSnack}
-                    </Alert>
-                </Snackbar>
+                <GenericSnackBar message={successSnack} setMessage={setSuccessSnack} severity="success" />
+                <GenericSnackBar message={errorSnack} setMessage={setErrorSnack} severity="error" />
 
                 <Link href={`/tournaments/${tournament.id}`} passHref>
                     <Button startIcon={<ArrowBackIcon />}>Back</Button>

@@ -135,20 +135,6 @@ const Home: NextPage = () => {
                     setCurrentPage={setUserPage}
                 />
             </TabPanel>
-            {/* <Fab
-                color="primary"
-                aria-label="add..."
-                variant='circular'
-                sx={{
-                    position: "absolute",
-                    bottom: { xs: 16, sm: 16, md: "unset" },
-                    right: { xs: 16, sm: 16, md: "unset" },
-                    left: { sm: "unset", md: 16 },
-                    top: { sm: "unset", md: 80 },
-                }}
-            >
-                <AddIcon />
-            </Fab> */}
         </>
     );
 };

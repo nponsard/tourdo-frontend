@@ -4,6 +4,7 @@ import { Alert, Button, Paper, Snackbar, Stack, TextField, Typography } from "@m
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
+import GenericSnackBar from "../../components/GenericSnackBar";
 import { LoginContext } from "../../utils/auth";
 import { FetchCreateTeam } from "../../utils/teams";
 
@@ -13,7 +14,7 @@ export default function TeamCreation() {
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
     console.log("user :", context.user);
 
@@ -35,11 +36,7 @@ export default function TeamCreation() {
 
     return (
         <>
-            <Snackbar open={errorMessage.length > 0} autoHideDuration={6000} onClose={() => setErrorMessage("")}>
-                <Alert onClose={() => setErrorMessage("")} severity="error" sx={{ width: "100%" }}>
-                    {errorMessage}
-                </Alert>
-            </Snackbar>
+            <GenericSnackBar severity="error" message={errorMessage} setMessage={setErrorMessage} />
             <Paper
                 elevation={3}
                 sx={{

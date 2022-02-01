@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
+import GenericSnackBar from "../components/GenericSnackBar";
 import { FetchLogin, LoginContext } from "../utils/auth";
 
 const Login = () => {
@@ -15,7 +16,7 @@ const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const [errorMessage, setErrorMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
     // redirect to home page if already logged in
 
@@ -48,11 +49,7 @@ const Login = () => {
 
     return (
         <>
-            <Snackbar open={errorMessage.length > 0} autoHideDuration={6000} onClose={() => setErrorMessage("")}>
-                <Alert onClose={() => setErrorMessage("")} severity="error" sx={{ width: "100%" }}>
-                    {errorMessage}
-                </Alert>
-            </Snackbar>
+            <GenericSnackBar message={errorMessage} setMessage={setErrorMessage} severity="error" />
 
             <Paper
                 elevation={3}
