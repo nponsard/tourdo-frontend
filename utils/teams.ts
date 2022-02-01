@@ -15,8 +15,8 @@ export interface Team {
     id: number;
     name: string;
     description: string;
-    matchCount: number;
-    winCount: number;
+    match_count: number;
+    win_count: number;
 }
 export interface TeamMember {
     user: User;
