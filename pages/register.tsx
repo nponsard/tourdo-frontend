@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { LoginContext } from "../utils/auth";
 import {
-    Login,
+    LoginFetch,
     RegisterUser, SearchUserFetch
 } from "../utils/users";
 
@@ -117,7 +117,7 @@ const Register = () => {
     };
 
     const closeSuccessSnack = () => {
-        Login(username, password)
+        LoginFetch(username, password)
             .then((res) => {
                 context.setTokenPair(res);
             })

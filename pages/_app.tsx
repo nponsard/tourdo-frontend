@@ -14,31 +14,27 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import "../styles/globals.css";
 import {
-    CallLogout,
+    FetchLogout,
     CheckLocalStorage,
     ClearLocalStorage,
     LoginContext,
     SaveLocalStorage,
     TokenPair,
 } from "../utils/auth";
-import { GetCurrentUser, User } from "../utils/users";
+import { FetchCurrentUser, User } from "../utils/users";
 
 function MyApp({ Component, pageProps }: AppProps) {
     // undefined : not yet loaded
     // null : not logged in
 
     const [user, setUser] = useState<User | undefined | null>(undefined);
-    const [tokenPair, _setTokenPair] = useState<TokenPair | undefined | null>(
-        undefined
-    );
+    const [tokenPair, _setTokenPair] = useState<TokenPair | undefined | null>(undefined);
 
     const setTokenPair = (value: TokenPair | undefined | null) => {
         if (value) SaveLocalStorage(value);
 
         _setTokenPair(value);
     };
-
-    const [validToken, setValidToken] = useState<boolean>(false);
 
     const router = useRouter();
 
@@ -50,7 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     useEffect(() => {
         if (tokenPair) {
-            GetCurrentUser(tokenPair, setTokenPair)
+            FetchCurrentUser(tokenPair, setTokenPair)
                 .then((data) => {
                     console.log("user", data);
                     if (data.id != undefined && data.username != undefined) {
@@ -71,13 +67,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         }
     }, [tokenPair]);
 
-    const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(
-        null
-    );
+    const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
 
-    const [addMenuAnchor, setAddMenuAnchor] = useState<null | HTMLElement>(
-        null
-    );
+    const [addMenuAnchor, setAddMenuAnchor] = useState<null | HTMLElement>(null);
     const handleUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setUserMenuAnchor(event.currentTarget);
     };
@@ -88,7 +80,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     const handleLogout = () => {
         if (tokenPair) {
             setUserMenuAnchor(null);
-            CallLogout(tokenPair, setTokenPair)
+            FetchLogout(tokenPair, setTokenPair)
                 .then(() => {
                     ClearLocalStorage();
                     setTokenPair(null);
@@ -105,11 +97,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 user,
                 setUser: (newUser: User | undefined | null) => setUser(newUser),
                 tokenPair,
-                setTokenPair: (newTokenPair: TokenPair | undefined | null) =>
-                    setTokenPair(newTokenPair),
-                validToken,
-                setValidToken: (newValidToken: boolean) =>
-                    setValidToken(newValidToken),
+                setTokenPair: (newTokenPair: TokenPair | undefined | null) => setTokenPair(newTokenPair),
             }}
         >
             <div>
@@ -131,11 +119,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                             >
                                 <MenuIcon />
                             </IconButton> */}
-                            <Typography
-                                variant="h6"
-                                component="div"
-                                sx={{ flexGrow: 1 }}
-                            >
+                            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                 <Link href={"/"}>TourDO</Link>
                             </Typography>
 
@@ -173,9 +157,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                         <MenuItem
                                             onClick={() => {
                                                 setAddMenuAnchor(null);
-                                                router.push(
-                                                    `/create/tournament`
-                                                );
+                                                router.push(`/create/tournament`);
                                             }}
                                         >
                                             Tournament
@@ -200,8 +182,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                         sx={{ textTransform: "none" }}
                                         endIcon={<ArrowDropDownIcon />}
                                     >
-                                        {user.username}{" "}
-                                        {user.admin && "(admin)"}
+                                        {user.username} {user.admin && "(admin)"}
                                     </Button>
                                     <Menu
                                         id="user-menu"
@@ -221,9 +202,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                         <MenuItem
                                             onClick={() => {
                                                 setUserMenuAnchor(null);
-                                                router.push(
-                                                    `/users/${user.id}`
-                                                );
+                                                router.push(`/users/${user.id}`);
                                             }}
                                         >
                                             Profile
@@ -236,9 +215,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                         >
                                             Change password
                                         </MenuItem>
-                                        <MenuItem onClick={handleLogout}>
-                                            Logout
-                                        </MenuItem>
+                                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
                                     </Menu>
                                 </>
                             ) : (
