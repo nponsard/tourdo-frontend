@@ -11,18 +11,19 @@ const urlFetch = fetch("/api/url")
         return { BACKEND_URL: null };
     });
 
-const server =
+const defaultServer =
     publicRuntimeConfig.NODE_ENV === "production" ? "https://woa-backend.juno.nponsard.net" : "http://localhost:8080";
-console.log(server, publicRuntimeConfig);
-export const BASE_URL = server + "/api/v1";
+console.log(defaultServer, publicRuntimeConfig);
 
 async function getBaseURL() {
     const res = await urlFetch;
 
-    return res.BACKEND_URL ?? server + "/api/v1";
+    return res.BACKEND_URL ?? defaultServer + "/api/v1";
 }
 
 export async function BaseFetch<T>(endpoint: string, init?: RequestInit | undefined, tokenPair?: TokenPair | null) {
+    const BASE_URL = await getBaseURL();
+
     const res = await fetch(BASE_URL + endpoint, {
         headers: {
             Authorization: tokenPair?.access_token ?? "",
