@@ -1,6 +1,6 @@
 ## todo
 - cleanup code
-- dark theme
+- change the way backend_url is obtained
 
 ## possible improvements 
 - use Skeleton when loading
