@@ -23,6 +23,19 @@ const theme = createTheme({
     },
 });
 
+const DOTheme = createTheme({
+    palette: {
+        mode: "light",
+        primary: {
+            main: "#821980",
+        },
+        secondary: {
+            main: "#EDAE49",
+        },
+    },
+});
+
+
 function MyApp({ Component, pageProps }: AppProps) {
     // const { mode, toggleMode } = useGetThemeVariant();
 
@@ -75,7 +88,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 setTokenPair: (newTokenPair: TokenPair | undefined | null) => setTokenPair(newTokenPair),
             }}
         >
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={DOTheme}>
                 <Head>
                     <title>TOURDO</title>
                     <meta name="description" content="DO tournament manager" />
