@@ -7,8 +7,9 @@ const { publicRuntimeConfig } = getConfig();
 
 const server =
     publicRuntimeConfig.NODE_ENV === "production"
-        ? publicRuntimeConfig.BASE_URL ?? "https://woa-backen.juno.nponsard.net"
+        ? publicRuntimeConfig.BASE_URL ?? "https://woa-backend.juno.nponsard.net"
         : "http://localhost:8080";
+console.log(server,publicRuntimeConfig);
 export const BASE_URL = server + "/api/v1";
 
 export async function BaseFetch<T>(endpoint: string, init?: RequestInit | undefined, tokenPair?: TokenPair | null) {
