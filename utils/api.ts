@@ -5,12 +5,22 @@ import { TokenPair, FetchRefreshToken, LoginContext } from "./auth";
 
 const { publicRuntimeConfig } = getConfig();
 
+const urlFetch = fetch("/api/url")
+    .then((res) => res.json() as Promise<{ BACKEND_URL: string | null }>)
+    .catch(() => {
+        return { BACKEND_URL: null };
+    });
+
 const server =
-    publicRuntimeConfig.NODE_ENV === "production"
-        ? publicRuntimeConfig.BACKEND_URL ?? "https://woa-backend.juno.nponsard.net"
-        : "http://localhost:8080";
-console.log(server,publicRuntimeConfig);
+    publicRuntimeConfig.NODE_ENV === "production" ? "https://woa-backend.juno.nponsard.net" : "http://localhost:8080";
+console.log(server, publicRuntimeConfig);
 export const BASE_URL = server + "/api/v1";
+
+async function getBaseURL() {
+    const res = await urlFetch;
+
+    return res.BACKEND_URL ?? server + "/api/v1";
+}
 
 export async function BaseFetch<T>(endpoint: string, init?: RequestInit | undefined, tokenPair?: TokenPair | null) {
     const res = await fetch(BASE_URL + endpoint, {
