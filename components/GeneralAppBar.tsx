@@ -6,11 +6,11 @@ import Link from "next/link";
 import router from "next/router";
 import { useContext, useState } from "react";
 import { ClearLocalStorage, FetchLogout, LoginContext } from "../utils/auth";
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 
-export default function GeneralAppBar({ toggleDarkMode }: { toggleDarkMode: () => void }) {
-    const themeContext = useTheme() as { palette: { mode: "light" | "dark" } };
+export default function GeneralAppBar() {
+    // const themeContext = useTheme() as { palette: { mode: "light" | "dark" } };
 
     const { user, tokenPair, setTokenPair } = useContext(LoginContext);
 
@@ -44,9 +44,9 @@ export default function GeneralAppBar({ toggleDarkMode }: { toggleDarkMode: () =
                 <Typography variant="h6" component="div">
                     <Link href={"/"}>TourDO</Link>
                 </Typography>
-                <IconButton onClick={toggleDarkMode}>
+                {/* <IconButton onClick={toggleDarkMode}>
                     {themeContext.palette.mode === "dark" ? <DarkModeIcon /> : <LightModeIcon />}
-                </IconButton>
+                </IconButton> */}
 
                 <Box sx={{ flexGrow: 1 }} />
 

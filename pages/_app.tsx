@@ -11,22 +11,20 @@ import { CheckLocalStorage, ClearLocalStorage, LoginContext, SaveLocalStorage, T
 import useGetThemeVariant from "../utils/theme";
 import { FetchCurrentUser, User } from "../utils/users";
 
-function MyApp({ Component, pageProps }: AppProps) {
-    const { mode, toggleMode } = useGetThemeVariant();
+const theme = createTheme({
+    palette: {
+        mode: "light",
+        primary: {
+            main: "#2b9eb3",
+        },
+        secondary: {
+            main: "#B87D4B",
+        },
+    },
+});
 
-    const theme = useMemo(() => {
-        return createTheme({
-            palette: {
-                mode,
-                primary: {
-                    main: "#2b9eb3",
-                },
-                secondary: {
-                    main: "#B87D4B",
-                },
-            },
-        });
-    }, [mode]);
+function MyApp({ Component, pageProps }: AppProps) {
+    // const { mode, toggleMode } = useGetThemeVariant();
 
     // undefined : not yet loaded
     // null : not logged in
@@ -90,7 +88,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                         minHeight: "100vh",
                     }}
                 >
-                    <GeneralAppBar toggleDarkMode={toggleMode} />
+                    <GeneralAppBar />
 
                     <Box
                         sx={{

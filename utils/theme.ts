@@ -6,9 +6,7 @@ export default function useGetThemeVariant() {
 
     console.log("prefersDarkMode", prefersDarkMode);
 
-    const darkMode = useMemo(() => {
-        return getDarkThemeLocalStorage() ?? prefersDarkMode;
-    }, [prefersDarkMode]);
+    const darkMode =  getDarkThemeLocalStorage() ?? prefersDarkMode;
 
     console.log("darkMode", darkMode);
 
