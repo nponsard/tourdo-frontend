@@ -85,7 +85,7 @@ export function SimpleElimination(props: { tournament: Tournament; matches: Matc
             }}
         >
             {props.matches.map((match) => (
-                <Box key={match.id} sx={{ gridColumn: match.column, gridRow: match.row }}>
+                <Box key={match.id} sx={{ gridColumn: `${match.column}`, gridRow: `${match.row}` }}>
                     <MatchSummary match={match} teams={props.teams} />
                 </Box>
             ))}
