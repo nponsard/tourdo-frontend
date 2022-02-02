@@ -1,10 +1,9 @@
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
 import { Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Match } from "../utils/matches";
 import { Team } from "../utils/teams";
+import EmojiEventsTwoToneIcon from "@mui/icons-material/EmojiEventsTwoTone";
 
 const MiniTeam = ({
     team,
@@ -17,6 +16,11 @@ const MiniTeam = ({
 }) => {
     return (
         <Box sx={{ display: "flex" }}>
+            <Box sx={{ width: "1.7em", height: "1.5em" }}>
+                {matchStatus >= 1 && matchStatus <= 2 && matchStatus === teamNumber && (
+                    <EmojiEventsTwoToneIcon color="success" />
+                )}
+            </Box>
             <Typography
                 component="div"
                 sx={{
@@ -29,10 +33,6 @@ const MiniTeam = ({
             >
                 {team ? team.name : "TBD"}
             </Typography>
-            <Box sx={{ flexGrow: 1, minWidth: "1em" }} />
-            {matchStatus >= 1 &&
-                matchStatus <= 2 &&
-                (matchStatus === teamNumber ? <CheckIcon color="success" /> : <CloseIcon color="error" />)}
         </Box>
     );
 };
@@ -40,14 +40,6 @@ const MiniTeam = ({
 const MatchSummary = ({ match, teams }: { match: Match; teams: Team[] }) => {
     let team1 = teams.find((t) => t.id === match.team1_id);
     let team2 = teams.find((t) => t.id === match.team2_id);
-
-    /*
-
-    if (team1 === undefined || team2 === undefined) {
-        return (
-            <Paper elevation={3} sx={{ width: "20em", p: "0.5rem" }}></Paper>
-        );
-    }*/
 
     return (
         <Paper elevation={3} sx={{ width: "15em", p: "0.5rem", m: "1rem" }}>
