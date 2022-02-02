@@ -139,9 +139,9 @@ const Tournament = () => {
                             </>
                         ) : (
                             <>No date specified</>
-                        )}
+                        )}{" "}
+                        | {tournament.max_teams} teams | Game : {tournament.game_name}
                     </Typography>
-                    <Typography>{tournament.game_name}</Typography>
                 </Box>
                 <Box>
                     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

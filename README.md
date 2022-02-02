@@ -1,10 +1,5 @@
 ## todo
-
-- enter to log in
-
 -   cleanup code
--   change the way backend_url is obtained
-
 ## possible improvements
 
 -   use Skeleton when loading
