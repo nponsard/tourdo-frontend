@@ -80,12 +80,12 @@ export function SimpleElimination(props: { tournament: Tournament; matches: Matc
             sx={{
                 display: "grid",
                 overflowX: "auto",
-                gridTemplateColumns: `repeat(1fr,${maxColumn})`,
-                gridTemplateRows: `repeat(1fr,${maxRow})`,
+                gridTemplateColumns: `repeat(${maxColumn}, 1fr)`,
+                gridTemplateRows: `repeat(${maxRow},1fr)`,
             }}
         >
             {props.matches.map((match) => (
-                <Box key={match.id} sx={{ gridColumn: `${match.column}`, gridRow: `${match.row}` }}>
+                <Box key={match.id} sx={{ gridColumn: `${match.column + 1}`, gridRow: `${match.row + 1}` }}>
                     <MatchSummary match={match} teams={props.teams} />
                 </Box>
             ))}
