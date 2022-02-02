@@ -22,8 +22,6 @@ const Login = () => {
 
     if (context.user) router.push("/");
 
-    console.log(context);
-
     const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(event.target.value);
     };

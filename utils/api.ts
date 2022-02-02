@@ -13,7 +13,6 @@ const urlFetch = fetch("/api/url")
 
 const defaultServer =
     publicRuntimeConfig.NODE_ENV === "production" ? "https://woa-backend.juno.nponsard.net" : "http://localhost:8080";
-console.log(defaultServer, publicRuntimeConfig);
 
 async function getBaseURL() {
     const res = await urlFetch;

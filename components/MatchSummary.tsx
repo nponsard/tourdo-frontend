@@ -41,8 +41,6 @@ const MatchSummary = ({ match, teams }: { match: Match; teams: Team[] }) => {
     let team1 = teams.find((t) => t.id === match.team1_id);
     let team2 = teams.find((t) => t.id === match.team2_id);
 
-    console.log(teams);
-
     /*
 
     if (team1 === undefined || team2 === undefined) {

@@ -64,7 +64,6 @@ const OrganizerManager = ({
         if (removeOrganizer) {
             removeOrganizer(user)
                 .then((v) => {
-                    console.log(v);
                     setSuccessSnack(true);
                 })
                 .catch((e) => {

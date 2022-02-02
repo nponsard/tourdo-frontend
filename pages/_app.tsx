@@ -61,7 +61,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         if (tokenPair) {
             FetchCurrentUser(tokenPair, setTokenPair)
                 .then((data) => {
-                    console.log("user", data);
                     if (data.id != undefined && data.username != undefined) {
                         setUser(data);
                     } else {
