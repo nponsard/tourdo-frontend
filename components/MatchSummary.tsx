@@ -56,7 +56,7 @@ const MatchSummary = ({ match, teams }: { match: Match; teams: Team[] }) => {
                     : "No date specified"
             }
         >
-            <Paper elevation={3} sx={{ width: "16em", p: "0.5rem", m: "1rem" }}>
+            <Paper elevation={3} sx={{ width: "15em", p: "0.5rem", m: "1rem" }}>
                 <MiniTeam team={team1} teamNumber={1} matchStatus={match.status} />
                 <MiniTeam team={team2} teamNumber={2} matchStatus={match.status} />
             </Paper>
