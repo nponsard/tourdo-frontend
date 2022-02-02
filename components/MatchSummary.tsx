@@ -1,4 +1,4 @@
-import { Paper } from "@mui/material";
+import { Paper, Tooltip } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Match } from "../utils/matches";
@@ -42,10 +42,25 @@ const MatchSummary = ({ match, teams }: { match: Match; teams: Team[] }) => {
     let team2 = teams.find((t) => t.id === match.team2_id);
 
     return (
-        <Paper elevation={3} sx={{ width: "15em", p: "0.5rem", m: "1rem" }}>
-            <MiniTeam team={team1} teamNumber={1} matchStatus={match.status} />
-            <MiniTeam team={team2} teamNumber={2} matchStatus={match.status} />
-        </Paper>
+        <Tooltip
+            title={
+                match.date
+                    ? new Date(match.date).toLocaleString("en-US", {
+                          timeZone: "UTC",
+                          day: "2-digit",
+                          month: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          year: "numeric",
+                      })
+                    : "No date specified"
+            }
+        >
+            <Paper elevation={3} sx={{ width: "16em", p: "0.5rem", m: "1rem" }}>
+                <MiniTeam team={team1} teamNumber={1} matchStatus={match.status} />
+                <MiniTeam team={team2} teamNumber={2} matchStatus={match.status} />
+            </Paper>
+        </Tooltip>
     );
 };
 
