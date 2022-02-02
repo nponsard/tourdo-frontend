@@ -1,20 +1,12 @@
-import {
-    Alert, Paper,
-    Snackbar,
-    Stack,
-    TextField
-} from "@mui/material";
+import { Alert, Paper, Snackbar, Stack, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
+import { SyntheticEvent, useContext, useState } from "react";
 import { LoginContext } from "../utils/auth";
-import {
-    FetchLogin,
-    RegisterUser, FetchSearchUser
-} from "../utils/users";
+import { FetchLogin, RegisterUser, FetchSearchUser } from "../utils/users";
 
 const Register = () => {
     const router = useRouter();
@@ -36,18 +28,11 @@ const Register = () => {
 
     if (context.user != null) router.push("/");
 
-    const handleUsernameChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(event.target.value);
         FetchSearchUser(event.target.value)
             .then((data) => {
-                if (
-                    data &&
-                    data.users.some(
-                        (value) => value.username == event.target.value
-                    )
-                )
+                if (data && data.users.some((value) => value.username == event.target.value))
                     setUsernameError("Username already taken");
                 else setUsernameError("");
             })
@@ -56,23 +41,17 @@ const Register = () => {
             });
     };
 
-    const handleConfirmPasswordChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPasswordConfirm(event.target.value);
 
-        if (password != event.target.value)
-            setConfirmPasswordError("Passwords does not match");
+        if (password != event.target.value) setConfirmPasswordError("Passwords does not match");
         else setConfirmPasswordError("");
     };
 
-    const handlePasswordChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
 
-        if (event.target.value.length < 8)
-            setPasswordError("Password must be at least 8 characters long");
+        if (event.target.value.length < 8) setPasswordError("Password must be at least 8 characters long");
         else setPasswordError("");
 
         if (passwordConfirm.length > 0 && event.target.value != passwordConfirm)
@@ -80,12 +59,9 @@ const Register = () => {
         else setConfirmPasswordError("");
     };
 
-    const handleRegister = () => {
-        if (
-            usernameError.length > 0 ||
-            passwordError.length > 0 ||
-            confirmPasswordError.length > 0
-        ) {
+    const handleRegister = (event: SyntheticEvent<any>) => {
+        event.preventDefault();
+        if (usernameError.length > 0 || passwordError.length > 0 || confirmPasswordError.length > 0) {
             setErrorMessage("There is at least one error in the form");
             return;
         }
@@ -94,8 +70,7 @@ const Register = () => {
             setErrorMessage("please fill in all fields");
 
             if (password.length < 1) setPasswordError("Please fill this field");
-            if (passwordConfirm.length < 1)
-                setConfirmPasswordError("Please fill this field");
+            if (passwordConfirm.length < 1) setConfirmPasswordError("Please fill this field");
             return;
         }
 
@@ -111,8 +86,7 @@ const Register = () => {
             })
             .catch((err) => {
                 if (err.message) setErrorMessage(`${err.message}`);
-                else
-                    setErrorMessage("There was an error contacting the server");
+                else setErrorMessage("There was an error contacting the server");
             });
     };
 
@@ -132,29 +106,13 @@ const Register = () => {
 
     return (
         <>
-            <Snackbar
-                open={showSuccessSnack}
-                autoHideDuration={2000}
-                onClose={closeSuccessSnack}
-            >
-                <Alert
-                    onClose={closeSuccessSnack}
-                    severity="success"
-                    sx={{ width: "100%" }}
-                >
+            <Snackbar open={showSuccessSnack} autoHideDuration={2000} onClose={closeSuccessSnack}>
+                <Alert onClose={closeSuccessSnack} severity="success" sx={{ width: "100%" }}>
                     Registered ! Logging you in...
                 </Alert>
             </Snackbar>
-            <Snackbar
-                open={errorMessage.length > 0}
-                autoHideDuration={6000}
-                onClose={() => setErrorMessage("")}
-            >
-                <Alert
-                    onClose={() => setErrorMessage("")}
-                    severity="error"
-                    sx={{ width: "100%" }}
-                >
+            <Snackbar open={errorMessage.length > 0} autoHideDuration={6000} onClose={() => setErrorMessage("")}>
+                <Alert onClose={() => setErrorMessage("")} severity="error" sx={{ width: "100%" }}>
                     {errorMessage}
                 </Alert>
             </Snackbar>
@@ -203,7 +161,7 @@ const Register = () => {
                             helperText={confirmPasswordError}
                             error={confirmPasswordError.length > 0}
                         />
-                        <Button variant="contained" onClick={handleRegister}>
+                        <Button type="submit" variant="contained" onClick={handleRegister}>
                             Register
                         </Button>
                         <Typography>

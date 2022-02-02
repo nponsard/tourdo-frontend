@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
+import { SyntheticEvent, useContext, useState } from "react";
 import GenericSnackBar from "../components/GenericSnackBar";
 import { FetchLogin, LoginContext } from "../utils/auth";
 
@@ -32,7 +32,8 @@ const Login = () => {
         setPassword(event.target.value);
     };
 
-    const handleLogin = () => {
+    const handleLogin = (event : SyntheticEvent<any>) => {
+        event.preventDefault();
         FetchLogin(username, password)
             .then((value) => {
                 context.setTokenPair(value);
@@ -78,7 +79,7 @@ const Login = () => {
                             onChange={handlePasswordChange}
                             type="password"
                         />
-                        <Button variant="contained" onClick={handleLogin}>
+                        <Button type="submit" variant="contained" onClick={handleLogin}>
                             Login
                         </Button>
                         <Typography>
