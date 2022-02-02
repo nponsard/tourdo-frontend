@@ -15,7 +15,7 @@ const MiniTeam = ({
     matchStatus: number;
 }) => {
     return (
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
             <Box sx={{ width: "1.7em", height: "1.5em" }}>
                 {matchStatus >= 1 && matchStatus <= 2 && matchStatus === teamNumber && (
                     <EmojiEventsTwoToneIcon color="success" />
