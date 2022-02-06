@@ -51,7 +51,7 @@ const TeamEditor = () => {
     useEffect(() => {
         if (team) {
             setLocalName(team.name);
-            setLocalDescription(team.description);
+            setLocalDescription(team.description ?? "");
         }
     }, [team]);
 
@@ -116,7 +116,7 @@ const TeamEditor = () => {
     const handleReset = useCallback(() => {
         if (team) {
             setLocalName(team.name);
-            setLocalDescription(team.description);
+            setLocalDescription(team.description ?? "");
         }
     }, [team]);
     if (team === undefined || members === undefined) return <div>Loading</div>;

@@ -14,7 +14,7 @@ export const TeamRoleNames = ["Player", "Captain", "Coach"];
 export interface Team {
     id: number;
     name: string;
-    description: string;
+    description: string | null;
     match_count: number;
     win_count: number;
 }

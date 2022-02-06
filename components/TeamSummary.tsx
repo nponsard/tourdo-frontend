@@ -41,7 +41,7 @@ const TeamSummary = ({ team }: { team: Team }) => {
                         whiteSpace: "nowrap",
                     }}
                 >
-                    {team.description.length > 0 ? team.description : "No description"}
+                    {team.description && team.description.length > 0 ? team.description : "No description"}
                 </Typography>
             </Paper>
         </Link>
