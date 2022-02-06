@@ -35,8 +35,6 @@ export default function TournamentCreation() {
 
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
-    console.log("user :", context.user);
-
     if (context.user === null) router.push("/");
 
     const handleCreate = () => {

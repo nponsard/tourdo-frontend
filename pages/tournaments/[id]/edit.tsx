@@ -140,7 +140,6 @@ const TournamentEditor = () => {
                     const error = results.filter((result) => result.status === "rejected")[0] as { reason: any };
                     if (error.reason.message) setErrorSnack(error.reason.message);
                     else setErrorSnack("Some teams could not be added");
-
                     console.log(results);
                 } else {
                     setSuccessSnack("User(s) added successfully");
@@ -353,14 +352,12 @@ const TournamentEditor = () => {
                                             </TableCell>
                                             <TableCell>
                                                 <FormControl fullWidth sx={{ minWidth: "7rem" }}>
-                                                    <InputLabel id="demo-simple-select-label">Winner</InputLabel>
+                                                    <InputLabel id="winner-label">Winner</InputLabel>
                                                     <Select
-                                                        labelId="demo-simple-select-label"
-                                                        id="demo-simple-select"
+                                                        labelId="winner-label"
                                                         value={match.status}
-                                                        label="Age"
+                                                        label="Winner"
                                                         onChange={(e) => {
-                                                            console.log(e.target.value);
 
                                                             handleUpdateMatch({
                                                                 ...match,

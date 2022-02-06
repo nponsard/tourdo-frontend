@@ -13,15 +13,11 @@ export default function TeamSelector(props: {
     const available = props.teams.filter((team) => {
         return team.id !== props.match[opposite];
     });
-    console.log("teams :", props.teams);
-    console.log("available :", available);
 
     return (
         <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">{props.position}</InputLabel>
+            <InputLabel >{props.position}</InputLabel>
             <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
                 value={props.match[props.position] === null ? -1 : props.match[props.position]}
                 label={props.position}
                 onChange={(e) => {
@@ -34,7 +30,6 @@ export default function TeamSelector(props: {
                 <MenuItem value={-1}>TBD</MenuItem>
 
                 {available.map((team) => {
-                    console.log("team :", team);
 
                     return (
                         <MenuItem key={team.id} value={team.id}>

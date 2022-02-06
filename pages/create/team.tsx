@@ -16,8 +16,6 @@ export default function TeamCreation() {
     const [description, setDescription] = useState("");
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
-    console.log("user :", context.user);
-
     if (context.user === null) router.push("/");
 
     const handleCreate = () => {
