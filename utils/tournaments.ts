@@ -22,11 +22,11 @@ export interface Tournament {
     id: number;
     type: TournamentType;
     name: string;
-    description: string;
+    description: string | null;
     start_date: string | null;
     end_date: string | null;
     max_teams: number;
-    game_name: string;
+    game_name: string | null;
     status: TournamentStatus;
 }
 export interface TournamentTeam {

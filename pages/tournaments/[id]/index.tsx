@@ -92,7 +92,7 @@ const Tournament = () => {
                             alignItems: "center",
                         }}
                     >
-                        <Typography variant="h2">{tournament?.name}</Typography>
+                        <Typography variant="h4">{tournament?.name}</Typography>
 
                         <Box sx={{ flexGrow: 1 }} />
                         <Box>
