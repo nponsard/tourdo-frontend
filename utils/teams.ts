@@ -71,6 +71,27 @@ export function FetchCreateTeam(
     );
 }
 
+export function CreateEmptyTeam(
+    name: string,
+    description: string,
+    tokenPair: TokenPair,
+    setTokenPair: TokenPairSetter
+) {
+    return FetchApi<Team>(
+        `/teams`,
+        {
+            method: "POST",
+            body: JSON.stringify({
+                name,
+                description,
+                empty: true,
+            }),
+        },
+        tokenPair,
+        setTokenPair
+    );
+}
+
 export async function FetchEditTeam(
     teamID: number,
     name: string,
